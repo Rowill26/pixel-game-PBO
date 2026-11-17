@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.girah.karakter.SenopatiTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.455Z" hostname="PROWILL_SIGBOY" time="0.004">
+  <properties/>
+  <testcase name="Jurus ketiga gagal (50 - 20 - 20 = 10) dan tidak mengubah apa pun" classname="id.girah.karakter.SenopatiTest" time="0.001"/>
+  <testcase name="narasiGugurKhasSenopati()" classname="id.girah.karakter.SenopatiTest" time="0.0"/>
+  <testcase name="targetNullDitolak()" classname="id.girah.karakter.SenopatiTest" time="0.001"/>
+  <testcase name="jurusKeTargetGugurTidakMemakaiEnergi()" classname="id.girah.karakter.SenopatiTest" time="0.0"/>
+  <testcase name="identitas()" classname="id.girah.karakter.SenopatiTest" time="0.001"/>
+  <testcase name="Jurus: 15 x 3 - 3 = 42 kerusakan, energi 50 - 20 = 30" classname="id.girah.karakter.SenopatiTest" time="0.0"/>
+  <testcase name="jurusButuhTepatSatuSasaran()" classname="id.girah.karakter.SenopatiTest" time="0.001"/>
+  <testcase name="senopatiGugurTidakBisaBertindak()" classname="id.girah.karakter.SenopatiTest" time="0.0"/>
+  <testcase name="Serangan dasar: 15 - pertahanan Leak 3 = 12, tanpa energi batin" classname="id.girah.karakter.SenopatiTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.girah.karakter.PengelanaTest$TelikSandiTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.449Z" hostname="PROWILL_SIGBOY" time="0.004">
+  <properties/>
+  <testcase name="tercepatDiKelompok()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
+  <testcase name="Langkah Bayangan: menyerang (12 - 10 = 2), lalu memberi tepat satu giliran tambahan" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
+  <testcase name="seranganBiasaTidakMemberiGiliranTambahan()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
+  <testcase name="gugurSebelumGiliranTambahanTidakMendapatGiliran()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
+  <testcase name="Hanya sekali per ronde, lalu tersedia lagi setelah awalRonde()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
+  <testcase name="Energi habis: exception, dan tidak ada giliran tambahan" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.girah.karakter.KarakterMitosTest" tests="20" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.388Z" hostname="PROWILL_SIGBOY" time="0.055">
+  <properties/>
+  <testcase name="bisaMemakaiJurusMengikutiEnergi()" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="seranganNegatifDitolak()" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="bawaanTidakAdaGiliranTambahan()" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="pakaiSeluruhEnergiDiperbolehkan()" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="statistikTidakValidDitolak()" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="penyembuhanDibatasiMaksimum()" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="namaNullDitolak()" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="seranganNolTidakMelukai()" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="pemulihanEnergiDibatasiMaksimum()" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="Energi tidak cukup melempar exception dan energi tidak berubah" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="Laporan kerusakan menyebut jumlah kerusakan dan sisa nyawa" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="Karakter baru mulai dengan nyawa dan energi penuh" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="Nyawa tidak pernah di bawah nol dan karakter gugur" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="pakaiEnergiMengurangiEnergi()" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="Laporan kerusakan menambahkan narasi gugur" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="[1] " classname="id.girah.karakter.KarakterMitosTest" time="0.006"/>
+  <testcase name="[2]    " classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="Serangan lemah tetap memberi minimal 1 kerusakan" classname="id.girah.karakter.KarakterMitosTest" time="0.001"/>
+  <testcase name="Kerusakan dikurangi pertahanan" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <testcase name="karakterGugurTidakBisaDipulihkan()" classname="id.girah.karakter.KarakterMitosTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

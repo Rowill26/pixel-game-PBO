@@ -1,0 +1,22 @@
+subprojects {
+    apply plugin: 'java'
+
+    group = 'id.girah'
+    version = '0.1.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        // Kompilasi dengan JDK 25, tapi bytecode tetap target Java 17.
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 17
+        options.encoding = 'UTF-8'
+    }
+}
