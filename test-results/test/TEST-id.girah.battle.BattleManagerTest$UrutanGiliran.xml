@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="id.girah.battle.BattleManagerTest$UrutanGiliran" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.376Z" hostname="PROWILL_SIGBOY" time="0.005">
+<testsuite name="id.girah.battle.BattleManagerTest$UrutanGiliran" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:33:40.031Z" hostname="PROWILL_SIGBOY" time="0.003">
   <properties/>
   <testcase name="Kecepatan seri: pengelana didahulukan" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.001"/>
-  <testcase name="giliranMajuDanStatusMengikutiFaksi()" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.001"/>
-  <testcase name="Tersusun dari yang tercepat: Telik Sandi 18 ... Leak 8" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.0"/>
-  <testcase name="Karakter yang gugur di tengah ronde dilewati dan tidak masuk ronde berikutnya" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.001"/>
+  <testcase name="giliranMajuDanStatusMengikutiFaksi()" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.0"/>
+  <testcase name="Tersusun dari yang tercepat: Telik Sandi 18 ... Leak 8" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.001"/>
+  <testcase name="Karakter yang gugur di tengah ronde dilewati dan tidak masuk ronde berikutnya" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.0"/>
   <testcase name="Setelah semua bertindak, ronde baru dimulai dengan urutan yang sama" classname="id.girah.battle.BattleManagerTest$UrutanGiliran" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

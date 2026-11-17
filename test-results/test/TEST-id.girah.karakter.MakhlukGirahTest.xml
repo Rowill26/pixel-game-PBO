@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="id.girah.karakter.MakhlukGirahTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.444Z" hostname="PROWILL_SIGBOY" time="0.003">
+<testsuite name="id.girah.karakter.MakhlukGirahTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:33:40.123Z" hostname="PROWILL_SIGBOY" time="0.002">
   <properties/>
   <testcase name="diAtasAmbangTidakBerucap()" classname="id.girah.karakter.MakhlukGirahTest" time="0.0"/>
   <testcase name="Ucapan nyawa rendah muncul tepat sekali saat nyawa &lt;= 30% (120 dari 400)" classname="id.girah.karakter.MakhlukGirahTest" time="0.0"/>

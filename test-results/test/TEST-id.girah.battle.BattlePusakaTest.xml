@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="id.girah.battle.BattlePusakaTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:33:40.034Z" hostname="PROWILL_SIGBOY" time="0.003">
+  <properties/>
+  <testcase name="musuhTidakBolehMemakaiTas()" classname="id.girah.battle.BattlePusakaTest" time="0.001"/>
+  <testcase name="Pengelana memakai Tirta Suci: nyawa pulih, tas berkurang, giliran maju" classname="id.girah.battle.BattlePusakaTest" time="0.0"/>
+  <testcase name="konstruktorLamaMemakaiTasKosong()" classname="id.girah.battle.BattlePusakaTest" time="0.001"/>
+  <testcase name="pusakaTidakBergunaDitolakTanpaMenghabiskanGiliran()" classname="id.girah.battle.BattlePusakaTest" time="0.0"/>
+  <testcase name="pusakaYangHabisDitolak()" classname="id.girah.battle.BattlePusakaTest" time="0.001"/>
+  <testcase name="Tas yang sama dipakai lintas pertarungan: pusaka terpakai tidak kembali" classname="id.girah.battle.BattlePusakaTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

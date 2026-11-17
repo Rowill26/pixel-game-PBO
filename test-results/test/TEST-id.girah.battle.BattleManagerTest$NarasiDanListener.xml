@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="id.girah.battle.BattleManagerTest$NarasiDanListener" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.309Z" hostname="PROWILL_SIGBOY" time="0.036">
+<testsuite name="id.girah.battle.BattleManagerTest$NarasiDanListener" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:33:40.018Z" hostname="PROWILL_SIGBOY" time="0.001">
   <properties/>
-  <testcase name="listenerMenerimaSemuaPeristiwa()" classname="id.girah.battle.BattleManagerTest$NarasiDanListener" time="0.02"/>
-  <testcase name="Narasi masuk ke antrean dialog (per baris) dan ke babad" classname="id.girah.battle.BattleManagerTest$NarasiDanListener" time="0.002"/>
+  <testcase name="listenerMenerimaSemuaPeristiwa()" classname="id.girah.battle.BattleManagerTest$NarasiDanListener" time="0.001"/>
+  <testcase name="Narasi masuk ke antrean dialog (per baris) dan ke babad" classname="id.girah.battle.BattleManagerTest$NarasiDanListener" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

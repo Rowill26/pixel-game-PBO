@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="id.girah.karakter.PengelanaTest$TelikSandiTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.449Z" hostname="PROWILL_SIGBOY" time="0.004">
+<testsuite name="id.girah.karakter.PengelanaTest$TelikSandiTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:33:40.127Z" hostname="PROWILL_SIGBOY" time="0.003">
   <properties/>
-  <testcase name="tercepatDiKelompok()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
+  <testcase name="tercepatDiKelompok()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.001"/>
   <testcase name="Langkah Bayangan: menyerang (12 - 10 = 2), lalu memberi tepat satu giliran tambahan" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
   <testcase name="seranganBiasaTidakMemberiGiliranTambahan()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>
   <testcase name="gugurSebelumGiliranTambahanTidakMendapatGiliran()" classname="id.girah.karakter.PengelanaTest$TelikSandiTest" time="0.0"/>

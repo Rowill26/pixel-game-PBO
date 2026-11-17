@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="id.girah.battle.BattleManagerTest$Validasi" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:13:51.355Z" hostname="PROWILL_SIGBOY" time="0.009">
+<testsuite name="id.girah.battle.BattleManagerTest$Validasi" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-17T15:33:40.022Z" hostname="PROWILL_SIGBOY" time="0.004">
   <properties/>
-  <testcase name="belumDimulai()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.001"/>
-  <testcase name="tidakBolehMenyerangKawanSendiri()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.002"/>
-  <testcase name="tidakBolehMenyerangYangSudahGugur()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.002"/>
-  <testcase name="pesertaTidakSah()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.002"/>
-  <testcase name="tidakBolehDimulaiDuaKali()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.001"/>
+  <testcase name="belumDimulai()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.0"/>
+  <testcase name="tidakBolehMenyerangKawanSendiri()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.001"/>
+  <testcase name="tidakBolehMenyerangYangSudahGugur()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.0"/>
+  <testcase name="pesertaTidakSah()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.0"/>
+  <testcase name="tidakBolehDimulaiDuaKali()" classname="id.girah.battle.BattleManagerTest$Validasi" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
