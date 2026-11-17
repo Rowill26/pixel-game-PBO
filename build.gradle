@@ -1,22 +1,17 @@
-subprojects {
-    apply plugin: 'java'
+apply plugin: 'java-library'
 
-    group = 'id.girah'
-    version = '0.1.0'
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
-    repositories {
-        mavenCentral()
-    }
+    testImplementation platform("org.junit:junit-bom:$junitVersion")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
 
-    java {
-        // Kompilasi dengan JDK 25, tapi bytecode tetap target Java 17.
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(25)
-        }
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.release = 17
-        options.encoding = 'UTF-8'
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat = 'full'
     }
 }
