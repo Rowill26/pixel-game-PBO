@@ -1,17 +1,18 @@
-apply plugin: 'java-library'
+// Pengaturan bersama untuk semua modul (core dan lwjgl3).
+subprojects {
+    apply plugin: 'java'
 
-dependencies {
-    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    group = 'id.girah'
+    version = '0.1.0'
 
-    testImplementation platform("org.junit:junit-bom:$junitVersion")
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+    repositories {
+        mavenCentral()
+    }
 
-test {
-    useJUnitPlatform()
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-        exceptionFormat = 'full'
+    // Bisa di-build dengan JDK 17 ke atas; bytecode selalu target Java 17
+    // supaya jalan di semua laptop anggota kelompok.
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 17
+        options.encoding = 'UTF-8'
     }
 }
