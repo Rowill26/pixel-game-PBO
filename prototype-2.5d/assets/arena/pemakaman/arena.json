@@ -41,19 +41,13 @@
   "layers": [
     {
       "file": "far.png",
-      "parallax": 0.35,
-      "normal": false,
-      "lit": 0.95
-    },
-    {
-      "file": "ground.png",
-      "parallax": 1.0,
+      "parallax": 0.6,
       "normal": true,
       "lit": 1.0
     },
     {
-      "file": "mid.png",
-      "parallax": 0.95,
+      "file": "ground.png",
+      "parallax": 1.0,
       "normal": true,
       "lit": 1.0
     }
@@ -65,18 +59,18 @@
   },
   "torches": [
     {
-      "x": 42,
-      "y": 196
+      "x": 64,
+      "y": 190
     },
     {
-      "x": 566,
-      "y": 176
+      "x": 552,
+      "y": 178
     }
   ],
   "staticLights": [
     {
-      "x": 40,
-      "y": 204,
+      "x": 64,
+      "y": 196,
       "z": 30,
       "color": [
         0.79,
@@ -106,7 +100,7 @@
       "id": "calon_arang",
       "name": "Calon Arang",
       "sprite": "calon_arang",
-      "x": 150,
+      "x": 232,
       "y": 262,
       "side": "girah",
       "boss": true,
@@ -130,8 +124,8 @@
       "id": "leak",
       "name": "Leak",
       "sprite": "leak",
-      "x": 70,
-      "y": 194,
+      "x": 160,
+      "y": 220,
       "side": "girah",
       "float": true,
       "eyes": [
@@ -145,24 +139,24 @@
       "id": "pengikut",
       "name": "Pengikut",
       "sprite": "pengikut",
-      "x": 250,
-      "y": 292,
+      "x": 306,
+      "y": 286,
       "side": "girah"
     },
     {
       "id": "pendekar",
       "name": "Pendekar",
       "sprite": "pendekar",
-      "x": 440,
-      "y": 214,
+      "x": 400,
+      "y": 234,
       "side": "pengelana"
     },
     {
       "id": "juru_mantra",
       "name": "Juru Mantra",
       "sprite": "juru_mantra",
-      "x": 488,
-      "y": 238,
+      "x": 450,
+      "y": 250,
       "side": "pengelana",
       "staff": [
         60,
@@ -173,15 +167,15 @@
       "id": "peramu",
       "name": "Peramu",
       "sprite": "peramu",
-      "x": 436,
-      "y": 262,
+      "x": 396,
+      "y": 270,
       "side": "pengelana"
     },
     {
       "id": "pengintai",
       "name": "Pengintai",
       "sprite": "pengintai",
-      "x": 488,
+      "x": 452,
       "y": 288,
       "side": "pengelana"
     },
@@ -189,7 +183,7 @@
       "id": "ratna",
       "name": "Ratna",
       "sprite": "ratna",
-      "x": 548,
+      "x": 506,
       "y": 262,
       "side": "sekutu"
     },
@@ -197,8 +191,8 @@
       "id": "bharadah",
       "name": "Mpu Bharadah",
       "sprite": "bharadah",
-      "x": 584,
-      "y": 284,
+      "x": 530,
+      "y": 290,
       "side": "sekutu"
     }
   ]

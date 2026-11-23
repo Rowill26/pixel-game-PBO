@@ -105,6 +105,11 @@ public class StoryLayer implements Disposable {
 
     public void start(String script) {
         JsonValue root = new JsonReader().parse(Gdx.files.internal("cerita/" + script + ".json"));
+        // the scene's location: a story background in assets/arena/<key>/ (party standing in it)
+        String place = root.getString("arena", null);
+        if (place != null) {
+            game.loadArena(place, root.getString("mode", null));
+        }
         title = root.getString("title", "");
         mission = root.getString("mission", "");
         queue.clear();
@@ -272,7 +277,7 @@ public class StoryLayer implements Disposable {
 
         // dim the diorama so the text reads (brief: digelapkan)
         batch.begin();
-        batch.setColor(INK.r, INK.g, INK.b, 0.5f);
+        batch.setColor(INK.r, INK.g, INK.b, 0.32f);
         batch.draw(white, 0, 0, W, H);
         batch.setColor(Color.WHITE);
         // portrait (left, bottom anchored, slides in)

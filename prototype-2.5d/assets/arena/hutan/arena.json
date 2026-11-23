@@ -76,19 +76,13 @@
   "layers": [
     {
       "file": "far.png",
-      "parallax": 0.35,
-      "normal": false,
-      "lit": 0.6
-    },
-    {
-      "file": "ground.png",
-      "parallax": 1.0,
+      "parallax": 0.6,
       "normal": true,
       "lit": 1.0
     },
     {
-      "file": "mid.png",
-      "parallax": 0.95,
+      "file": "ground.png",
+      "parallax": 1.0,
       "normal": true,
       "lit": 1.0
     }
@@ -100,12 +94,12 @@
   },
   "torches": [
     {
-      "x": 64,
-      "y": 214
+      "x": 28,
+      "y": 224
     },
     {
-      "x": 583,
-      "y": 266
+      "x": 588,
+      "y": 302
     }
   ],
   "actors": [
@@ -113,8 +107,8 @@
       "id": "leak1",
       "name": "Leak 1",
       "sprite": "leak",
-      "x": 110,
-      "y": 196,
+      "x": 140,
+      "y": 226,
       "side": "girah",
       "float": true,
       "eyes": [
@@ -128,7 +122,7 @@
       "id": "leak2",
       "name": "Leak 2",
       "sprite": "leak",
-      "x": 170,
+      "x": 236,
       "y": 246,
       "side": "girah",
       "float": true,
@@ -143,32 +137,32 @@
       "id": "pengikut",
       "name": "Pengikut",
       "sprite": "pengikut",
-      "x": 92,
-      "y": 282,
+      "x": 118,
+      "y": 276,
       "side": "girah"
     },
     {
       "id": "pemimpin_pengikut",
       "name": "Pemimpin Pengikut",
       "sprite": "pemimpin_pengikut",
-      "x": 214,
-      "y": 304,
+      "x": 212,
+      "y": 292,
       "side": "girah"
     },
     {
       "id": "pendekar",
       "name": "Pendekar",
       "sprite": "pendekar",
-      "x": 470,
-      "y": 214,
+      "x": 440,
+      "y": 238,
       "side": "pengelana"
     },
     {
       "id": "juru_mantra",
       "name": "Juru Mantra",
       "sprite": "juru_mantra",
-      "x": 522,
-      "y": 238,
+      "x": 494,
+      "y": 254,
       "side": "pengelana",
       "staff": [
         60,
@@ -179,16 +173,16 @@
       "id": "peramu",
       "name": "Peramu",
       "sprite": "peramu",
-      "x": 466,
-      "y": 262,
+      "x": 432,
+      "y": 274,
       "side": "pengelana"
     },
     {
       "id": "pengintai",
       "name": "Pengintai",
       "sprite": "pengintai",
-      "x": 520,
-      "y": 288,
+      "x": 490,
+      "y": 292,
       "side": "pengelana"
     }
   ]

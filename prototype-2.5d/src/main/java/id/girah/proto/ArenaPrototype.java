@@ -163,11 +163,16 @@ public class ArenaPrototype extends ApplicationAdapter {
     }
 
     private void loadArena(int index, String modeName) {
+        arenaIndex = index;
+        loadArena(ARENAS[index], modeName);
+    }
+
+    /** Memuat arena atau lokasi cerita mana pun dari {@code assets/arena/<key>/} (dipakai naskah cerita). */
+    void loadArena(String key, String modeName) {
         if (arena != null) {
             arena.dispose();
         }
-        arenaIndex = index;
-        arena = new ArenaData(ARENAS[index], spriteCache);
+        arena = new ArenaData(key, spriteCache);
         mode = arena.mode(modeName);
         particles.clear();
         effects.clear();
@@ -184,8 +189,8 @@ public class ArenaPrototype extends ApplicationAdapter {
         fx.tint = mode.tint;
         fx.lift = mode.lift;
         fx.vignette = mode.vignette;
-        fx.threshold = "day".equals(mode.name) ? 0.72f : 0.55f;
-        fx.bloomAmount = "day".equals(mode.name) ? 0.7f : 1.1f;
+        fx.threshold = "day".equals(mode.name) ? 0.8f : 0.55f;           // bright day skies should not glow
+        fx.bloomAmount = "day".equals(mode.name) ? 0.5f : 1.1f;
     }
 
     // ------------------------------------------------------------------ input & update

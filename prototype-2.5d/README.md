@@ -173,7 +173,8 @@ kerusakan di sini hanya pertunjukan: nanti diganti `BattleManager` di backend.
 kiri, kotak dialog miring, papan nama emas, judul babak (merah) dan misi di atas, serta pilihan berupa
 panel miring bertumpuk. Teks muncul huruf demi huruf; `Enter` pertama menyelesaikan baris.
 
-Naskah: `assets/cerita/<nama>.json` berisi `title`, `mission`, dan `lines`. Setiap baris
+Naskah: `assets/cerita/<nama>.json` berisi `title`, `mission`, `arena` (lokasi, folder di
+`assets/arena/`, misalnya `tapak_wangi`), dan `lines`. Setiap baris
 `{"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "..."}`; `"who": "narator"` tanpa
 potret. Pilihan: `{"choice": ["A", "B"], "replies": [[baris jika A], [baris jika B]]}`. Potret dicari di
 `assets/potret/<who>_<face>.png` (128×192, menghadap kanan); bila belum ada dipakai sprite tokoh
@@ -189,6 +190,32 @@ Alat ini memakai grid dan palet yang sama dengan `normalize_ai_pixel.py`, memper
 bulat supaya pixel tetap persegi, dan menaruh badan di tepi bawah kanvas 128×192. Pakai selalu
 `--height 85 --scale 2` supaya semua potret punya ukuran pixel yang sama (AI kadang memakai kotak
 pixel yang berbeda). Latar diambil dari baris paling atas gambar, karena badan terpotong di bawah.
+
+## Arena battle dari adegan utuh
+
+Arena Hutan Beringin dan Pemakaman memakai cara yang sama dengan latar cerita: adegan utuh + langit +
+latar jauh yang dibuat ulang AI dari adegan utuh. Bagian tengah adegan dibuka dengan
+`tools/bg_window.py utuh jauh langit utama.png --rect x0,y0,x1,y1` (hanya di dalam persegi yang tidak
+memotong batang pohon atau bangunan), lalu `bg_pixelize.py`. Lapisan lama disimpan di
+`codixel-work/latar/placeholder/v1_*`.
+
+## Latar layar cerita
+
+Lokasi cerita disimpan seperti arena (`assets/arena/<lokasi>/arena.json`, tanpa musuh). Cara membuat
+yang paling rapi: minta AI **satu adegan utuh**, lalu lapisan **langit** dan **latar jauh** yang
+disalin dari adegan itu. Bangunan dan tanah dipotong langsung dari adegan utuh:
+
+```bash
+python tools/bg_from_scene.py utuh.jpeg jauh.jpeg langit.jpeg utama.png --base 452
+python tools/bg_pixelize.py utama.png assets/arena/tapak_wangi/ground.png --key ff00ff --sat 1.6 --contrast 1.1 --ramps ...
+```
+
+Untuk ruangan yang hanya terlihat ke luar lewat celah (Balai Kerajaan Daha), latar jauh dibuat AI dari
+adegan utuh (posisi sama persis), lalu pendopo dipotong hanya di dalam celah antar-tiang; pelita di gambar
+dijadikan `staticLights` di `arena.json` supaya ikut menerangi tokoh. Contoh: `--story contoh_babak1`.
+
+`--base` = baris tempat bangunan menapak di gambar utuh. `--sat` / `--contrast` menaikkan warna
+gambar AI yang berkabut sebelum dicocokkan ke palet (Desa Tapak Wangi memakai 1.6 / 1.1).
 
 ## Efek serangan dan jurus
 

@@ -1,0 +1,218 @@
+{
+  "name": "Balai Kerajaan Daha",
+  "modes": {
+    "night": {
+      "sky": "sky_night.png",
+      "ambient": [
+        0.62,
+        0.6,
+        0.7
+      ],
+      "sun": [
+        0.2,
+        0.2,
+        0.3
+      ],
+      "sunDir": [
+        0.2,
+        0.7,
+        0.7
+      ],
+      "torches": false,
+      "shafts": false,
+      "particles": "dust",
+      "grade": {
+        "sat": 0.95,
+        "tint": [
+          1.0,
+          0.98,
+          1.0
+        ],
+        "lift": [
+          0.01,
+          0.01,
+          0.02
+        ],
+        "vignette": 0.3
+      }
+    }
+  },
+  "startMode": "night",
+  "layers": [
+    {
+      "file": "far.png",
+      "parallax": 0.45,
+      "normal": false,
+      "lit": 0.8
+    },
+    {
+      "file": "ground.png",
+      "parallax": 1.0,
+      "normal": true,
+      "lit": 1.0
+    }
+  ],
+  "front": {
+    "file": "front.png",
+    "parallax": 1.35,
+    "normal": true
+  },
+  "torches": [],
+  "staticLights": [
+    {
+      "x": 112,
+      "y": 57,
+      "z": 26,
+      "color": [
+        1.0,
+        0.72,
+        0.38
+      ],
+      "radius": 95,
+      "intensity": 1.25,
+      "flicker": 0.12
+    },
+    {
+      "x": 177,
+      "y": 100,
+      "z": 26,
+      "color": [
+        1.0,
+        0.72,
+        0.38
+      ],
+      "radius": 95,
+      "intensity": 1.25,
+      "flicker": 0.12
+    },
+    {
+      "x": 320,
+      "y": 42,
+      "z": 26,
+      "color": [
+        1.0,
+        0.72,
+        0.38
+      ],
+      "radius": 95,
+      "intensity": 1.25,
+      "flicker": 0.12
+    },
+    {
+      "x": 320,
+      "y": 89,
+      "z": 26,
+      "color": [
+        1.0,
+        0.72,
+        0.38
+      ],
+      "radius": 95,
+      "intensity": 1.25,
+      "flicker": 0.12
+    },
+    {
+      "x": 527,
+      "y": 57,
+      "z": 26,
+      "color": [
+        1.0,
+        0.72,
+        0.38
+      ],
+      "radius": 95,
+      "intensity": 1.25,
+      "flicker": 0.12
+    },
+    {
+      "x": 462,
+      "y": 100,
+      "z": 26,
+      "color": [
+        1.0,
+        0.72,
+        0.38
+      ],
+      "radius": 95,
+      "intensity": 1.25,
+      "flicker": 0.12
+    },
+    {
+      "x": 216,
+      "y": 226,
+      "z": 14,
+      "color": [
+        1.0,
+        0.6,
+        0.3
+      ],
+      "radius": 40,
+      "intensity": 0.7,
+      "flicker": 0.25
+    },
+    {
+      "x": 310,
+      "y": 226,
+      "z": 14,
+      "color": [
+        1.0,
+        0.6,
+        0.3
+      ],
+      "radius": 40,
+      "intensity": 0.7,
+      "flicker": 0.25
+    },
+    {
+      "x": 366,
+      "y": 230,
+      "z": 14,
+      "color": [
+        1.0,
+        0.6,
+        0.3
+      ],
+      "radius": 40,
+      "intensity": 0.7,
+      "flicker": 0.25
+    }
+  ],
+  "actors": [
+    {
+      "id": "pendekar",
+      "name": "Pendekar",
+      "sprite": "pendekar",
+      "x": 300,
+      "y": 266,
+      "side": "pengelana"
+    },
+    {
+      "id": "juru_mantra",
+      "name": "Juru Mantra",
+      "sprite": "juru_mantra",
+      "x": 346,
+      "y": 278,
+      "side": "pengelana",
+      "staff": [
+        60,
+        20
+      ]
+    },
+    {
+      "id": "peramu",
+      "name": "Peramu",
+      "sprite": "peramu",
+      "x": 392,
+      "y": 266,
+      "side": "pengelana"
+    },
+    {
+      "id": "pengintai",
+      "name": "Pengintai",
+      "sprite": "pengintai",
+      "x": 438,
+      "y": 278,
+      "side": "pengelana"
+    }
+  ]
+}

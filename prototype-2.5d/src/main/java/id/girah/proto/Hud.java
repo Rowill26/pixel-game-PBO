@@ -51,6 +51,9 @@ public class Hud implements Disposable {
     private final ArenaPrototype game;
     private final BitmapFont font;
     private final BitmapFont outlined;
+    /** Smaller outlined font for names over the fighters, drawn at screen resolution (1280x720). */
+    private final BitmapFont small;
+    private final Matrix4 screenMatrix = new Matrix4();
     private final GlyphLayout layout = new GlyphLayout();
     private final Matrix4 matrix = new Matrix4();
     private final Texture panelTex;
@@ -76,7 +79,11 @@ public class Hud implements Disposable {
         p.borderColor = SHADE;
         p.borderStraight = true;
         outlined = gen.generateFont(p);
+        p.size = 22;
+        p.borderWidth = 2;
+        small = gen.generateFont(p);
         gen.dispose();
+        small.setUseIntegerPositions(true);
         font.setUseIntegerPositions(true);
         outlined.setUseIntegerPositions(true);
 
@@ -140,6 +147,7 @@ public class Hud implements Disposable {
         drawBottom(batch, party, active);
         drawMenu(batch, active);
         drawPopups(batch);
+        drawEnemyNames(batch, arena);
         if (showHelp) {
             drawHelp(batch, fx, rig);
         } else {
@@ -236,10 +244,28 @@ public class Hud implements Disposable {
             float cx = ux(e.footX());
             float y = Math.max(uy(e.footY()) - 4, BOTTOM + 14);
             bar(batch, cx - 16, y, 32, 3, e.hp, HP, HP_D);
-            outlined.setColor(TEXT);
-            layout.setText(outlined, e.name);
-            outlined.draw(batch, e.name, cx - layout.width / 2f, y - 2);
         }
+    }
+
+    /** Names under the enemies' health bars, in the small font (screen pixels, so it can be smaller). */
+    private void drawEnemyNames(SpriteBatch batch, ArenaData arena) {
+        batch.end();
+        screenMatrix.setToOrtho2D(0, 0, W * 2, H * 2);
+        batch.setProjectionMatrix(screenMatrix);
+        batch.begin();
+        small.setColor(TEXT);
+        for (Actor25D e : arena.actors) {
+            if (!e.isEnemy() || e.isDown()) {
+                continue;
+            }
+            float cx = ux(e.footX());
+            float y = Math.max(uy(e.footY()) - 4, BOTTOM + 14);
+            layout.setText(small, e.name);
+            small.draw(batch, e.name, Math.round(cx * 2 - layout.width / 2f), Math.round(y * 2 - 6));
+        }
+        batch.end();
+        batch.setProjectionMatrix(matrix);
+        batch.begin();
     }
 
     private void drawMenu(SpriteBatch batch, Actor25D active) {
@@ -337,6 +363,7 @@ public class Hud implements Disposable {
     public void dispose() {
         font.dispose();
         outlined.dispose();
+        small.dispose();
         panelTex.dispose();
         panelActiveTex.dispose();
         cursor.dispose();

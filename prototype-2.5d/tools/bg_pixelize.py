@@ -45,11 +45,28 @@ def main():
     ap.add_argument("--key-spread", type=float, default=0,
                     help="also clear lavender/pink pixels touching the key whose red and blue exceed green by this")
     ap.add_argument("--dither", type=float, default=20)
+    ap.add_argument("--sat", type=float, default=1.0, help="saturation boost before palette mapping (1 = none)")
+    ap.add_argument("--contrast", type=float, default=1.0, help="contrast boost around mid grey (1 = none)")
+    ap.add_argument("--brightness", type=float, default=1.0, help="brightness factor (below 1 = darker)")
     ap.add_argument("--preview")
     a = ap.parse_args()
 
     W, H = map(int, a.size.lower().split("x"))
     src = Image.open(a.src).convert("RGB")
+    if a.sat != 1.0 or a.contrast != 1.0 or a.brightness != 1.0:
+        # foggy AI paintings map to the greys of the palette; lift colour first so the ramps' hues are used
+        from PIL import ImageEnhance
+        keyed = None
+        if a.key:
+            arr = np.asarray(src).astype(int)
+            keyed = (arr[..., 0] > 150) & (arr[..., 2] > 150) & (arr[..., 1] < 120)
+        src = ImageEnhance.Color(src).enhance(a.sat)
+        src = ImageEnhance.Contrast(src).enhance(a.contrast)
+        src = ImageEnhance.Brightness(src).enhance(a.brightness)
+        if keyed is not None:                  # keep the key colour exact
+            arr = np.asarray(src).copy()
+            arr[keyed] = (255, 0, 255)
+            src = Image.fromarray(arr)
     sw, sh = src.size
     k = W / sw if a.fit == "width" else max(W / sw, H / sh)
     nw, nh = max(W, round(sw * k)), max(1, round(sh * k))
