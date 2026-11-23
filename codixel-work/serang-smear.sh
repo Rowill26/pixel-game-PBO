@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Animasi serang semua tokoh dengan smear frame + waktu per frame (skill game-feel).
-# Jalankan dari folder prototype-2.5d:   bash ../codixel-work/serang-smear.sh [--install assets/sprites]
+# Jalankan dari folder prototype-2.5d:   bash ../codixel-work/serang-smear.sh [--install ../assets/sprites]
 # Pendekar memakai skrip sendiri: codixel-work/pendekar/ai/smear.py
 set -e
 T="python -I tools/smear_attack.py"

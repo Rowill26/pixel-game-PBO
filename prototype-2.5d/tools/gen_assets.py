@@ -19,7 +19,7 @@ sys.path.insert(0, str(HERE))
 import pixelkit as pk  # noqa: E402
 from make_normals import normal_map  # noqa: E402
 
-ASSETS = HERE.parent / "assets"
+ASSETS = HERE.parent.parent / "assets"   # assets/ di root repo
 LW, LH = 720, 380          # layer canvas: 640x360 view + 40px / 10px slack for parallax
 OX, OY = 40, 10            # where the 640x360 view starts inside a layer canvas
 pk.W, pk.H = LW, LH        # let pixelkit helpers (grass, dither bounds) cover the whole canvas

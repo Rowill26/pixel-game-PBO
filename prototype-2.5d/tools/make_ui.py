@@ -14,7 +14,7 @@ import numpy as np
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ASSETS = os.path.join(HERE, "..", "assets")
+ASSETS = os.path.join(HERE, "..", "..", "assets")  # assets/ di root repo
 OUT = os.path.join(ASSETS, "ui")
 os.makedirs(OUT, exist_ok=True)
 

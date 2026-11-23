@@ -23,7 +23,7 @@ for (const [n, b] of [["A", A], ["B", B]]) {
   const cc = P.colorCount(b);
   console.log(n, "size", b.w + "x" + b.h, "colours", cc.length, "top", cc.slice(0, 4).map(c => (c.share * 100).toFixed(0) + "%").join(" "), "edges", JSON.stringify(P.edgeCheck(b)).slice(0, 120));
 }
-const old = P.load("../../prototype-2.5d/assets/sprites/pendekar.png");
+const old = P.load("../../assets/sprites/pendekar.png");
 P.save(P.sheet([
   { buf: cut, label: "REFERENSI" },
   { buf: ca, label: "A: KECILKAN LALU PALET", scale: 6 },

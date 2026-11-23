@@ -2,6 +2,7 @@ package id.girah.proto;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import id.girah.GirahGame;
 
 /**
  * Titik masuk prototipe arena 2.5D.
@@ -25,7 +26,7 @@ public final class Launcher {
     public static void main(String[] args) {
         PrototypeOptions options = PrototypeOptions.parse(args);
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("Calon Arang: Bayang-Bayang Girah - prototipe arena 2.5D");
+        config.setTitle(GirahGame.JUDUL);
         config.setWindowedMode(ArenaPrototype.SCREEN_W, ArenaPrototype.SCREEN_H);
         config.setResizable(false);
         config.useVsync(true);

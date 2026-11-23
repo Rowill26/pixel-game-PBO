@@ -495,7 +495,7 @@ Lihat `layout-cerita.png` dan mockup layar cerita.
 - Font pixel sempit, tinggi huruf ±7–8 px pada resolusi 640×360.
 - Mendukung huruf Latin lengkap dan tanda baca (`"`, `!`, `?`, `…`, `—`).
 - Opsional: font judul dekoratif untuk judul babak.
-- Font dipilih: **monogram** (datagoblin, CC0), `prototype-2.5d/assets/fonts/monogram-extended.ttf`, ukuran 16 = tinggi huruf 7 px. Lisensi dicatat di `CREDITS.md`.
+- Font dipilih: **monogram** (datagoblin, CC0), `assets/fonts/monogram-extended.ttf`, ukuran 16 = tinggi huruf 7 px. Lisensi dicatat di `CREDITS.md`.
 
 ---
 

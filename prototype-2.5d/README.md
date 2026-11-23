@@ -15,7 +15,7 @@ gambar diam). Isinya satu layar battle dengan dua arena: tanah lapang Hutan Beri
 
 ## Alur permainan
 
-`./gradlew run` tanpa argumen membuka **layar judul** (latar Desa Girah saat senja). **Mulai** memutar
+`./gradlew :lwjgl3:run` tanpa argumen membuka **layar judul** (latar Desa Girah saat senja). **Mulai** memutar
 adegan pembuka Babak 1 di Balai Kerajaan Daha; begitu naskahnya selesai, game masuk ke battle di Hutan
 Beringin (diatur oleh `"then": "hutan"` di naskah). **Lanjut** belum aktif (belum ada simpanan),
 **Pengaturan** menyalakan/mematikan efek kamera. Argumen `--arena`, `--story`, atau `--demo` melewati
@@ -23,27 +23,33 @@ layar judul; `--title` memaksanya tampil.
 
 ## Cara menjalankan
 
-Butuh Java 17 atau lebih baru. Dari folder `prototype-2.5d/`:
+Prototipe sudah **disatukan ke proyek utama**: kode tampilan ada di `core/src/main/java/id/girah/proto`,
+launcher di `lwjgl3/`, dan semua asset di `assets/` di **root** repo. Jalankan dari **root** repo
+(bukan lagi dari folder ini). Butuh Java 17 atau lebih baru.
 
 ```bash
-./gradlew run
+./gradlew :lwjgl3:run
 ```
 
 Di Windows **PowerShell** (wajib pakai `.\` di depan):
 
 ```bash
-.\gradlew.bat run
+.\gradlew.bat :lwjgl3:run
 ```
 
 Di Windows **Command Prompt (cmd)**:
 
 ```bash
-gradlew.bat run
+gradlew.bat :lwjgl3:run
 ```
 
 Pertama kali dijalankan, Gradle dan LibGDX akan diunduh otomatis (butuh internet).
+`./gradlew build` membangun semuanya sekaligus menjalankan test back end.
 
-Argumen tambahan, contoh: `./gradlew run --args="--arena pemakaman --demo"`
+Argumen tambahan, contoh: `./gradlew :lwjgl3:run --args="--arena pemakaman --demo"`
+
+Folder `prototype-2.5d/` sekarang hanya berisi `tools/` (alat Python untuk asset), `screenshots/`,
+dan README ini. **Semua perintah `python` di bawah dijalankan dari root repo.**
 
 | Argumen | Arti |
 |---|---|
@@ -100,27 +106,18 @@ blur kedalaman + bloom + grading → layar → HUD (tanpa efek).
 ## Struktur
 
 ```
-prototype-2.5d/
-├── assets/
-│   ├── arena/<nama>/      arena.json + lapisan sky/far/mid/ground/front (+ *_n.png normal map)
-│   ├── sprites/           sprite tokoh 64×64 (Calon Arang 128×128) + normal map
-│   └── shaders/           lit.frag, bright.frag, blur.frag, composite.frag, sprite.vert
-├── src/main/java/id/girah/proto/
-│   ├── Launcher.java          main + konfigurasi jendela
-│   ├── ArenaPrototype.java    loop utama, urutan gambar, aksi serangan
-│   ├── ArenaData.java         membaca arena.json
-│   ├── Actor25D.java          tokoh di bidang main
-│   ├── PointLight.java        lampu (obor berkedip, kilatan sementara)
-│   ├── CameraRig.java         kamera diorama
-│   ├── ParticleSystem.java    partikel
-│   ├── PostProcessor.java     efek kamera (FrameBuffer + shader)
-│   ├── Hud.java               HUD sementara
-│   └── Shaders.java           pemuat shader
-├── tools/
-│   ├── gen_assets.py      membuat ulang semua asset sementara
-│   ├── make_normals.py    membuat normal map otomatis dari satu sprite
-│   └── pixelkit.py, palette2.py   alat gambar pixel + palet 64 warna
-└── screenshots/
+(root repo)
+├── assets/                    working directory game (dipakai lwjgl3:run)
+│   ├── arena/<nama>/          arena.json + lapisan latar (+ *_n.png normal map)
+│   ├── sprites/  potret/  fx/  ui/  fonts/  cerita/
+│   └── shaders/               lit.frag, bright.frag, blur.frag, composite.frag, sprite.vert
+├── core/src/main/java/id/girah/
+│   ├── proto/                 kode tampilan (ArenaPrototype, Hud, StoryLayer, TitleLayer, ...)
+│   └── ai/ battle/ karakter/ pusaka/ io/   back end (milik tim back end)
+├── lwjgl3/src/main/java/id/girah/proto/Launcher.java   main + konfigurasi jendela
+└── prototype-2.5d/
+    ├── tools/                 alat Python asset (jalankan dari root repo)
+    └── screenshots/
 ```
 
 ## Mengganti asset sementara dengan asset buatan kelompok
@@ -136,16 +133,16 @@ prototype-2.5d/
    `<nama>_terluka_0.png`, `<nama>_gugur_0.png`, ... (lama frame: serang 0,09 s, jurus 0,1 s,
    terluka 0,1 s, gugur 0,14 s). Tokoh tanpa file aksi tetap memakai pose diamnya.
 3. Buat normal map-nya:
-   - cepat: `python tools/make_normals.py assets/sprites/pendekar.png`
+   - cepat: `python prototype-2.5d/tools/make_normals.py assets/sprites/pendekar.png`
    - lebih bagus: pakai **Laigter** (gratis), ekspor sebagai `pendekar_n.png`.
      Pastikan arah hijau (Y) menghadap **ke atas**; kalau cahaya terlihat terbalik atas-bawah,
      balik channel hijau di Laigter.
 4. Lapisan latar: kanvas **720×380** (layar 640×360 + kelonggaran 40 px kiri-kanan dan 10 px
    atas-bawah). Posisi tokoh, obor, dan lampu diatur di `arena.json` dengan koordinat layar
    640×360 (y ke bawah).
-5. Jalankan ulang `./gradlew run`.
+5. Jalankan ulang `./gradlew :lwjgl3:run` dari root repo.
 
-Menjalankan `python tools/gen_assets.py` akan **menimpa** semua asset di `assets/arena` dan
+Menjalankan `python prototype-2.5d/tools/gen_assets.py` akan **menimpa** semua asset di `assets/arena` dan
 `assets/sprites` dengan versi sementara. Jangan jalankan setelah asset asli dimasukkan.
 
 ## Latar arena dari gambar AI
@@ -154,8 +151,8 @@ Lapisan latar dibuat AI per lapisan (langit siang/malam, jauh, tengah, tanah, de
 berwarna magenta #FF00FF), lalu diubah ke ukuran 720×380 dan palet game:
 
 ```bash
-python tools/bg_pixelize.py "../referensi asset/latar arena/Hutan Beringin/hutan-tengah.jpeg" assets/arena/hutan/mid.png --ramps Daun,Tanah,Batu,Bayangan,Jerami,Putih --anchor bottom --key ff00ff
-python tools/make_normals.py assets/arena/hutan/mid.png
+python prototype-2.5d/tools/bg_pixelize.py "referensi asset/latar arena/Hutan Beringin/hutan-tengah.jpeg" assets/arena/hutan/mid.png --ramps Daun,Tanah,Batu,Bayangan,Jerami,Putih --anchor bottom --key ff00ff
+python prototype-2.5d/tools/make_normals.py assets/arena/hutan/mid.png
 ```
 
 `--key ff00ff` membuat magenta transparan, `--fit width --top Y` menaruh gambar lebar mulai baris Y,
@@ -173,7 +170,7 @@ Calon Arang digambar dengan kode langsung di `ground.png` pada posisi tokohnya.
 `Hud` menggambar UI di skala pixel 640×360 dengan font **monogram** (CC0, `assets/fonts/`, butuh
 `gdx-freetype`): kotak narasi, kartu status (ikon, nyawa, energi), nama + nyawa musuh, ronde, urutan
 giliran, menu aksi melayang, penunjuk sasaran, dan angka kerusakan (kuning) / pemulihan (hijau).
-Bingkai panel, kursor, dan ikon wajah dibuat dengan `python tools/make_ui.py` (ikon diambil dari frame
+Bingkai panel, kursor, dan ikon wajah dibuat dengan `python prototype-2.5d/tools/make_ui.py` (ikon diambil dari frame
 idle pertama tiap sprite) ke `assets/ui/`. Jurus memakai 30% energi; Pusaka belum aktif. Logika
 kerusakan di sini hanya pertunjukan: nanti diganti `BattleManager` di backend.
 
@@ -193,7 +190,7 @@ diperbesar sebagai pengganti sementara. Uji: `--story contoh_babak2 --story-line
 Potret dari AI (pixel art setengah badan, latar polos) diubah dengan:
 
 ```bash
-python tools/portrait.py "../referensi asset/potret/ratna-netral.jpeg" assets/potret/ratna_netral.png --ramps Bayangan,Kulit,Putih,Jerami,Senja,Emas,Batu --sat-weight 20000 --height 85 --scale 2
+python prototype-2.5d/tools/portrait.py "referensi asset/potret/ratna-netral.jpeg" assets/potret/ratna_netral.png --ramps Bayangan,Kulit,Putih,Jerami,Senja,Emas,Batu --sat-weight 20000 --height 85 --scale 2
 ```
 
 Alat ini memakai grid dan palet yang sama dengan `normalize_ai_pixel.py`, memperbesar dengan kelipatan
@@ -216,8 +213,8 @@ yang paling rapi: minta AI **satu adegan utuh**, lalu lapisan **langit** dan **l
 disalin dari adegan itu. Bangunan dan tanah dipotong langsung dari adegan utuh:
 
 ```bash
-python tools/bg_from_scene.py utuh.jpeg jauh.jpeg langit.jpeg utama.png --base 452
-python tools/bg_pixelize.py utama.png assets/arena/tapak_wangi/ground.png --key ff00ff --sat 1.6 --contrast 1.1 --ramps ...
+python prototype-2.5d/tools/bg_from_scene.py utuh.jpeg jauh.jpeg langit.jpeg utama.png --base 452
+python prototype-2.5d/tools/bg_pixelize.py utama.png assets/arena/tapak_wangi/ground.png --key ff00ff --sat 1.6 --contrast 1.1 --ramps ...
 ```
 
 Untuk ruangan yang hanya terlihat ke luar lewat celah (Balai Kerajaan Daha), latar jauh dibuat AI dari
@@ -249,7 +246,7 @@ bilangan bulat dan berubah tiap gambar, warnanya ratusan, latarnya tidak transpa
 tokohnya acak. Selalu lewatkan dulu ke alat penyeragaman:
 
 ```bash
-python tools/normalize_ai_pixel.py "../referensi asset/karakter/Leak/leak-idle-ai.jpg" assets/sprites/leak.png --ramps Bayangan,Batu,Putih,Girah
+python prototype-2.5d/tools/normalize_ai_pixel.py "referensi asset/karakter/Leak/leak-idle-ai.jpg" assets/sprites/leak.png --ramps Bayangan,Batu,Putih,Girah
 ```
 
 Alat ini mengukur grid pixel, mengambil warna dari tengah tiap kotak, menghapus latar, mencocokkan
@@ -279,7 +276,7 @@ smear sangat cepat, benturan ditahan) dan frame benturan. Kerusakan, kilatan, da
 (animasi hampir membeku 0,07 s; 0,12 s untuk serangan besar) muncul tepat di frame benturan itu.
 Semua tokoh sudah memakainya: Pendekar lewat `codixel-work/pendekar/ai/smear.py`, tokoh lain lewat
 `tools/smear_attack.py` (jejak arc / claw / thrust / none) yang dijalankan semua sekaligus dengan
-`bash ../codixel-work/serang-smear.sh --install assets/sprites`.
+`bash ../codixel-work/serang-smear.sh --install ../assets/sprites` (dari folder `prototype-2.5d`).
 
 Warna cahaya mata bisa diatur per tokoh dengan `"eyeColor": [r, g, b]` (0–1) di `arena.json`;
 bawaannya ungu pucat seperti mata leak. Wujud ritual Calon Arang memakai merah.
