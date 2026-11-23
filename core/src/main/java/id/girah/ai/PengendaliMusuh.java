@@ -31,8 +31,12 @@ import java.util.concurrent.Executor;
  * <h2>Pemakaian di LibGDX</h2>
  * <pre>
  *  PengendaliMusuh ai = new PengendaliMusuh(battle, new StrategiDasar(), Gdx.app::postRunnable);
+ *  ai.setTungguIzinFrontEnd(true);   // opsional: AI menunggu animasi dan dialog selesai
  *  ai.aktifkan();
  *  battle.mulai();
+ *  ...
+ *  // saat giliran musuh, setelah animasi aksi sebelumnya selesai dan dialog kosong:
+ *  ai.izinkanBertindak();
  *  ...
  *  // di Screen.hide() / dispose():
  *  ai.hentikan();
@@ -52,6 +56,23 @@ public class PengendaliMusuh implements BattleListener {
     private Thread threadAktif;
     private long nomorGiliran;
     private boolean dihentikan;
+
+    private boolean tungguIzinFrontEnd;
+    private boolean izinDiberikan;
+    private KeputusanTertunda tertunda;
+
+    /** Keputusan AI yang sudah siap tetapi belum diizinkan front end. */
+    private static final class KeputusanTertunda {
+        final long nomor;
+        final KarakterMitos aktor;
+        final KeputusanAksi keputusan;
+
+        KeputusanTertunda(long nomor, KarakterMitos aktor, KeputusanAksi keputusan) {
+            this.nomor = nomor;
+            this.aktor = aktor;
+            this.keputusan = keputusan;
+        }
+    }
 
     public PengendaliMusuh(BattleManager battle, StrategiMusuh strategi, Executor keThreadUtama) {
         this(battle, strategi, keThreadUtama, JEDA_BIASA_MS, JEDA_BOS_MS);
@@ -84,11 +105,52 @@ public class PengendaliMusuh implements BattleListener {
         dihentikan = true;
         battle.hapusListener(this);
         batalkanThread();
+        tertunda = null;
     }
 
     /** {@code true} selama thread AI sedang menunggu atau berpikir. UI bisa menampilkan "...". */
     public boolean isSedangBerpikir() {
         return threadAktif != null && threadAktif.isAlive();
+    }
+
+    /**
+     * Jika {@code true}, keputusan AI baru dijalankan setelah front end memanggil
+     * {@link #izinkanBertindak()}, sehingga aksi musuh tidak menimpa animasi atau dialog yang
+     * masih diputar. Bawaan {@code false}: aksi langsung dijalankan setelah jeda berpikir.
+     */
+    public void setTungguIzinFrontEnd(boolean tunggu) {
+        this.tungguIzinFrontEnd = tunggu;
+    }
+
+    public boolean isTungguIzinFrontEnd() {
+        return tungguIzinFrontEnd;
+    }
+
+    /**
+     * Dipanggil front end (di render thread) setelah selesai menampilkan aksi sebelumnya
+     * (animasi dan antrean dialog kosong). Berlaku untuk giliran musuh yang sedang berjalan saja:
+     * <ul>
+     *   <li>jika keputusan AI sudah siap, aksi langsung dijalankan;</li>
+     *   <li>jika AI masih berpikir, aksi dijalankan begitu keputusannya datang.</li>
+     * </ul>
+     * Izin hangus saat giliran musuh berikutnya dimulai, jadi front end memanggilnya sekali
+     * untuk setiap giliran musuh. Tidak berpengaruh jika mode tunggu izin tidak aktif.
+     */
+    public void izinkanBertindak() {
+        if (!tungguIzinFrontEnd || dihentikan) {
+            return;
+        }
+        izinDiberikan = true;
+        if (tertunda != null) {
+            KeputusanTertunda t = tertunda;
+            tertunda = null;
+            jalankanKeputusan(t.nomor, t.aktor, t.keputusan);
+        }
+    }
+
+    /** {@code true} jika keputusan AI sudah siap dan hanya menunggu {@link #izinkanBertindak()}. */
+    public boolean isMenungguIzin() {
+        return tertunda != null;
     }
 
     // ================================================================
@@ -98,6 +160,8 @@ public class PengendaliMusuh implements BattleListener {
     @Override
     public void onGiliranBaru(KarakterMitos aktor, StatusBattle status) {
         if (status == StatusBattle.GILIRAN_MUSUH && !dihentikan) {
+            izinDiberikan = false;      // izin giliran sebelumnya tidak terbawa
+            tertunda = null;
             mulaiBerpikir(aktor);
         }
     }
@@ -130,6 +194,10 @@ public class PengendaliMusuh implements BattleListener {
             return;
         }
         threadAktif = null;
+        if (tungguIzinFrontEnd && !izinDiberikan) {
+            tertunda = new KeputusanTertunda(nomor, aktor, keputusan);
+            return;
+        }
         try {
             if (keputusan.getJenis() == KeputusanAksi.Jenis.JURUS) {
                 battle.gunakanJurus(keputusan.getTarget());
