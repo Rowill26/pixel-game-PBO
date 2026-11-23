@@ -43,7 +43,8 @@ class DataFrontEndTest {
 
     @Test
     void idSpriteUnikPerKelas() {
-        List<KarakterMitos> semua = List.of(senopati, wiku, telikSandi, balian, leak, calonArang);
+        List<KarakterMitos> semua = List.of(senopati, wiku, telikSandi, balian, leak, calonArang,
+                new Pengikut("Pengikut"), new PemimpinPengikut());
         Set<String> id = new HashSet<>();
         for (KarakterMitos k : semua) {
             assertTrue(id.add(k.getIdSprite()), "Kunci sprite ganda: " + k.getIdSprite());

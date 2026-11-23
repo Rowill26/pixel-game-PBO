@@ -82,7 +82,8 @@ class MakhlukGirahTest {
     @DisplayName("Polymorphism: satu daftar KarakterMitos, setiap serang() bernarasi sesuai kelasnya")
     void polymorphism() {
         List<KarakterMitos> semua = new ArrayList<>(
-                List.of(senopati, wiku, telikSandi, balian, new Leak("Leak Setra"), calonArang));
+                List.of(senopati, wiku, telikSandi, balian, new Leak("Leak Setra"), calonArang,
+                        new Pengikut("Pengikut Girah"), new PemimpinPengikut()));
         KarakterMitos samsak = new CalonArang();
 
         List<String> narasi = new ArrayList<>();
