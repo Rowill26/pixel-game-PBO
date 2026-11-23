@@ -57,6 +57,7 @@ class BabadExporterTest {
         assertEquals(folderBabad.resolve("babad_2026-11-17_14-30-05.txt"), file);
         List<String> baris = Files.readAllLines(file, StandardCharsets.UTF_8);
         assertEquals("BABAD PERTARUNGAN", baris.get(0));
+        assertEquals("Calon Arang: Bayang-Bayang Girah", baris.get(1));
         assertTrue(baris.contains("Dicatat : 17-11-2026 14:30:05"), baris.toString());
         assertTrue(baris.contains("Hasil   : Menang (ronde ke-1)"), baris.toString());
         assertTrue(baris.contains("  - Arya (Pendekar), nyawa 120/120"), baris.toString());

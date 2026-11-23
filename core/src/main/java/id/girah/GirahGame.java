@@ -9,7 +9,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
  */
 public class GirahGame extends ApplicationAdapter {
 
-    public static final String JUDUL = "Bayang-Bayang Girah";
+    /** Judul resmi game, sama dengan judul dokumen cerita. Dipakai jendela dan Babad. */
+    public static final String JUDUL = "Calon Arang: Bayang-Bayang Girah";
 
     @Override
     public void render() {

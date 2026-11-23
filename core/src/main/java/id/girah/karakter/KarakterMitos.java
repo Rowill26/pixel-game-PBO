@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Dasar semua karakter dalam Bayang-Bayang Girah.
+ * Dasar semua karakter dalam Calon Arang: Bayang-Bayang Girah.
  *
  * <p>Setiap aksi ({@link #serang}, {@link #gunakanJurus}) mengembalikan {@code String}
  * narasi yang siap ditampilkan di kotak dialog dan dicatat di Babad Pertarungan.

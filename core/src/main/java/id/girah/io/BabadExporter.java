@@ -1,5 +1,6 @@
 package id.girah.io;
 
+import id.girah.GirahGame;
 import id.girah.battle.BattleManager;
 import id.girah.battle.StatusBattle;
 import id.girah.karakter.KarakterMitos;
@@ -90,7 +91,7 @@ public class BabadExporter {
 
     private void tulis(BufferedWriter penulis, BattleManager battle, LocalDateTime waktu) throws IOException {
         tulisBaris(penulis, "BABAD PERTARUNGAN");
-        tulisBaris(penulis, "Bayang-Bayang Girah");
+        tulisBaris(penulis, GirahGame.JUDUL);
         tulisBaris(penulis, GARIS);
         tulisBaris(penulis, "Dicatat : " + waktu.format(FORMAT_TAMPILAN));
         tulisBaris(penulis, "Hasil   : " + labelHasil(battle.getStatus()) + " (ronde ke-" + battle.getRonde() + ")");
