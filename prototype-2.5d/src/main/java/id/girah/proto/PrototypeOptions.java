@@ -4,6 +4,11 @@ package id.girah.proto;
 public final class PrototypeOptions {
 
     public String arena = "hutan";
+    /** Start on the title screen (off when the arguments ask for a specific arena, story or test). */
+    public boolean title = true;
+    /** Test: press "Mulai" on frame N; with storyEndAt the opening script is skipped to its end. */
+    public int startAt = -1;
+    public int storyEndAt = -1;
     public String mode;
     public boolean demo;
     public String shotPath;
@@ -28,9 +33,13 @@ public final class PrototypeOptions {
             String a = args[i];
             String next = i + 1 < args.length ? args[i + 1] : null;
             switch (a) {
-                case "--arena": o.arena = next; i++; break;
+                case "--arena": o.arena = next; o.title = false; i++; break;
+                case "--title": o.title = true; break;
+                case "--no-title": o.title = false; break;
+                case "--start-at": o.startAt = Integer.parseInt(next); i++; break;
+                case "--story-end-at": o.storyEndAt = Integer.parseInt(next); i++; break;
                 case "--mode": o.mode = next; i++; break;
-                case "--demo": o.demo = true; break;
+                case "--demo": o.demo = true; o.title = false; break;
                 case "--shot": o.shotPath = next; i++; break;
                 case "--frames": o.shotFrame = Integer.parseInt(next); i++; break;
                 case "--attack-at": o.attackAt = Integer.parseInt(next); i++; break;
@@ -42,7 +51,7 @@ public final class PrototypeOptions {
                 case "--fx-at": o.fxAt = Integer.parseInt(next); i++; break;
                 case "--fx-skip": o.fxSkip = Integer.parseInt(next); i++; break;
                 case "--choose-at": o.chooseAt = Integer.parseInt(next); i++; break;
-                case "--story": o.story = next; i++; break;
+                case "--story": o.story = next; o.title = false; i++; break;
                 case "--story-line": o.storyLine = Integer.parseInt(next); i++; break;
                 case "--choose-item": o.chooseItem = Integer.parseInt(next); i++; break;
                 default: break;

@@ -13,6 +13,14 @@ gambar diam). Isinya satu layar battle dengan dua arena: tanah lapang Hutan Beri
 |---|---|---|
 | ![](screenshots/hutan-malam.png) | ![](screenshots/hutan-siang.png) | ![](screenshots/pemakaman-malam.png) |
 
+## Alur permainan
+
+`./gradlew run` tanpa argumen membuka **layar judul** (latar Desa Girah saat senja). **Mulai** memutar
+adegan pembuka Babak 1 di Balai Kerajaan Daha; begitu naskahnya selesai, game masuk ke battle di Hutan
+Beringin (diatur oleh `"then": "hutan"` di naskah). **Lanjut** belum aktif (belum ada simpanan),
+**Pengaturan** menyalakan/mematikan efek kamera. Argumen `--arena`, `--story`, atau `--demo` melewati
+layar judul; `--title` memaksanya tampil.
+
 ## Cara menjalankan
 
 Butuh Java 17 atau lebih baru. Dari folder `prototype-2.5d/`:
@@ -45,6 +53,8 @@ Argumen tambahan, contoh: `./gradlew run --args="--arena pemakaman --demo"`
 | `--shot file.png --frames N` | Simpan screenshot pada frame N lalu keluar |
 | `--attack-at N` / `--jurus-at N` | Picu serangan/jurus pada frame N |
 | `--fx-at N` / `--fx-skip i` | Uji: putar pamer efek ke-i (0–7) pada frame N |
+| `--title` / `--no-title` | Paksa tampil / lewati layar judul |
+| `--start-at N` / `--story-end-at N` | Uji: tekan Mulai pada frame N / selesaikan naskah pada frame N |
 | `--boss-down-at N` | Uji: nyawa bos habis pada frame N (Calon Arang berubah ke wujud ritual) |
 
 ## Tombol

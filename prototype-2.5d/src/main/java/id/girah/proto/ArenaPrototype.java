@@ -48,6 +48,8 @@ public class ArenaPrototype extends ApplicationAdapter {
     private FxPlayer effects;
     /** Layar cerita dan dialog (tombol C memutar naskah contoh). */
     private StoryLayer story;
+    /** Layar judul dan menu utama. */
+    private TitleLayer title;
     private final Map<String, Texture[][]> spriteCache = new HashMap<>();
     private final Map<Texture, TextureRegion> regions = new HashMap<>();
     private final List<PointLight> tempLights = new ArrayList<>();
@@ -111,13 +113,35 @@ public class ArenaPrototype extends ApplicationAdapter {
         shaft = shaftTexture();
         effects = new FxPlayer();
         story = new StoryLayer(this);
+        title = new TitleLayer(this);
         cam.setToOrtho(false, ArenaData.VIEW_W, ArenaData.VIEW_H);
         for (int i = 0; i < ARENAS.length; i++) {
             if (ARENAS[i].equals(options.arena)) {
                 arenaIndex = i;
             }
         }
-        loadArena(arenaIndex, options.mode);
+        if (options.title) {
+            loadArena("girah", null);            // title backdrop: Desa Girah at dusk
+            title.open();
+        } else {
+            loadArena(arenaIndex, options.mode);
+        }
+    }
+
+    /** Menu "Mulai": the opening scene of Babak 1; its script continues into the first battle. */
+    void startNewGame() {
+        story.start("contoh_babak1");
+    }
+
+    boolean cameraEffects() {
+        return fx.bloom && fx.dof && fx.grade;
+    }
+
+    void toggleCameraEffects() {
+        boolean on = !cameraEffects();
+        fx.bloom = on;
+        fx.dof = on;
+        fx.grade = on;
     }
 
     private static Texture solid(int r, int g, int b) {
@@ -196,6 +220,9 @@ public class ArenaPrototype extends ApplicationAdapter {
     // ------------------------------------------------------------------ input & update
 
     private void handleInput() {
+        if (title.active) {
+            return;                              // the title screen reads its own keys
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !story.active) {
             story.start("contoh_babak2");
             return;
@@ -916,6 +943,13 @@ public class ArenaPrototype extends ApplicationAdapter {
             story.start(options.story);
             story.jump(options.storyLine);
         }
+        if (frame == options.startAt && title.active) {
+            title.active = false;
+            startNewGame();
+        }
+        if (frame == options.storyEndAt) {
+            story.finish();
+        }
         if (frame == options.chooseAt) {
             // test: pick a menu item for the active member (shows target selection)
             menuIndex = options.chooseItem;
@@ -982,6 +1016,7 @@ public class ArenaPrototype extends ApplicationAdapter {
         particles.update(realDt);
         effects.update(realDt);
         story.update(realDt);
+        title.update(realDt);
         for (int i = later.size() - 1; i >= 0; i--) {
             if (time >= later.get(i).at) {
                 Later l = later.remove(i);
@@ -1220,7 +1255,7 @@ public class ArenaPrototype extends ApplicationAdapter {
         List<Actor25D> sorted = new ArrayList<>(arena.actors);
         sorted.sort((p, q) -> Float.compare(q.footY(), p.footY()));
         for (Actor25D a : sorted) {
-            if (story.active && a.isEnemy()) {
+            if (title.active || (story.active && a.isEnemy())) {
                 continue;
             }
             bindNormals(a.normals, 1f);
@@ -1250,7 +1285,9 @@ public class ArenaPrototype extends ApplicationAdapter {
         update(dt);
         renderScene();
         post.render(batch, fx);
-        if (story.active) {
+        if (title.active) {
+            title.draw(batch);
+        } else if (story.active) {
             story.draw(batch);
         } else {
             hud.draw(batch, arena, mode, fx, rig);
@@ -1298,6 +1335,7 @@ public class ArenaPrototype extends ApplicationAdapter {
         batch.dispose();
         effects.dispose();
         story.dispose();
+        title.dispose();
         lit.dispose();
         post.dispose();
         hud.dispose();

@@ -18,6 +18,11 @@
       "name": "Pendekar",
       "face": "tegas",
       "text": "Kalau begitu kita berangkat sebelum fajar."
+    },
+    {
+      "who": "narator",
+      "text": "Fajar belum datang ketika keempat pengelana memasuki Hutan Beringin. Di tanah lapang, sesuatu sudah menunggu."
     }
-  ]
+  ],
+  "then": "hutan"
 }

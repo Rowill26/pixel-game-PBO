@@ -70,6 +70,8 @@ public class StoryLayer implements Disposable {
     private final List<Texture> owned = new ArrayList<>();
 
     private String title = "";
+    /** Arena loaded when the script ends ("then" in the script), e.g. the battle that follows. */
+    private String then;
     private String mission = "";
     private final List<Line> queue = new ArrayList<>();
     private int index;
@@ -111,6 +113,7 @@ public class StoryLayer implements Disposable {
             game.loadArena(place, root.getString("mode", null));
         }
         title = root.getString("title", "");
+        then = root.getString("then", null);
         mission = root.getString("mission", "");
         queue.clear();
         queue.addAll(parse(root.get("lines")));
@@ -181,6 +184,13 @@ public class StoryLayer implements Disposable {
         }
     }
 
+    /** Test hook: run the script to its end (as if every line was read), including "then". */
+    public void finish() {
+        while (active && current() != null && current().choices == null) {
+            next();
+        }
+    }
+
     /** Test hook: skip to line n (for screenshots). */
     public void jump(int n) {
         while (index < n && current() != null && current().choices == null) {
@@ -197,6 +207,9 @@ public class StoryLayer implements Disposable {
         Line after = current();
         if (after == null) {
             active = false;
+            if (then != null) {
+                game.loadArena(then, null);
+            }
         } else if (before == null || before.who == null || after.who == null || !before.who.equals(after.who)) {
             portraitIn = 0f;                    // a new speaker slides in
         }
