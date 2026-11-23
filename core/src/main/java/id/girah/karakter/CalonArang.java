@@ -90,7 +90,17 @@ public class CalonArang extends MakhlukGirah {
     }
 
     @Override
+    public JarakAksi getJarakSerang() {
+        return JarakAksi.JAUH;      // asap dupa dikirim dari dalam lingkaran ritual
+    }
+
+    @Override
     public String getPeran() {
         return "Janda Sakti dari Girah";
+    }
+
+    @Override
+    public String getIdSprite() {
+        return "calon_arang";
     }
 }

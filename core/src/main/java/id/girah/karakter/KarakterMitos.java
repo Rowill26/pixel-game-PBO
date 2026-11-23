@@ -72,9 +72,25 @@ public abstract class KarakterMitos {
 
     public abstract Faksi getFaksi();
 
+    /**
+     * Kunci aset untuk front end, sama dengan nama file sprite di {@code assets/sprites/},
+     * mis. {@code "pendekar"} untuk {@code pendekar.png}. Dua karakter sejenis memakai id yang sama.
+     */
+    public abstract String getIdSprite();
+
     // ================================================================
     // Hook: boleh di-override, perilaku bawaannya sudah masuk akal
     // ================================================================
+
+    /** Cara serangan dasar dilakukan di arena. Bawaan: {@link JarakAksi#DEKAT}. */
+    public JarakAksi getJarakSerang() {
+        return JarakAksi.DEKAT;
+    }
+
+    /** Cara jurus dilakukan di arena. Bawaan: {@link JarakAksi#JAUH}. */
+    public JarakAksi getJarakJurus() {
+        return JarakAksi.JAUH;
+    }
 
     /** Rumus kerusakan yang diterima. Bawaan: kekuatan dikurangi pertahanan. */
     protected int hitungKerusakanMasuk(int kekuatanSerangan) {

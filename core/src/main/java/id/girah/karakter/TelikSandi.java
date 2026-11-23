@@ -92,7 +92,17 @@ public class TelikSandi extends Pengelana {
     }
 
     @Override
+    public JarakAksi getJarakJurus() {
+        return JarakAksi.DEKAT;     // Langkah Bayangan: melesat lalu menikam
+    }
+
+    @Override
     public String getPeran() {
         return "Telik Sandi";
+    }
+
+    @Override
+    public String getIdSprite() {
+        return "pengintai";
     }
 }

@@ -363,6 +363,7 @@ class BattleManagerTest {
         @Override public int getBiayaJurus() { return 0; }
         @Override public JenisSasaran getSasaranJurus() { return JenisSasaran.SATU_LAWAN; }
         @Override public String getPeran() { return "Uji"; }
+        @Override public String getIdSprite() { return "uji"; }
     }
 
     static class Perekam implements BattleListener {

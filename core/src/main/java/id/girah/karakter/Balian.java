@@ -78,7 +78,17 @@ public class Balian extends Pengelana {
     }
 
     @Override
+    public JarakAksi getJarakSerang() {
+        return JarakAksi.JAUH;      // melempar kantung getah dari tempatnya
+    }
+
+    @Override
     public String getPeran() {
         return "Balian";
+    }
+
+    @Override
+    public String getIdSprite() {
+        return "peramu";
     }
 }

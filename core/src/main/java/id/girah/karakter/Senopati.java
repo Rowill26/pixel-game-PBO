@@ -70,7 +70,17 @@ public class Senopati extends Pengelana {
     }
 
     @Override
+    public JarakAksi getJarakJurus() {
+        return JarakAksi.DEKAT;     // tebasan keris: maju ke depan sasaran
+    }
+
+    @Override
     public String getPeran() {
         return "Senopati";
+    }
+
+    @Override
+    public String getIdSprite() {
+        return "pendekar";
     }
 }

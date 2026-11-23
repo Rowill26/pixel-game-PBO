@@ -73,4 +73,9 @@ public class Wiku extends Pengelana {
     public String getPeran() {
         return "Wiku";
     }
+
+    @Override
+    public String getIdSprite() {
+        return "juru_mantra";
+    }
 }

@@ -33,6 +33,7 @@ class KarakterMitosTest {
         @Override public JenisSasaran getSasaranJurus() { return JenisSasaran.SATU_LAWAN; }
         @Override public String getPeran() { return "Penguji"; }
         @Override public Faksi getFaksi() { return Faksi.GIRAH; }
+        @Override public String getIdSprite() { return "uji"; }
 
         void pakai(int biaya) throws EnergiBatinHabisException {
             pakaiEnergiBatin(biaya);

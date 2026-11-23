@@ -75,4 +75,9 @@ public class Leak extends MakhlukGirah {
     public String getPeran() {
         return "Leak";
     }
+
+    @Override
+    public String getIdSprite() {
+        return "leak";
+    }
 }
