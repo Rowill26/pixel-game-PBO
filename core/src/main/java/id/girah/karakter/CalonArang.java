@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Calon Arang, janda sakti dari Girah. Bos pertarungan akhir.
  * Jurus Sebar Wabah mengenai semua pengelana, dan ia berucap getir
- * sekali saja ketika nyawanya jatuh ke {@value #AMBANG_NYAWA_RENDAH_PERSEN}% atau kurang.
+ * sekali saja ketika nyawanya jatuh ke {@value MakhlukGirah#AMBANG_NYAWA_RENDAH_PERSEN}% atau kurang.
  */
 public class CalonArang extends MakhlukGirah {
 
@@ -17,10 +17,6 @@ public class CalonArang extends MakhlukGirah {
 
     public static final int BIAYA_JURUS = 30;
     public static final int KEKUATAN_WABAH = 22;
-    public static final int AMBANG_NYAWA_RENDAH_PERSEN = 30;
-
-    private boolean sudahBerucapNyawaRendah;
-
     public CalonArang() {
         super("Calon Arang", NYAWA_AWAL, ENERGI_BATIN_AWAL, KEKUATAN_AWAL, PERTAHANAN_AWAL, KECEPATAN_AWAL);
     }
@@ -56,22 +52,18 @@ public class CalonArang extends MakhlukGirah {
     }
 
     @Override
-    protected String reaksiSetelahTerluka() {
-        if (sudahBerucapNyawaRendah || !isNyawaRendah()) {
-            return "";
-        }
-        sudahBerucapNyawaRendah = true;
+    protected String ucapanNyawaRendah() {
         return getNama() + ": \"Mereka membuat putriku menangis! Apa lagi yang tersisa untukku?\"";
+    }
+
+    @Override
+    public boolean isBos() {
+        return true;
     }
 
     @Override
     protected String narasiGugur() {
         return getNama() + " jatuh berlutut di tengah lingkaran ritual. Cahayanya meredup.";
-    }
-
-    /** {@code true} jika nyawa sudah di bawah atau sama dengan ambang nyawa rendah. */
-    public boolean isNyawaRendah() {
-        return getNyawa() * 100 <= getNyawaMaks() * AMBANG_NYAWA_RENDAH_PERSEN;
     }
 
     @Override

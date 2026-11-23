@@ -3,7 +3,7 @@ package id.girah.ai;
 import id.girah.battle.BattleListener;
 import id.girah.battle.BattleManager;
 import id.girah.battle.StatusBattle;
-import id.girah.karakter.CalonArang;
+import id.girah.karakter.MakhlukGirah;
 import id.girah.karakter.EnergiBatinHabisException;
 import id.girah.karakter.KarakterMitos;
 import java.util.List;
@@ -81,7 +81,7 @@ public class PengendaliMusuh implements BattleListener {
     /**
      * @param keThreadUtama cara mengirim pekerjaan ke render thread; di LibGDX {@code Gdx.app::postRunnable}
      * @param jedaBiasaMs   lama "berpikir" makhluk biasa
-     * @param jedaBosMs     lama "berpikir" Calon Arang, lebih panjang agar ucapannya sempat dibaca
+     * @param jedaBosMs     lama "berpikir" bos ({@link MakhlukGirah#isBos()}), lebih panjang agar ucapannya sempat dibaca
      */
     public PengendaliMusuh(BattleManager battle, StrategiMusuh strategi, Executor keThreadUtama,
                            long jedaBiasaMs, long jedaBosMs) {
@@ -211,7 +211,7 @@ public class PengendaliMusuh implements BattleListener {
     }
 
     private long jedaUntuk(KarakterMitos aktor) {
-        return aktor instanceof CalonArang ? jedaBosMs : jedaBiasaMs;
+        return aktor instanceof MakhlukGirah && ((MakhlukGirah) aktor).isBos() ? jedaBosMs : jedaBiasaMs;
     }
 
     private void batalkanThread() {
