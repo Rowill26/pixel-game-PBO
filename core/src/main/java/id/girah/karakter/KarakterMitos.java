@@ -67,7 +67,10 @@ public abstract class KarakterMitos {
 
     public abstract JenisSasaran getSasaranJurus();
 
-    /** Peran dalam kelompok, mis. "Senopati" atau "Makhluk Gaib". */
+    /**
+     * Nama peran untuk ditampilkan di HUD, dialog, dan Babad, mengikuti naskah cerita
+     * (mis. "Pendekar" untuk kelas {@code Senopati}). Nama kelas Java tidak ikut berubah.
+     */
     public abstract String getPeran();
 
     public abstract Faksi getFaksi();

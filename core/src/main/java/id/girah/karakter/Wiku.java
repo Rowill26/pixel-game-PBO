@@ -71,7 +71,7 @@ public class Wiku extends Pengelana {
 
     @Override
     public String getPeran() {
-        return "Wiku";
+        return "Juru Mantra";
     }
 
     @Override

@@ -98,7 +98,7 @@ public class TelikSandi extends Pengelana {
 
     @Override
     public String getPeran() {
-        return "Telik Sandi";
+        return "Pengintai";
     }
 
     @Override

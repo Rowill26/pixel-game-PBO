@@ -21,7 +21,7 @@ class SenopatiTest {
     @Test
     void identitas() {
         assertEquals(Faksi.PENGELANA, senopati.getFaksi());
-        assertEquals("Senopati", senopati.getPeran());
+        assertEquals("Pendekar", senopati.getPeran());
         assertEquals("Tebasan Keris Pusaka", senopati.getNamaJurus());
         assertEquals(JenisSasaran.SATU_LAWAN, senopati.getSasaranJurus());
     }

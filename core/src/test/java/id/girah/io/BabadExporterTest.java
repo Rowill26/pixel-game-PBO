@@ -59,7 +59,7 @@ class BabadExporterTest {
         assertEquals("BABAD PERTARUNGAN", baris.get(0));
         assertTrue(baris.contains("Dicatat : 17-11-2026 14:30:05"), baris.toString());
         assertTrue(baris.contains("Hasil   : Menang (ronde ke-1)"), baris.toString());
-        assertTrue(baris.contains("  - Arya (Senopati), nyawa 120/120"), baris.toString());
+        assertTrue(baris.contains("  - Arya (Pendekar), nyawa 120/120"), baris.toString());
         assertTrue(baris.contains("  - Leak Setra (Leak), nyawa 0/60, gugur"), baris.toString());
         assertTrue(baris.contains("=== Ronde 1 ==="), baris.toString());
         assertTrue(baris.contains("Arya menghunus keris dan menebas Leak Setra!"), baris.toString());

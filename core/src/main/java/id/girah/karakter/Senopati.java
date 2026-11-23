@@ -76,7 +76,7 @@ public class Senopati extends Pengelana {
 
     @Override
     public String getPeran() {
-        return "Senopati";
+        return "Pendekar";
     }
 
     @Override

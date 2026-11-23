@@ -30,6 +30,18 @@ class DataFrontEndTest {
     }
 
     @Test
+    @DisplayName("Nama peran yang ditampilkan mengikuti naskah cerita")
+    void namaPeranNaskah() {
+        assertEquals("Pendekar", senopati.getPeran());
+        assertEquals("Juru Mantra", wiku.getPeran());
+        assertEquals("Pengintai", telikSandi.getPeran());
+        assertEquals("Peramu", balian.getPeran());
+        assertEquals("Leak", leak.getPeran());
+        assertEquals("Janda Sakti dari Girah", calonArang.getPeran());
+        assertTrue(senopati.toString().startsWith("Pendekar Arya "), senopati.toString());
+    }
+
+    @Test
     void idSpriteUnikPerKelas() {
         List<KarakterMitos> semua = List.of(senopati, wiku, telikSandi, balian, leak, calonArang);
         Set<String> id = new HashSet<>();
