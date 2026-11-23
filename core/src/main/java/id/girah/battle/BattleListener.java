@@ -10,6 +10,17 @@ import id.girah.karakter.KarakterMitos;
  */
 public interface BattleListener {
 
+    /**
+     * Sebuah aksi baru saja terjadi. Berisi pelaku, jenis aksi, jarak, sasaran, serta perubahan
+     * nyawa/energi dan siapa yang gugur, sehingga front end bisa memutar animasi yang tepat.
+     *
+     * <p>Urutan pemanggilan untuk satu aksi: {@code onAksi} → {@code onNarasi} → lalu
+     * {@code onBattleSelesai}, atau {@code onRondeBaru} (jika ronde berganti) dan {@code onGiliranBaru}.
+     * Aksi yang ditolak (mis. energi batin habis) tidak memicu event apa pun.
+     */
+    default void onAksi(HasilAksi hasil) {
+    }
+
     /** Ada narasi baru (boleh berisi beberapa baris). */
     default void onNarasi(String narasi) {
     }

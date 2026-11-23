@@ -2,6 +2,7 @@ package id.girah.battle;
 
 import id.girah.karakter.EnergiBatinHabisException;
 import id.girah.karakter.Faksi;
+import id.girah.karakter.JarakAksi;
 import id.girah.karakter.KarakterMitos;
 import id.girah.karakter.MakhlukGirah;
 import id.girah.karakter.Pengelana;
@@ -43,6 +44,9 @@ public class BattleManager {
 
     /** Nilai batas ronde yang berarti pertarungan tidak dibatasi waktu. */
     public static final int TANPA_BATAS_RONDE = 0;
+
+    /** Nama aksi serangan dasar di {@link HasilAksi#getNamaAksi()}. */
+    public static final String NAMA_SERANGAN = "Serangan";
 
     private final List<KarakterMitos> kelompok;
     private final List<KarakterMitos> lawan;
@@ -133,7 +137,10 @@ public class BattleManager {
     public String serang(KarakterMitos target) {
         KarakterMitos aktor = getAktor();
         wajibSasaranSah(target, getSasaranSerang(), "serangan");
-        return selesaikanAksi(aktor, aktor.serang(target));
+        Map<KarakterMitos, StatusSesaat> sebelum = potretStatus();
+        String narasi = aktor.serang(target);
+        return selesaikanAksi(new HasilAksi(aktor, JenisAksi.SERANG, NAMA_SERANGAN, aktor.getJarakSerang(),
+                List.of(target), perubahanSejak(sebelum), narasi));
     }
 
     /**
@@ -162,8 +169,10 @@ public class BattleManager {
             default:
                 throw new IllegalStateException("Jenis sasaran tidak dikenal: " + aktor.getSasaranJurus());
         }
-        String narasi = aktor.gunakanJurus(sasaran);   // exception keluar sebelum giliran maju
-        return selesaikanAksi(aktor, narasi);
+        Map<KarakterMitos, StatusSesaat> sebelum = potretStatus();
+        String narasi = aktor.gunakanJurus(sasaran);   // exception keluar sebelum ada event dan giliran maju
+        return selesaikanAksi(new HasilAksi(aktor, JenisAksi.JURUS, aktor.getNamaJurus(), aktor.getJarakJurus(),
+                sasaran, perubahanSejak(sebelum), narasi));
     }
 
     /**
@@ -183,7 +192,10 @@ public class BattleManager {
             throw new IllegalStateException(pusaka.getNama() + " tidak ada di Tas Pusaka");
         }
         wajibSasaranSah(target, getSasaranPusaka(pusaka), pusaka.getNama());
-        return selesaikanAksi(aktor, tasPusaka.gunakan(pusaka, aktor, target));
+        Map<KarakterMitos, StatusSesaat> sebelum = potretStatus();
+        String narasi = tasPusaka.gunakan(pusaka, aktor, target);
+        return selesaikanAksi(new HasilAksi(aktor, JenisAksi.PUSAKA, pusaka.getNama(), JarakAksi.JAUH,
+                List.of(target), perubahanSejak(sebelum), narasi));
     }
 
     /** Kawan yang terbantu oleh {@code pusaka} saat ini (hidup dan belum penuh). */
@@ -221,16 +233,56 @@ public class BattleManager {
     // Inti: setelah aksi, catat, periksa akhir, majukan giliran
     // ================================================================
 
-    private String selesaikanAksi(KarakterMitos aktor, String narasi) {
+    private String selesaikanAksi(HasilAksi hasil) {
+        for (BattleListener l : salinanPendengar()) {
+            l.onAksi(hasil);
+        }
+        String narasi = hasil.getNarasi();
         catat(narasi);
         if (periksaAkhirPertarungan()) {
             return narasi;
         }
+        KarakterMitos aktor = hasil.getAktor();
         if (aktor.isHidup() && aktor.ambilGiliranTambahan()) {
             urutanGiliran.add(indeksGiliran + 1, aktor);
         }
         majuKeGiliranBerikutnya();
         return narasi;
+    }
+
+    /** Nyawa dan energi batin satu karakter pada satu saat. */
+    private static final class StatusSesaat {
+        final int nyawa;
+        final int energiBatin;
+
+        StatusSesaat(KarakterMitos k) {
+            this.nyawa = k.getNyawa();
+            this.energiBatin = k.getEnergiBatin();
+        }
+    }
+
+    /** Mencatat status semua peserta tepat sebelum aksi, untuk dibandingkan sesudahnya. */
+    private Map<KarakterMitos, StatusSesaat> potretStatus() {
+        Map<KarakterMitos, StatusSesaat> potret = new IdentityHashMap<>();
+        for (KarakterMitos k : semuaPeserta()) {
+            potret.put(k, new StatusSesaat(k));
+        }
+        return potret;
+    }
+
+    /** Peserta yang nyawa atau energinya berubah sejak {@code sebelum}, urut kelompok lalu lawan. */
+    private List<PerubahanStatus> perubahanSejak(Map<KarakterMitos, StatusSesaat> sebelum) {
+        List<PerubahanStatus> perubahan = new ArrayList<>();
+        for (KarakterMitos k : semuaPeserta()) {
+            StatusSesaat lama = sebelum.get(k);
+            int selisihNyawa = k.getNyawa() - lama.nyawa;
+            int selisihEnergi = k.getEnergiBatin() - lama.energiBatin;
+            if (selisihNyawa != 0 || selisihEnergi != 0) {
+                boolean gugur = lama.nyawa > 0 && !k.isHidup();
+                perubahan.add(new PerubahanStatus(k, selisihNyawa, selisihEnergi, gugur));
+            }
+        }
+        return perubahan;
     }
 
     private void majuKeGiliranBerikutnya() {
