@@ -19,7 +19,7 @@ Catatan sumber dan lisensi semua asset yang dipakai di game. Setiap asset pihak 
 
 | Font | Pembuat | Sumber | Lisensi |
 |---|---|---|---|
-| (belum dipilih) | | | |
+| monogram (monogram-extended.ttf) | datagoblin | https://datagoblin.itch.io/monogram | CC0 1.0 (domain publik) |
 
 ## Audio
 

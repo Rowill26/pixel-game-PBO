@@ -51,7 +51,11 @@ Argumen tambahan, contoh: `./gradlew run --args="--arena pemakaman --demo"`
 
 | Tombol | Fungsi |
 |---|---|
-| `SPASI` | Pengelana yang aktif menyerang |
+| Panah atas/bawah, `Enter` | Menu aksi melayang (Serang, Jurus, Pusaka) untuk pengelana yang bergiliran |
+| Panah, `Enter`, `Backspace` | Pilih sasaran (musuh, atau kawan untuk Ramuan Penawar), pakai, batal |
+| `F12` | Tampilkan/sembunyikan daftar tombol |
+| `C` | Putar contoh layar cerita (`assets/cerita/contoh_babak2.json`); `Enter` lanjut, panah + `Enter` memilih, `ESC` keluar |
+| `SPASI` | Serang cepat (sasaran acak) |
 | `J` | Juru Mantra memakai Mantra Lingkar Suci (animasi jurus, cahaya tongkat ikut bergerak) |
 | `K` | Pendekar memakai jurus Tebasan Keris Pusaka (animasi jurus) |
 | `X` | Musuh menyerang Pendekar (animasi terluka) |
@@ -134,6 +138,58 @@ prototype-2.5d/
 Menjalankan `python tools/gen_assets.py` akan **menimpa** semua asset di `assets/arena` dan
 `assets/sprites` dengan versi sementara. Jangan jalankan setelah asset asli dimasukkan.
 
+## Latar arena dari gambar AI
+
+Lapisan latar dibuat AI per lapisan (langit siang/malam, jauh, tengah, tanah, depan; bagian kosong
+berwarna magenta #FF00FF), lalu diubah ke ukuran 720×380 dan palet game:
+
+```bash
+python tools/bg_pixelize.py "../referensi asset/latar arena/Hutan Beringin/hutan-tengah.jpeg" assets/arena/hutan/mid.png --ramps Daun,Tanah,Batu,Bayangan,Jerami,Putih --anchor bottom --key ff00ff
+python tools/make_normals.py assets/arena/hutan/mid.png
+```
+
+`--key ff00ff` membuat magenta transparan, `--fit width --top Y` menaruh gambar lebar mulai baris Y,
+`--anchor top|center|bottom` memotong gambar yang lebih tinggi dari lapisan. Urutan gambar lapisan
+mengikuti urutan `layers` di `arena.json` (di hutan: jauh, tanah, lalu pohon beringin di atas tanah).
+Lapisan sementara yang lama disimpan di `codixel-work/latar/placeholder/`.
+
+Bila AI mengisi bagian tengah lapisan tengah dengan kabut, semak, atau cahaya bulan (seperti di
+pemakaman), bersihkan dulu dengan `tools/bg_sides.py` (menghapus pixel kebiruan/keunguan di tengah
+dan mendorong pemandangan ke kedua sudut), lalu baru `bg_pixelize.py`. Lingkaran ritual di bawah
+Calon Arang digambar dengan kode langsung di `ground.png` pada posisi tokohnya.
+
+## HUD dan menu battle
+
+`Hud` menggambar UI di skala pixel 640×360 dengan font **monogram** (CC0, `assets/fonts/`, butuh
+`gdx-freetype`): kotak narasi, kartu status (ikon, nyawa, energi), nama + nyawa musuh, ronde, urutan
+giliran, menu aksi melayang, penunjuk sasaran, dan angka kerusakan (kuning) / pemulihan (hijau).
+Bingkai panel, kursor, dan ikon wajah dibuat dengan `python tools/make_ui.py` (ikon diambil dari frame
+idle pertama tiap sprite) ke `assets/ui/`. Jurus memakai 30% energi; Pusaka belum aktif. Logika
+kerusakan di sini hanya pertunjukan: nanti diganti `BattleManager` di backend.
+
+## Layar cerita dan dialog
+
+`StoryLayer` (brief C7) menggambar di atas diorama arena: latar digelapkan, potret setengah badan di
+kiri, kotak dialog miring, papan nama emas, judul babak (merah) dan misi di atas, serta pilihan berupa
+panel miring bertumpuk. Teks muncul huruf demi huruf; `Enter` pertama menyelesaikan baris.
+
+Naskah: `assets/cerita/<nama>.json` berisi `title`, `mission`, dan `lines`. Setiap baris
+`{"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "..."}`; `"who": "narator"` tanpa
+potret. Pilihan: `{"choice": ["A", "B"], "replies": [[baris jika A], [baris jika B]]}`. Potret dicari di
+`assets/potret/<who>_<face>.png` (128×192, menghadap kanan); bila belum ada dipakai sprite tokoh
+diperbesar sebagai pengganti sementara. Uji: `--story contoh_babak2 --story-line 4`.
+
+Potret dari AI (pixel art setengah badan, latar polos) diubah dengan:
+
+```bash
+python tools/portrait.py "../referensi asset/potret/ratna-netral.jpeg" assets/potret/ratna_netral.png --ramps Bayangan,Kulit,Putih,Jerami,Senja,Emas,Batu --sat-weight 20000 --height 85 --scale 2
+```
+
+Alat ini memakai grid dan palet yang sama dengan `normalize_ai_pixel.py`, memperbesar dengan kelipatan
+bulat supaya pixel tetap persegi, dan menaruh badan di tepi bawah kanvas 128×192. Pakai selalu
+`--height 85 --scale 2` supaya semua potret punya ukuran pixel yang sama (AI kadang memakai kotak
+pixel yang berbeda). Latar diambil dari baris paling atas gambar, karena badan terpotong di bawah.
+
 ## Efek serangan dan jurus
 
 Efek dibuat dengan kode (Codixel) di `codixel-work/fx/` (`effects.js`, `tebasan.js`; jalankan
@@ -179,6 +235,14 @@ lampunya ikut bergerak bersama tongkat. Tanpa file itu dipakai `staff` dari `are
 Bos bisa punya wujud kedua: tambahkan `"nextForm": {"name": ..., "sprite": ..., "eyes": [...]}` pada
 tokoh di `arena.json`. Saat nyawanya habis, animasi `gugur` wujud pertama diputar (untuk Calon Arang:
 berlutut dan mulai berubah), lalu tokoh diganti wujud kedua dengan nyawa penuh (fase 2).
+
+Animasi aksi boleh punya `assets/sprites/<nama>_<anim>_timing.json`, misalnya
+`{"durations": [0.16, 0.05, 0.12, 0.08, 0.10], "impact": 2}`: lama tiap frame (antisipasi ditahan,
+smear sangat cepat, benturan ditahan) dan frame benturan. Kerusakan, kilatan, dan hit-stop singkat
+(animasi hampir membeku 0,07 s; 0,12 s untuk serangan besar) muncul tepat di frame benturan itu.
+Semua tokoh sudah memakainya: Pendekar lewat `codixel-work/pendekar/ai/smear.py`, tokoh lain lewat
+`tools/smear_attack.py` (jejak arc / claw / thrust / none) yang dijalankan semua sekaligus dengan
+`bash ../codixel-work/serang-smear.sh --install assets/sprites`.
 
 Warna cahaya mata bisa diatur per tokoh dengan `"eyeColor": [r, g, b]` (0–1) di `arena.json`;
 bawaannya ungu pucat seperti mata leak. Wujud ritual Calon Arang memakai merah.

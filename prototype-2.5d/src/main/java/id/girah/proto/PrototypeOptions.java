@@ -16,6 +16,11 @@ public final class PrototypeOptions {
     public int bossDownAt = -1;
     public int fxAt = -1;
     public int fxSkip = 0;
+    public int chooseAt = -1;
+    public String story;
+    public int storyAt = 5;
+    public int storyLine = 0;
+    public int chooseItem = 0;
 
     public static PrototypeOptions parse(String[] args) {
         PrototypeOptions o = new PrototypeOptions();
@@ -36,6 +41,10 @@ public final class PrototypeOptions {
                 case "--boss-down-at": o.bossDownAt = Integer.parseInt(next); i++; break;
                 case "--fx-at": o.fxAt = Integer.parseInt(next); i++; break;
                 case "--fx-skip": o.fxSkip = Integer.parseInt(next); i++; break;
+                case "--choose-at": o.chooseAt = Integer.parseInt(next); i++; break;
+                case "--story": o.story = next; i++; break;
+                case "--story-line": o.storyLine = Integer.parseInt(next); i++; break;
+                case "--choose-item": o.chooseItem = Integer.parseInt(next); i++; break;
                 default: break;
             }
         }

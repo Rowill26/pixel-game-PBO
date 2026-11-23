@@ -81,14 +81,14 @@
       "lit": 0.6
     },
     {
-      "file": "mid.png",
-      "parallax": 0.7,
+      "file": "ground.png",
+      "parallax": 1.0,
       "normal": true,
       "lit": 1.0
     },
     {
-      "file": "ground.png",
-      "parallax": 1.0,
+      "file": "mid.png",
+      "parallax": 0.95,
       "normal": true,
       "lit": 1.0
     }
@@ -100,16 +100,12 @@
   },
   "torches": [
     {
-      "x": 214,
-      "y": 130
-    },
-    {
-      "x": 600,
-      "y": 124
-    },
-    {
-      "x": 28,
+      "x": 64,
       "y": 214
+    },
+    {
+      "x": 583,
+      "y": 266
     }
   ],
   "actors": [

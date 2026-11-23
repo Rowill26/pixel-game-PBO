@@ -125,6 +125,7 @@ public class ArenaData implements Disposable {
                 base.getString("side"), tex[0], tex[1], base.getFloat("x"), VIEW_H - base.getFloat("y"),
                 a.getBoolean("float", false), a.getBoolean("boss", base.getBoolean("boss", false)),
                 eyes == null ? null : eyes.asIntArray(), staff == null ? null : staff.asIntArray());
+        actor.sprite = sprite;
         JsonValue eyeColor = a.get("eyeColor");
         if (eyeColor != null) {
             actor.eyeColor = eyeColor.asFloatArray();
@@ -142,6 +143,11 @@ public class ArenaData implements Disposable {
                     k -> loadFrames(sprite + "_" + anim.getKey()));
             if (frames != null) {
                 actor.addAnimation(anim.getKey(), frames[0], frames[1], anim.getValue());
+                FileHandle timing = Gdx.files.internal("sprites/" + sprite + "_" + anim.getKey() + "_timing.json");
+                if (timing.exists()) {
+                    JsonValue tj = new JsonReader().parse(timing);
+                    actor.setTiming(anim.getKey(), tj.get("durations").asFloatArray(), tj.getInt("impact", -1));
+                }
                 setStaffFrames(actor, staffFrames, anim.getKey(), frames[0]);
                 setSmokeFrames(actor, smokeFrames, anim.getKey(), frames[0]);
             }

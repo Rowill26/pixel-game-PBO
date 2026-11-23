@@ -3,155 +3,330 @@ package id.girah.proto;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * HUD sementara (digambar setelah efek kamera, jadi tetap tajam): kotak narasi, kartu status
- * pengelana, nama + nyawa musuh, angka kerusakan, dan daftar tombol/saklar efek.
+ * HUD battle (brief C6), digambar di skala pixel 640x360 (setiap pixel UI = 2x2 pixel layar) setelah
+ * efek kamera, jadi tetap tajam: kotak narasi, kartu status pengelana, nama + nyawa musuh, urutan
+ * giliran, ronde, menu aksi melayang, penunjuk sasaran, dan angka kerusakan.
  *
- * <p>Font masih font bawaan LibGDX; nanti diganti font pixel sesuai brief.
+ * <p>Font: monogram (datagoblin, CC0) ukuran 16 = tinggi huruf 7 px.
  */
 public class Hud implements Disposable {
 
-    private static final Color PANEL = new Color(0.07f, 0.06f, 0.10f, 0.86f);
-    private static final Color GOLD = new Color(0.72f, 0.58f, 0.29f, 1f);
-    private static final Color GOLD_LIGHT = new Color(0.86f, 0.75f, 0.48f, 1f);
-    private static final Color TEXT = new Color(0.93f, 0.90f, 0.84f, 1f);
-    private static final Color MUTED = new Color(0.79f, 0.76f, 0.68f, 1f);
-    private static final Color HP = new Color(0.76f, 0.27f, 0.24f, 1f);
-    private static final Color HP_DARK = new Color(0.39f, 0.13f, 0.15f, 1f);
-    private static final Color EN = new Color(0.37f, 0.58f, 0.73f, 1f);
-    private static final Color EN_DARK = new Color(0.20f, 0.25f, 0.35f, 1f);
+    static final int W = 640;
+    static final int H = 360;
+    /** Tinggi panel bawah; bidang main aman di atasnya (brief: y 130-300 dari atas). */
+    static final int BOTTOM = 62;
+
+    // palette colours (palette2.py)
+    private static final Color TEXT = rgb("ece6d7");
+    private static final Color MUTED = rgb("c9c1ad");
+    private static final Color DIM = rgb("656b6b");
+    private static final Color GOLD = rgb("dcc07a");
+    private static final Color GOLD_D = rgb("b8954a");
+    private static final Color HP = rgb("c2463d");
+    private static final Color HP_D = rgb("642127");
+    private static final Color EN = rgb("5f95b9");
+    private static final Color EN_D = rgb("34405a");
+    private static final Color BAR_BG = rgb("121019");
+    private static final Color HEAL = rgb("74ad7e");
+    private static final Color HIT = rgb("e8b25e");
+    private static final Color SHADE = rgb("121019");
 
     public boolean visible = true;
+    public boolean showHelp = false;
     private final ArenaPrototype game;
-    private final ShapeRenderer shapes = new ShapeRenderer();
-    private final BitmapFont font = new BitmapFont();
+    private final BitmapFont font;
+    private final BitmapFont outlined;
     private final GlyphLayout layout = new GlyphLayout();
     private final Matrix4 matrix = new Matrix4();
+    private final Texture panelTex;
+    private final Texture panelActiveTex;
+    private final NinePatch panel;
+    private final NinePatch panelActive;
+    private final Texture cursor;
+    private final Texture arrow;
+    private final Texture white;
+    private final Map<String, Texture> icons = new HashMap<>();
 
     public Hud(ArenaPrototype game) {
         this.game = game;
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        FreeTypeFontGenerator gen = new FreeTypeFontGenerator(Gdx.files.internal("fonts/monogram-extended.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter p = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        p.size = 16;
+        p.mono = true;
+        p.minFilter = Texture.TextureFilter.Nearest;
+        p.magFilter = Texture.TextureFilter.Nearest;
+        p.characters = FreeTypeFontGenerator.DEFAULT_CHARS + "…—–“”‘’";
+        font = gen.generateFont(p);
+        p.borderWidth = 1;
+        p.borderColor = SHADE;
+        p.borderStraight = true;
+        outlined = gen.generateFont(p);
+        gen.dispose();
+        font.setUseIntegerPositions(true);
+        outlined.setUseIntegerPositions(true);
+
+        panelTex = load("ui/panel.png");
+        panelActiveTex = load("ui/panel_active.png");
+        panel = new NinePatch(panelTex, 4, 4, 4, 4);
+        panelActive = new NinePatch(panelActiveTex, 4, 4, 4, 4);
+        cursor = load("ui/cursor.png");
+        arrow = load("ui/arrow.png");
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(Color.WHITE);
+        pm.fill();
+        white = new Texture(pm);
+        pm.dispose();
+    }
+
+    private static Texture load(String path) {
+        Texture t = new Texture(Gdx.files.internal(path));
+        t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        return t;
+    }
+
+    private static Color rgb(String hex) {
+        return Color.valueOf(hex);
+    }
+
+    private Texture icon(Actor25D a) {
+        String key = a.sprite;
+        if (!icons.containsKey(key)) {
+            String path = "ui/ikon_" + key + ".png";
+            icons.put(key, Gdx.files.internal(path).exists() ? load(path) : null);
+        }
+        return icons.get(key);
+    }
+
+    /** Dunia (640x360, y ke atas) -> koordinat UI (sama dengan layar dibagi 2). */
+    private float ux(float wx) {
+        return Math.round(game.toScreenX(wx) / 2f);
+    }
+
+    private float uy(float wy) {
+        return Math.round(game.toScreenY(wy) / 2f);
     }
 
     public void draw(SpriteBatch batch, ArenaData arena, ArenaData.Mode mode, PostProcessor.Settings fx, CameraRig rig) {
         if (!visible) {
             return;
         }
-        matrix.setToOrtho2D(0, 0, ArenaPrototype.SCREEN_W, ArenaPrototype.SCREEN_H);
+        matrix.setToOrtho2D(0, 0, W, H);
         Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapes.setProjectionMatrix(matrix);
-        List<Actor25D> party = game.party();
-        int active = game.activeIndex();
-
-        shapes.begin(ShapeRenderer.ShapeType.Filled);
-        shapes.setColor(PANEL);
-        shapes.rect(0, 0, ArenaPrototype.SCREEN_W, 112);
-        shapes.rect(10, 676, 420, 34);
-        shapes.rect(860, 534, 410, 176);
-        for (int i = 0; i < party.size() && i < 4; i++) {
-            float x = 512 + i * 191;
-            Actor25D a = party.get(i);
-            bar(x + 12, 40, 160, 10, a.hp, HP, HP_DARK);
-            bar(x + 12, 22, 160, 7, a.energy, EN, EN_DARK);
-        }
-        for (Actor25D e : arena.actors) {
-            if (e.isEnemy()) {
-                float sx = game.toScreenX(e.footX());
-                float sy = Math.max(game.toScreenY(e.y) - 18f, 140f);   // jangan tertutup panel bawah
-                bar(sx - 40, sy, 80, 6, e.hp, HP, HP_DARK);
-            }
-        }
-        shapes.end();
-
-        shapes.begin(ShapeRenderer.ShapeType.Line);
-        shapes.setColor(GOLD);
-        shapes.line(0, 112, ArenaPrototype.SCREEN_W, 112);
-        shapes.rect(8, 8, 492, 96);
-        for (int i = 0; i < party.size() && i < 4; i++) {
-            shapes.setColor(i == active ? GOLD_LIGHT : GOLD);
-            shapes.rect(512 + i * 191, 8, 183, 96);
-            if (i == active) {
-                shapes.rect(513 + i * 191, 9, 181, 94);
-            }
-        }
-        shapes.end();
-
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);   // bloom may leave it additive
         batch.setShader(null);
         batch.setProjectionMatrix(matrix);
+        batch.setColor(Color.WHITE);
         batch.begin();
-        font.setColor(GOLD_LIGHT);
-        font.draw(batch, arena.title + "  -  " + ("day".equals(mode.name) ? "siang" : "malam"), 20, 700);
-        font.setColor(TEXT);
-        font.draw(batch, game.narration, 22, 92, 466, Align.left, true);
-        for (int i = 0; i < party.size() && i < 4; i++) {
-            float x = 512 + i * 191;
-            Actor25D a = party.get(i);
-            font.setColor(i == active ? GOLD_LIGHT : TEXT);
-            font.draw(batch, a.name, x + 12, 92);
-            font.setColor(MUTED);
-            font.draw(batch, "nyawa " + Math.round(a.hp * 100) + "%", x + 12, 70);
-        }
-        for (Actor25D e : arena.actors) {
-            if (e.isEnemy()) {
-                float sx = game.toScreenX(e.footX());
-                float sy = Math.max(game.toScreenY(e.y) - 18f, 140f) - 4f;
-                outlined(batch, e.name, sx, sy, TEXT);
-            }
-        }
-        for (int i = 0; i < game.popups.size(); i++) {
-            float[] p = game.popups.get(i);
-            Color c = new Color(1f, 0.85f, 0.55f, Math.min(1f, p[2] * 2f));
-            font.getData().setScale(1.6f);
-            outlined(batch, game.popupText.get(i), game.toScreenX(p[0]), game.toScreenY(p[1]), c);
-            font.getData().setScale(1f);
-        }
-        font.setColor(MUTED);
-        String[] help = {
-                "SPASI serang   J mantra   K jurus Pendekar   X Pendekar diserang",
-                "G Pendekar gugur/bangkit   E pamer efek jurus   T siang/malam   1/2 arena",
-                "F1 normal map: " + onOff(game.useNormals) + "     F2 blur kedalaman: " + onOff(fx.dof),
-                "F3 bloom: " + onOff(fx.bloom) + "     F4 kamera+parallax: " + onOff(rig.enabled),
-                "F5 grading+vignette: " + onOff(fx.grade) + "     F6 bayangan: " + onOff(game.useShadows),
-                "P screenshot   H sembunyikan HUD   ESC keluar",
-                "FPS " + Gdx.graphics.getFramesPerSecond(),
-        };
-        for (int i = 0; i < help.length; i++) {
-            font.draw(batch, help[i], 872, 698 - i * 22);
+        List<Actor25D> party = game.party();
+        Actor25D active = game.activeActor();
+
+        drawEnemyLabels(batch, arena);
+        drawTop(batch, arena, mode, party, active);
+        drawBottom(batch, party, active);
+        drawMenu(batch, active);
+        drawPopups(batch);
+        if (showHelp) {
+            drawHelp(batch, fx, rig);
+        } else {
+            outlined.setColor(DIM);
+            layout.setText(outlined, "F12 bantuan");
+            outlined.draw(batch, "F12 bantuan", W - layout.width - 6, H - 6);
         }
         batch.end();
-        font.setColor(Color.WHITE);
+        batch.setColor(Color.WHITE);
     }
 
-    private void outlined(SpriteBatch batch, String text, float cx, float y, Color color) {
-        layout.setText(font, text);
-        float x = cx - layout.width / 2f;
-        font.setColor(0.05f, 0.04f, 0.07f, color.a);
-        font.draw(batch, text, x - 1, y);
-        font.draw(batch, text, x + 1, y);
-        font.draw(batch, text, x, y - 1);
-        font.draw(batch, text, x, y + 1);
-        font.setColor(color);
-        font.draw(batch, text, x, y);
+    // ------------------------------------------------------------------ parts
+
+    private void drawTop(SpriteBatch batch, ArenaData arena, ArenaData.Mode mode, List<Actor25D> party, Actor25D active) {
+        // round + arena name, top left
+        String place = arena.title + " - " + ("day".equals(mode.name) ? "siang" : "malam");
+        layout.setText(font, place);
+        float w = Math.max(layout.width, 70) + 14;
+        panel.draw(batch, 4, H - 36, w, 32);
+        font.setColor(GOLD);
+        font.draw(batch, "Ronde " + game.round(), 11, H - 10);
+        font.setColor(MUTED);
+        font.draw(batch, place, 11, H - 21);
+
+        // turn order: the coming party turns, starting with the active member
+        int n = party.size();
+        if (n == 0) {
+            return;
+        }
+        int start = game.activeIndex();
+        int shown = 6;
+        // start right after the title panel, so a long arena name never overlaps
+        layout.setText(font, "Giliran");
+        float labelX = 4 + w + 10;
+        float x0 = labelX + layout.width + 6;
+        font.setColor(MUTED);
+        font.draw(batch, "Giliran", labelX, H - 10);
+        for (int k = 0; k < shown; k++) {
+            Actor25D a = party.get((start + k) % n);
+            Texture t = icon(a);
+            float x = x0 + k * 19;
+            float y = H - 22 - (k == 0 ? 2 : 0);
+            if (t != null) {
+                batch.setColor(a.isDown() ? DIM : Color.WHITE);
+                batch.draw(t, x, y, 16, 16);
+                batch.setColor(Color.WHITE);
+            }
+            if (k == 0) {
+                batch.draw(arrow, x + 4, y - 7);
+            }
+        }
     }
 
-    private void bar(float x, float y, float w, float h, float frac, Color light, Color dark) {
-        shapes.setColor(0.03f, 0.03f, 0.05f, 1f);
-        shapes.rect(x - 1, y - 1, w + 2, h + 2);
-        shapes.setColor(dark);
-        shapes.rect(x, y, w * frac, h);
-        shapes.setColor(light);
-        shapes.rect(x, y + h / 2f, w * frac, h / 2f);
+    private void drawBottom(SpriteBatch batch, List<Actor25D> party, Actor25D active) {
+        // narration box
+        panel.draw(batch, 4, 4, 232, BOTTOM - 8);
+        font.setColor(TEXT);
+        font.draw(batch, game.narration, 12, BOTTOM - 10, 216, Align.left, true);
+        if (((int) (game.clock() * 2.5f)) % 2 == 0) {
+            batch.draw(arrow, 222, 9);
+        }
+
+        // status cards
+        float cw = 98;
+        for (int i = 0; i < party.size() && i < 4; i++) {
+            Actor25D a = party.get(i);
+            boolean on = a == active;
+            float x = 240 + i * (cw + 1);
+            (on ? panelActive : panel).draw(batch, x, 4, cw, BOTTOM - 8);
+            Texture t = icon(a);
+            if (t != null) {
+                batch.setColor(a.isDown() ? DIM : Color.WHITE);
+                batch.draw(t, x + 6, BOTTOM - 26, 16, 16);
+                batch.setColor(Color.WHITE);
+            }
+            font.setColor(a.isDown() ? DIM : on ? GOLD : TEXT);
+            font.draw(batch, shortName(a.name), x + 26, BOTTOM - 12);
+            font.setColor(MUTED);
+            font.draw(batch, Math.round(a.hp * 120) + "/120", x + 26, BOTTOM - 22);
+            bar(batch, x + 7, 17, cw - 14, 4, a.hp, HP, HP_D);
+            bar(batch, x + 7, 10, cw - 14, 3, a.energy, EN, EN_D);
+        }
+    }
+
+    private static String shortName(String name) {
+        return name.length() > 11 ? name.replace("Juru Mantra", "J. Mantra") : name;
+    }
+
+    private void drawEnemyLabels(SpriteBatch batch, ArenaData arena) {
+        for (Actor25D e : arena.actors) {
+            if (!e.isEnemy() || e.isDown()) {
+                continue;
+            }
+            float cx = ux(e.footX());
+            float y = Math.max(uy(e.footY()) - 4, BOTTOM + 14);
+            bar(batch, cx - 16, y, 32, 3, e.hp, HP, HP_D);
+            outlined.setColor(TEXT);
+            layout.setText(outlined, e.name);
+            outlined.draw(batch, e.name, cx - layout.width / 2f, y - 2);
+        }
+    }
+
+    private void drawMenu(SpriteBatch batch, Actor25D active) {
+        // target pointer
+        Actor25D target = game.menuTarget();
+        if (target != null) {
+            float bob = ((int) (game.clock() * 4)) % 2;
+            float tx = ux(target.footX());
+            float ty = uy(target.footY() + 50f) + bob;
+            batch.draw(arrow, tx - 3, ty);
+            outlined.setColor(GOLD);
+            layout.setText(outlined, target.name);
+            outlined.draw(batch, target.name, tx - layout.width / 2f, ty + 16);
+        }
+        if (!game.menuOpen() || active == null) {
+            return;
+        }
+        String[] items = game.menuItems();
+        float mw = 64;
+        float mh = 10 + items.length * 11;
+        // float the menu next to the active member, toward the open middle of the arena
+        float ax = ux(active.footX());
+        float ay = uy(active.footY() + 30f);
+        float x = Math.max(6, Math.min(W - mw - 6, ax - mw - 18));
+        float y = Math.max(BOTTOM + 4, Math.min(H - mh - 40, ay - mh / 2f));
+        panelActive.draw(batch, x, y, mw, mh);
+        for (int i = 0; i < items.length; i++) {
+            boolean enabled = game.menuEnabled(i);
+            boolean sel = i == game.menuIndex() && !game.choosingTarget();
+            float ty = y + mh - 6 - i * 11;
+            font.setColor(!enabled ? DIM : sel ? GOLD : TEXT);
+            font.draw(batch, items[i], x + 12, ty);
+            if (i == game.menuIndex()) {
+                batch.draw(cursor, x + 5, ty - 7);
+            }
+        }
+        // name tag over the active member
+        outlined.setColor(GOLD);
+        layout.setText(outlined, active.name);
+        outlined.draw(batch, active.name, x + mw / 2f - layout.width / 2f, y + mh + 10);
+    }
+
+    private void drawPopups(SpriteBatch batch) {
+        for (int i = 0; i < game.popups.size(); i++) {
+            float[] p = game.popups.get(i);
+            String s = game.popupText.get(i);
+            float life = p[2];
+            float rise = (1f - life) * 14f;
+            float bounce = life > 0.8f ? (life - 0.8f) * 25f : 0f;     // small hop when it appears
+            Color c = s.startsWith("+") ? HEAL : HIT;
+            outlined.setColor(c.r, c.g, c.b, Math.min(1f, life * 2.5f));
+            layout.setText(outlined, s);
+            outlined.draw(batch, s, ux(p[0]) - layout.width / 2f, uy(p[1]) + rise + bounce);
+        }
+        outlined.setColor(Color.WHITE);
+    }
+
+    private void drawHelp(SpriteBatch batch, PostProcessor.Settings fx, CameraRig rig) {
+        String[] help = {
+                "Panah: pilih   Enter: pakai   Backspace: batal",
+                "SPASI serang cepat   J mantra   K jurus Pendekar",
+                "X Pendekar diserang   G gugur/bangkit   E pamer efek",
+                "T siang/malam   1/2 arena   P screenshot   H HUD",
+                "F1 normal map " + onOff(game.useNormals) + "   F2 blur " + onOff(fx.dof) + "   F3 bloom " + onOff(fx.bloom),
+                "F4 kamera " + onOff(rig.enabled) + "   F5 grading " + onOff(fx.grade) + "   F6 bayangan " + onOff(game.useShadows),
+                "FPS " + Gdx.graphics.getFramesPerSecond() + "   F12 tutup   ESC keluar",
+        };
+        float w = 236;
+        float h = 10 + help.length * 10;
+        panel.draw(batch, W - w - 4, H - h - 4, w, h);
+        font.setColor(MUTED);
+        for (int i = 0; i < help.length; i++) {
+            font.draw(batch, help[i], W - w + 4, H - 10 - i * 10);
+        }
+    }
+
+    private void bar(SpriteBatch batch, float x, float y, float w, float h, float frac, Color light, Color dark) {
+        frac = Math.max(0f, Math.min(1f, frac));
+        batch.setColor(BAR_BG);
+        batch.draw(white, x - 1, y - 1, w + 2, h + 2);
+        batch.setColor(dark);
+        batch.draw(white, x, y, Math.round(w * frac), h);
+        batch.setColor(light);
+        batch.draw(white, x, y + 1, Math.round(w * frac), h - 1);
+        batch.setColor(GOLD_D.r, GOLD_D.g, GOLD_D.b, 0.35f);
+        batch.draw(white, x, y + h - 1, Math.round(w * frac), 1);
+        batch.setColor(Color.WHITE);
     }
 
     private static String onOff(boolean b) {
@@ -160,7 +335,17 @@ public class Hud implements Disposable {
 
     @Override
     public void dispose() {
-        shapes.dispose();
         font.dispose();
+        outlined.dispose();
+        panelTex.dispose();
+        panelActiveTex.dispose();
+        cursor.dispose();
+        arrow.dispose();
+        white.dispose();
+        for (Texture t : icons.values()) {
+            if (t != null) {
+                t.dispose();
+            }
+        }
     }
 }

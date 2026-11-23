@@ -495,7 +495,7 @@ Lihat `layout-cerita.png` dan mockup layar cerita.
 - Font pixel sempit, tinggi huruf ±7–8 px pada resolusi 640×360.
 - Mendukung huruf Latin lengkap dan tanda baca (`"`, `!`, `?`, `…`, `—`).
 - Opsional: font judul dekoratif untuk judul babak.
-- Font dipilih: **(isi nanti)** — catat lisensinya di `CREDITS.md`.
+- Font dipilih: **monogram** (datagoblin, CC0), `prototype-2.5d/assets/fonts/monogram-extended.ttf`, ukuran 16 = tinggi huruf 7 px. Lisensi dicatat di `CREDITS.md`.
 
 ---
 
@@ -561,7 +561,7 @@ Cara menilai: lihat di ukuran asli dan 2×, sebelum dan sesudah efek kamera; tes
 - [ ] Palet v3 di-import ke Pixelorama / LibreSprite
 - [ ] Bagian B disepakati, termasuk dua wujud Calon Arang
 - [ ] Wireframe battle dan cerita disepakati
-- [ ] Font dipilih dan dites
+- [x] Font dipilih dan dites
 - [ ] Bagian E dibicarakan dengan tim backend
 - [ ] `style-board.png` dibuat dan disetujui (tabel D3)
 - [ ] `do-dont.png` dibuat

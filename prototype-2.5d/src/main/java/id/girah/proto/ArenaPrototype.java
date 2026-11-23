@@ -46,6 +46,8 @@ public class ArenaPrototype extends ApplicationAdapter {
     private final ParticleSystem particles = new ParticleSystem();
     /** Efek serangan dan jurus (assets/fx). */
     private FxPlayer effects;
+    /** Layar cerita dan dialog (tombol C memutar naskah contoh). */
+    private StoryLayer story;
     private final Map<String, Texture[][]> spriteCache = new HashMap<>();
     private final Map<Texture, TextureRegion> regions = new HashMap<>();
     private final List<PointLight> tempLights = new ArrayList<>();
@@ -72,7 +74,7 @@ public class ArenaPrototype extends ApplicationAdapter {
     private Action action;
     final List<float[]> popups = new ArrayList<>();
     final List<String> popupText = new ArrayList<>();
-    String narration = "Arahkan pengelana. SPASI = serang, J = jurus.";
+    String narration = "Pilih aksi dengan panah dan Enter. F12 untuk daftar tombol.";
 
     /** Satu aksi yang sedang dipertunjukkan. */
     private static final class Action {
@@ -108,6 +110,7 @@ public class ArenaPrototype extends ApplicationAdapter {
         glow = radialTexture(64);
         shaft = shaftTexture();
         effects = new FxPlayer();
+        story = new StoryLayer(this);
         cam.setToOrtho(false, ArenaData.VIEW_W, ArenaData.VIEW_H);
         for (int i = 0; i < ARENAS.length; i++) {
             if (ARENAS[i].equals(options.arena)) {
@@ -188,6 +191,21 @@ public class ArenaPrototype extends ApplicationAdapter {
     // ------------------------------------------------------------------ input & update
 
     private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C) && !story.active) {
+            story.start("contoh_babak2");
+            return;
+        }
+        if (story.active) {
+            // the story screen owns the keys; only the view toggles still work
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                story.active = false;
+            }
+            return;
+        }
+        menuInput();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
+            hud.showHelp = !hud.showHelp;
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             startAction(false);
         }
@@ -423,6 +441,203 @@ public class ArenaPrototype extends ApplicationAdapter {
         return out;
     }
 
+
+    // ------------------------------------------------------------------ battle menu (brief C6)
+
+    private static final String[] MENU = {"Serang", "Jurus", "Pusaka"};
+    private static final float JURUS_COST = 0.3f;
+    private int menuIndex;
+    /** Sasaran yang bisa dipilih saat memilih sasaran, atau null saat memilih aksi. */
+    private List<Actor25D> targets;
+    private int targetIndex;
+
+    /** Pengelana yang sedang bergiliran (yang gugur dilewati), atau null jika semua gugur. */
+    Actor25D activeActor() {
+        List<Actor25D> party = party();
+        for (int k = 0; k < party.size(); k++) {
+            Actor25D a = party.get((activeIndex() + k) % party.size());
+            if (!a.isDown()) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    int round() {
+        return turn / Math.max(1, party().size()) + 1;
+    }
+
+    float clock() {
+        return time;
+    }
+
+    boolean menuOpen() {
+        return action == null && later.isEmpty() && transforming == null && activeActor() != null;
+    }
+
+    String[] menuItems() {
+        return MENU;
+    }
+
+    int menuIndex() {
+        return menuIndex;
+    }
+
+    boolean choosingTarget() {
+        return targets != null;
+    }
+
+    Actor25D menuTarget() {
+        return menuOpen() && targets != null && !targets.isEmpty() ? targets.get(targetIndex % targets.size()) : null;
+    }
+
+    boolean menuEnabled(int i) {
+        Actor25D a = activeActor();
+        if (a == null) {
+            return false;
+        }
+        if (i == 1) {
+            return a.energy >= JURUS_COST - 1e-3f;
+        }
+        return i != 2;      // Pusaka: belum ada di prototipe (backend punya paket pusaka)
+    }
+
+    private void menuInput() {
+        if (!menuOpen()) {
+            targets = null;
+            return;
+        }
+        boolean up = Gdx.input.isKeyJustPressed(Input.Keys.UP);
+        boolean down = Gdx.input.isKeyJustPressed(Input.Keys.DOWN);
+        boolean left = Gdx.input.isKeyJustPressed(Input.Keys.LEFT);
+        boolean right = Gdx.input.isKeyJustPressed(Input.Keys.RIGHT);
+        boolean ok = Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.Z);
+        boolean back = Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE);
+        if (targets == null) {
+            if (up) {
+                menuIndex = (menuIndex + MENU.length - 1) % MENU.length;
+            }
+            if (down) {
+                menuIndex = (menuIndex + 1) % MENU.length;
+            }
+            if (ok) {
+                chooseAction();
+            }
+        } else {
+            if (up || left) {
+                targetIndex = (targetIndex + targets.size() - 1) % targets.size();
+            }
+            if (down || right) {
+                targetIndex = (targetIndex + 1) % targets.size();
+            }
+            if (back) {
+                targets = null;
+            }
+            if (ok) {
+                Actor25D t = targets.get(targetIndex % targets.size());
+                targets = null;
+                perform(activeActor(), menuIndex, t);
+            }
+        }
+    }
+
+    /** What the chosen action targets: "enemy", "ally" or "all" (no choice needed). */
+    private String targetKind(Actor25D a, int item) {
+        if (item == 0) {
+            return "enemy";
+        }
+        switch (a.id) {
+            case "juru_mantra":
+                return "all";
+            case "peramu":
+                return "ally";
+            default:
+                return "enemy";
+        }
+    }
+
+    private void chooseAction() {
+        Actor25D a = activeActor();
+        if (a == null) {
+            return;
+        }
+        if (!menuEnabled(menuIndex)) {
+            narration = menuIndex == 2 ? "Belum ada pusaka yang bisa dipakai." : a.name + " kehabisan energi untuk jurus.";
+            return;
+        }
+        String kind = targetKind(a, menuIndex);
+        if (kind.equals("all")) {
+            perform(a, menuIndex, null);
+            return;
+        }
+        List<Actor25D> list = kind.equals("ally") ? new ArrayList<>(party()) : enemies();
+        list.removeIf(Actor25D::isDown);
+        if (list.isEmpty()) {
+            return;
+        }
+        // top of the screen first, so up/down feels natural
+        list.sort((p, q) -> Float.compare(q.y, p.y));
+        targets = list;
+        targetIndex = kind.equals("ally") ? list.indexOf(a) < 0 ? 0 : list.indexOf(a) : 0;
+        narration = kind.equals("ally") ? "Pilih kawan yang diobati." : "Pilih sasaran.";
+    }
+
+    private void perform(Actor25D a, int item, Actor25D target) {
+        if (a == null) {
+            return;
+        }
+        Action act = new Action();
+        act.actor = a;
+        act.target = target;
+        if (item == 0) {
+            narration = a.name + " menyerang " + target.name + "!";
+            action = act;
+            return;
+        }
+        a.energy = Math.max(0f, a.energy - JURUS_COST);
+        switch (a.id) {
+            case "juru_mantra":
+                act.jurus = true;
+                narration = a.name + " merapal Mantra Lingkar Suci. Cahaya putih melingkar di sekeliling medan!";
+                action = act;
+                return;
+            case "peramu": {
+                a.play("jurus");
+                effects.play("ramuan_penawar", target.footX(), target.y, 0.2f);
+                narration = a.name + " menuangkan Ramuan Penawar untuk " + target.name + ".";
+                after(0.9f, () -> {
+                    int heal = 30;
+                    target.hp = Math.min(1f, target.hp + heal / 120f);
+                    popup(target.footX(), target.y + 54f, "+" + heal);
+                    narration = target.name + " pulih " + heal + " nyawa.";
+                });
+                after(1.4f, () -> turn++);
+                return;
+            }
+            case "pengintai":
+                narration = a.name + " melesat secepat bayangan. LANGKAH BAYANGAN!";
+                act.anim = "jurus";
+                act.animAt = 0.02f;
+                act.hitAt = 0.4f;
+                act.endAt = 1.1f;
+                act.dmgMin = 30;
+                act.dmgMax = 38;
+                act.zoom = 1.14f;
+                action = act;
+                return;
+            default:
+                narration = a.name + " memusatkan tenaga dalam pada keris pusakanya. TEBASAN KERIS PUSAKA!";
+                act.anim = "jurus";
+                act.animAt = 0.05f;
+                act.hitAt = 0.5f;
+                act.endAt = 1.3f;
+                act.dmgMin = 40;
+                act.dmgMax = 48;
+                act.zoom = 1.16f;
+                action = act;
+        }
+    }
+
     int activeIndex() {
         return turn % Math.max(1, party().size());
     }
@@ -452,8 +667,8 @@ public class ArenaPrototype extends ApplicationAdapter {
             }
             narration = a.actor.name + " merapal Mantra Lingkar Suci. Cahaya putih melingkar di sekeliling medan!";
         } else {
-            a.actor = party.get(activeIndex());
-            if (a.actor.isDown()) {
+            a.actor = activeActor();
+            if (a.actor == null) {
                 return;
             }
             a.target = foes.get(MathUtils.random(foes.size() - 1));
@@ -537,11 +752,18 @@ public class ArenaPrototype extends ApplicationAdapter {
             a.actor.offsetY = depth * k;
             if (!a.animStarted && a.t >= a.animAt) {
                 a.animStarted = true;
-                a.actor.play(a.anim);
+                float len = a.actor.play(a.anim);
+                float impact = a.actor.impactTime(a.anim);
+                if (impact >= 0f) {
+                    // the damage lands exactly on the impact frame, and the action lasts until the clip ends
+                    a.hitAt = a.t + impact;
+                    a.endAt = Math.max(a.endAt, a.t + len + 0.15f);
+                }
             }
             rig.focus((a.actor.footX() + a.target.footX()) / 2f, (a.actor.y + a.target.y) / 2f + 20f, a.zoom);
             if (a.t >= a.hitAt && !a.hit) {
                 a.hit = true;
+                hitStop = a.dmgMax >= 40 ? 0.12f : 0.07f;      // hit-stop: big hits freeze a bit longer
                 int dmg = MathUtils.random(a.dmgMin, a.dmgMax);
                 a.target.flash = 1f;
                 a.target.knock = 7f * dir;
@@ -604,6 +826,9 @@ public class ArenaPrototype extends ApplicationAdapter {
             }
             if (a.t > 1.5f) {
                 action = null;
+                if (a.actor.isParty()) {
+                    turn++;
+                }
             }
         }
     }
@@ -660,8 +885,14 @@ public class ArenaPrototype extends ApplicationAdapter {
         popupText.add(text);
     }
 
-    private void update(float dt) {
-        time += dt;
+    /** Sisa waktu hit-stop (detik nyata): animasi dan aksi hampir berhenti sesaat saat benturan. */
+    private float hitStop;
+
+    private void update(float realDt) {
+        time += realDt;
+        // hit-stop slows the action and the actors; the camera shake and particles keep real time
+        float dt = hitStop > 0f ? realDt * 0.05f : realDt;
+        hitStop = Math.max(0f, hitStop - realDt);
         handleInput();
         if (options.demo) {
             demoTimer += dt;
@@ -675,6 +906,15 @@ public class ArenaPrototype extends ApplicationAdapter {
         }
         if (frame == options.jurusAt) {
             startAction(true);
+        }
+        if (frame == options.storyAt && options.story != null) {
+            story.start(options.story);
+            story.jump(options.storyLine);
+        }
+        if (frame == options.chooseAt) {
+            // test: pick a menu item for the active member (shows target selection)
+            menuIndex = options.chooseItem;
+            chooseAction();
         }
         if (frame == options.fxAt) {
             showcaseIndex = options.fxSkip;
@@ -701,26 +941,26 @@ public class ArenaPrototype extends ApplicationAdapter {
         updateAction(dt);
         checkBeaten();
         checkTransform();
-        rig.update(dt, time);
+        rig.update(realDt, time);
         for (Actor25D a : arena.actors) {
             a.update(dt);
         }
         for (int i = tempLights.size() - 1; i >= 0; i--) {
-            tempLights.get(i).update(dt);
+            tempLights.get(i).update(realDt);
             if (tempLights.get(i).isExpired()) {
                 tempLights.remove(i);
             }
         }
         for (int i = popups.size() - 1; i >= 0; i--) {
             float[] p = popups.get(i);
-            p[2] -= dt;
-            p[1] += dt * 18f;
+            p[2] -= realDt;
+            p[1] += realDt * 18f;
             if (p[2] <= 0) {
                 popups.remove(i);
                 popupText.remove(i);
             }
         }
-        particles.ambient(mode.particles, dt);
+        particles.ambient(mode.particles, realDt);
         if (mode.torches && MathUtils.randomBoolean(0.5f)) {
             float[] t = arena.torches.get(MathUtils.random(arena.torches.size() - 1));
             particles.ember(t[0], t[1] + 4f);
@@ -729,13 +969,14 @@ public class ArenaPrototype extends ApplicationAdapter {
             int[] sp = a.smokePoint();
             if (sp != null) {
                 float rate = a.isPlaying("jurus") ? 60f : 7f;           // kepulan per detik
-                if (MathUtils.random() < rate * dt) {
+                if (MathUtils.random() < rate * realDt) {
                     particles.incense(a.drawX() + sp[0], a.drawY(time) + a.height() - sp[1]);
                 }
             }
         }
-        particles.update(dt);
-        effects.update(dt);
+        particles.update(realDt);
+        effects.update(realDt);
+        story.update(realDt);
         for (int i = later.size() - 1; i >= 0; i--) {
             if (time >= later.get(i).at) {
                 Later l = later.remove(i);
@@ -974,6 +1215,9 @@ public class ArenaPrototype extends ApplicationAdapter {
         List<Actor25D> sorted = new ArrayList<>(arena.actors);
         sorted.sort((p, q) -> Float.compare(q.footY(), p.footY()));
         for (Actor25D a : sorted) {
+            if (story.active && a.isEnemy()) {
+                continue;
+            }
             bindNormals(a.normals, 1f);
             lit.setUniformf("u_flash", a.flash);
             batch.draw(a.texture, a.drawX(), a.drawY(time));
@@ -1001,7 +1245,11 @@ public class ArenaPrototype extends ApplicationAdapter {
         update(dt);
         renderScene();
         post.render(batch, fx);
-        hud.draw(batch, arena, mode, fx, rig);
+        if (story.active) {
+            story.draw(batch);
+        } else {
+            hud.draw(batch, arena, mode, fx, rig);
+        }
         frame++;
         if (options.shotPath != null && frame == options.shotFrame) {
             saveScreenshot(options.shotPath);
@@ -1013,6 +1261,12 @@ public class ArenaPrototype extends ApplicationAdapter {
         int w = Gdx.graphics.getBackBufferWidth();
         int h = Gdx.graphics.getBackBufferHeight();
         Pixmap pm = Pixmap.createFromFrameBuffer(0, 0, w, h);
+        // the window ignores alpha, but see-through UI (dimming) leaves alpha < 1 in the buffer:
+        // make the saved picture opaque so it looks like the screen
+        java.nio.ByteBuffer px = pm.getPixels();
+        for (int i = 3; i < px.limit(); i += 4) {
+            px.put(i, (byte) 0xFF);
+        }
         PixmapIO.writePNG(Gdx.files.local(path), pm, Deflater.DEFAULT_COMPRESSION, true);
         pm.dispose();
         Gdx.app.log("prototipe", "screenshot disimpan: " + Gdx.files.local(path).file().getAbsolutePath());
@@ -1038,6 +1292,7 @@ public class ArenaPrototype extends ApplicationAdapter {
         }
         batch.dispose();
         effects.dispose();
+        story.dispose();
         lit.dispose();
         post.dispose();
         hud.dispose();

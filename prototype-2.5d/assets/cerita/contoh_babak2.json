@@ -1,0 +1,20 @@
+{
+  "title": "BABAK 2 - LUKA RATNA MANGGALI",
+  "mission": "Misi: cari asal wabah",
+  "lines": [
+    {"who": "narator", "text": "Senja di pelataran Girah. Kabut turun lebih cepat dari biasanya, dan bau dupa tidak mau hilang."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Ada yang mengikuti kita sejak gapura desa. Tunjukkan dirimu."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Maaf... aku tidak bermaksud menakuti kalian. Aku hanya ingin tahu siapa yang datang."},
+    {"who": "peramu", "name": "Peramu", "face": "netral", "text": "Kau Ratna, putri Calon Arang? Orang-orang di Tapak Wangi menyebut namamu sambil berbisik."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Mereka takut kepada Ibu. Lama-kelamaan, mereka takut kepadaku juga."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Wabah ini tidak menunggu. Kita harus memilih ke mana lebih dulu."},
+    {"choice": ["Mendahulukan Girah", "Mendahulukan Tapak Wangi"],
+     "replies": [
+       [{"who": "ratna", "name": "Ratna Manggali", "face": "netral", "text": "Kalian mau mendengar cerita kami dulu? Terima kasih... sudah lama tidak ada yang bertanya."},
+        {"who": "narator", "text": "Kepercayaan Ratna bertambah."}],
+       [{"who": "pengintai", "name": "Pengintai", "face": "tegas", "text": "Warga Tapak Wangi sekarat. Girah bisa menunggu sampai besok."},
+        {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "...Seperti biasa. Girah selalu bisa menunggu."},
+        {"who": "narator", "text": "Kepercayaan Ratna berkurang."}]
+     ]}
+  ]
+}

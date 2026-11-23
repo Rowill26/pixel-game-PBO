@@ -15,6 +15,8 @@ public class Actor25D {
     public static final float IDLE_FRAME_SECONDS = 0.2f;
 
     public final String id;
+    /** Nama file sprite (untuk ikon giliran di HUD). */
+    public String sprite = "";
     public final String name;
     public final String side;
     private final Texture[] frames;
@@ -49,11 +51,36 @@ public class Actor25D {
         final Texture[] frames;
         final Texture[] normals;
         final float seconds;
+        /** Lama tiap frame (detik); bawaannya semua sama dengan {@link #seconds}. */
+        float[] durations;
+        /** Frame benturan (saat kerusakan muncul), atau -1 jika tidak ditentukan. */
+        int impact = -1;
 
         Clip(Texture[] frames, Texture[] normals, float seconds) {
             this.frames = frames;
             this.normals = normals;
             this.seconds = seconds;
+            this.durations = new float[frames.length];
+            java.util.Arrays.fill(durations, seconds);
+        }
+
+        float total() {
+            float t = 0f;
+            for (float d : durations) {
+                t += d;
+            }
+            return t;
+        }
+
+        /** Indeks frame pada waktu {@code t}, atau {@code frames.length} jika sudah lewat. */
+        int frameAt(float t) {
+            for (int i = 0; i < durations.length; i++) {
+                t -= durations[i];
+                if (t < 0f) {
+                    return i;
+                }
+            }
+            return durations.length;
         }
     }
 
@@ -111,6 +138,31 @@ public class Actor25D {
         return playing != null && playing == clips.get(name);
     }
 
+    /** Waktu per frame dan frame benturan dari {@code <sprite>_<anim>_timing.json} (game feel). */
+    public void setTiming(String name, float[] durations, int impact) {
+        Clip c = clips.get(name);
+        if (c == null) {
+            return;
+        }
+        for (int i = 0; i < Math.min(durations.length, c.durations.length); i++) {
+            c.durations[i] = durations[i];
+        }
+        c.impact = impact;
+    }
+
+    /** Detik sejak awal animasi sampai frame benturan, atau -1 jika tidak ditentukan. */
+    public float impactTime(String name) {
+        Clip c = clips.get(name);
+        if (c == null || c.impact < 0) {
+            return -1f;
+        }
+        float t = 0f;
+        for (int i = 0; i < c.impact && i < c.durations.length; i++) {
+            t += c.durations[i];
+        }
+        return t;
+    }
+
     public boolean hasAnimation(String name) {
         return clips.containsKey(name);
     }
@@ -129,7 +181,7 @@ public class Actor25D {
         playing = c;
         playTime = 0f;
         holdLast = "gugur".equals(name);
-        return c.frames.length * c.seconds;
+        return c.total();
     }
 
     public void stopAnimation() {
@@ -206,7 +258,7 @@ public class Actor25D {
         animTime += dt;
         if (playing != null) {
             playTime += dt;
-            int k = (int) (playTime / playing.seconds);
+            int k = playing.frameAt(playTime);
             if (k >= playing.frames.length) {
                 if (holdLast) {
                     k = playing.frames.length - 1;

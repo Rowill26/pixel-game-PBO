@@ -46,14 +46,14 @@
       "lit": 0.95
     },
     {
-      "file": "mid.png",
-      "parallax": 0.7,
+      "file": "ground.png",
+      "parallax": 1.0,
       "normal": true,
       "lit": 1.0
     },
     {
-      "file": "ground.png",
-      "parallax": 1.0,
+      "file": "mid.png",
+      "parallax": 0.95,
       "normal": true,
       "lit": 1.0
     }
@@ -65,22 +65,18 @@
   },
   "torches": [
     {
-      "x": 196,
-      "y": 158
+      "x": 42,
+      "y": 196
     },
     {
-      "x": 404,
-      "y": 138
-    },
-    {
-      "x": 610,
-      "y": 230
+      "x": 566,
+      "y": 176
     }
   ],
   "staticLights": [
     {
-      "x": 70,
-      "y": 120,
+      "x": 40,
+      "y": 204,
       "z": 30,
       "color": [
         0.79,
@@ -157,7 +153,7 @@
       "id": "pendekar",
       "name": "Pendekar",
       "sprite": "pendekar",
-      "x": 462,
+      "x": 440,
       "y": 214,
       "side": "pengelana"
     },
@@ -165,7 +161,7 @@
       "id": "juru_mantra",
       "name": "Juru Mantra",
       "sprite": "juru_mantra",
-      "x": 512,
+      "x": 488,
       "y": 238,
       "side": "pengelana",
       "staff": [
@@ -177,7 +173,7 @@
       "id": "peramu",
       "name": "Peramu",
       "sprite": "peramu",
-      "x": 458,
+      "x": 436,
       "y": 262,
       "side": "pengelana"
     },
@@ -185,7 +181,7 @@
       "id": "pengintai",
       "name": "Pengintai",
       "sprite": "pengintai",
-      "x": 512,
+      "x": 488,
       "y": 288,
       "side": "pengelana"
     },
@@ -193,16 +189,16 @@
       "id": "ratna",
       "name": "Ratna",
       "sprite": "ratna",
-      "x": 594,
-      "y": 204,
+      "x": 548,
+      "y": 262,
       "side": "sekutu"
     },
     {
       "id": "bharadah",
       "name": "Mpu Bharadah",
       "sprite": "bharadah",
-      "x": 576,
-      "y": 236,
+      "x": 584,
+      "y": 284,
       "side": "sekutu"
     }
   ]
