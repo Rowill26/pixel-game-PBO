@@ -215,18 +215,32 @@ public class BattleManager {
         return yangHidup(lawanDari(getAktor()));
     }
 
-    /** Karakter yang boleh dipilih sebagai sasaran jurus aktor saat ini. */
+    /**
+     * Karakter yang boleh dipilih sebagai sasaran jurus aktor saat ini, menurut
+     * {@link KarakterMitos#bisaMenjadiSasaranJurus}. Jika kosong (mis. Balian saat semua kawan
+     * sehat), UI menonaktifkan tombol jurus.
+     */
     public List<KarakterMitos> getSasaranJurus() {
         KarakterMitos aktor = getAktor();
+        List<KarakterMitos> calon;
         switch (aktor.getSasaranJurus()) {
             case SATU_KAWAN:
-                return yangHidup(kawanDari(aktor));
+                calon = kawanDari(aktor);
+                break;
             case SATU_LAWAN:
             case SEMUA_LAWAN:
-                return yangHidup(lawanDari(aktor));
+                calon = lawanDari(aktor);
+                break;
             default:
                 throw new IllegalStateException("Jenis sasaran tidak dikenal: " + aktor.getSasaranJurus());
         }
+        List<KarakterMitos> sah = new ArrayList<>();
+        for (KarakterMitos k : calon) {
+            if (aktor.bisaMenjadiSasaranJurus(k)) {
+                sah.add(k);
+            }
+        }
+        return sah;
     }
 
     // ================================================================

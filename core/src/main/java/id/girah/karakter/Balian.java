@@ -77,6 +77,12 @@ public class Balian extends Pengelana {
         return JenisSasaran.SATU_KAWAN;
     }
 
+    /** Hanya kawan yang masih hidup dan terluka; menyembuhkan kawan yang sehat tidak ada gunanya. */
+    @Override
+    public boolean bisaMenjadiSasaranJurus(KarakterMitos calon) {
+        return calon.isHidup() && calon.getNyawa() < calon.getNyawaMaks();
+    }
+
     @Override
     public JarakAksi getJarakSerang() {
         return JarakAksi.JAUH;      // melempar kantung getah dari tempatnya

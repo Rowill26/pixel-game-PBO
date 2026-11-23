@@ -92,6 +92,15 @@ public abstract class KarakterMitos {
         return JarakAksi.JAUH;
     }
 
+    /**
+     * Apakah {@code calon} boleh dipilih sebagai sasaran jurus karakter ini.
+     * Bawaan: semua yang masih hidup. Penyembuh membatasinya ke kawan yang terluka,
+     * supaya pemain tidak bisa membuang giliran tanpa efek.
+     */
+    public boolean bisaMenjadiSasaranJurus(KarakterMitos calon) {
+        return calon.isHidup();
+    }
+
     /** Rumus kerusakan yang diterima. Bawaan: kekuatan dikurangi pertahanan. */
     protected int hitungKerusakanMasuk(int kekuatanSerangan) {
         return kekuatanSerangan - pertahanan;

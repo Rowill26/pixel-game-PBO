@@ -183,17 +183,41 @@ class BattleManagerTest {
         }
 
         @Test
-        @DisplayName("Ramuan Penawar hanya boleh ke kawan")
+        @DisplayName("Ramuan Penawar hanya boleh ke kawan yang terluka")
         void penyembuhanKeKawan() throws EnergiBatinHabisException {
             BattleManager b = pertarunganPenuh();
             lewatiSampai(b, balian);                        // Calon Arang sempat menyerang Senopati
             assertTrue(senopati.getNyawa() < senopati.getNyawaMaks());
             assertEquals(JenisSasaran.SATU_KAWAN, balian.getSasaranJurus());
-            assertEquals(List.of(senopati, wiku, telikSandi, balian), b.getSasaranJurus());
+            assertEquals(List.of(senopati), b.getSasaranJurus(), "Hanya Senopati yang terluka");
 
             assertThrows(IllegalArgumentException.class, () -> b.gunakanJurus(leak));
             b.gunakanJurus(senopati);
             assertEquals(senopati.getNyawaMaks(), senopati.getNyawa());
+        }
+
+        @Test
+        @DisplayName("Semua kawan sehat: jurus Balian ditolak tanpa menghabiskan giliran atau energi")
+        void penyembuhanKeKawanSehatDitolak() {
+            BattleManager b = new BattleManager(List.of(balian, wiku), List.of(leak));
+            b.mulai();                                      // Balian 11, Wiku 9, Leak 8
+            assertSame(balian, b.getAktor());
+            assertEquals(List.of(), b.getSasaranJurus());
+
+            assertThrows(IllegalArgumentException.class, () -> b.gunakanJurus(wiku));
+
+            assertSame(balian, b.getAktor(), "Balian masih boleh memilih aksi lain");
+            assertEquals(Balian.ENERGI_BATIN_AWAL, balian.getEnergiBatin());
+            assertEquals(0, b.getBabad().getJumlahPeristiwa());
+        }
+
+        @Test
+        @DisplayName("Sasaran jurus lawan tetap semua lawan yang hidup")
+        void sasaranJurusLawanTidakBerubah() {
+            BattleManager b = pertarunganPenuh();
+            assertEquals(List.of(leak, calonArang), b.getSasaranJurus());
+            leak.terimaSerangan(1000);
+            assertEquals(List.of(calonArang), b.getSasaranJurus());
         }
     }
 
