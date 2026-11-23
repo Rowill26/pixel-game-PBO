@@ -1,0 +1,24 @@
+# Hasil build Gradle
+.gradle/
+build/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Hasil ekspor Babad Pertarungan saat game dijalankan
+assets/babad/
+
+# Editor dan IDE
+.idea/
+*.iml
+.vscode/
+bin/
+out/
+
+# Sistem operasi
+.DS_Store
+Thumbs.db
+
+# Python (alat bantu asset)
+__pycache__/
+*.pyc
