@@ -2,6 +2,8 @@ apply plugin: 'java-library'
 
 dependencies {
     api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    // Font TTF pixel (monogram) untuk HUD, dialog, dan layar judul
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
     testImplementation platform("org.junit:junit-bom:$junitVersion")
     testImplementation 'org.junit.jupiter:junit-jupiter'
