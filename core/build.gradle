@@ -12,6 +12,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Naskah di assets/cerita diperiksa oleh SemuaNaskahAssetsTest: test harus dijalankan ulang
+    // setiap kali naskah berubah, bukan hanya saat kode berubah.
+    inputs.files(fileTree(rootProject.file('assets/cerita')))
+          .withPropertyName('naskahCerita')
+          .withPathSensitivity(PathSensitivity.RELATIVE)
     testLogging {
         events 'passed', 'skipped', 'failed'
         exceptionFormat = 'full'
