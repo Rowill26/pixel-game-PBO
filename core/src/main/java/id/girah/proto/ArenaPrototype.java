@@ -41,18 +41,18 @@ public class ArenaPrototype extends ApplicationAdapter {
     private PostProcessor post;
     private final PostProcessor.Settings fx = new PostProcessor.Settings();
     private Hud hud;
-    private final CameraRig rig = new CameraRig();
+    final CameraRig rig = new CameraRig();
     private final OrthographicCamera cam = new OrthographicCamera();
-    private final ParticleSystem particles = new ParticleSystem();
+    final ParticleSystem particles = new ParticleSystem();
     /** Efek serangan dan jurus (assets/fx). */
-    private FxPlayer effects;
+    FxPlayer effects;
     /** Layar cerita dan dialog (tombol C memutar naskah contoh). */
     private StoryLayer story;
     /** Layar judul dan menu utama. */
     private TitleLayer title;
     private final Map<String, Texture[][]> spriteCache = new HashMap<>();
     private final Map<Texture, TextureRegion> regions = new HashMap<>();
-    private final List<PointLight> tempLights = new ArrayList<>();
+    final List<PointLight> tempLights = new ArrayList<>();
     private final List<PointLight> frameLights = new ArrayList<>();
     private final float[] lightPos = new float[MAX_LIGHTS * 3];
     private final float[] lightColor = new float[MAX_LIGHTS * 3];
@@ -74,6 +74,13 @@ public class ArenaPrototype extends ApplicationAdapter {
     private int turn;
     private float demoTimer;
     private Action action;
+    /**
+     * Pertarungan sungguhan (back end) di arena yang sedang dimuat, atau {@code null} untuk lokasi
+     * cerita dan mode pamer ({@code --pamer}).
+     */
+    BattleSession session;
+    /** Tas Pusaka kelompok: dibuat sekali per permainan dan dipakai ulang di setiap pertarungan. */
+    private id.girah.pusaka.TasPusaka bag;
     final List<float[]> popups = new ArrayList<>();
     final List<String> popupText = new ArrayList<>();
     String narration = "Pilih aksi dengan panah dan Enter. F12 untuk daftar tombol.";
@@ -103,6 +110,15 @@ public class ArenaPrototype extends ApplicationAdapter {
 
     @Override
     public void create() {
+        if (options.keys != null) {
+            for (String k : options.keys.split(",")) {
+                int code = Input.Keys.valueOf(k.trim());
+                if (code < 0) {
+                    throw new IllegalArgumentException("Tombol tidak dikenal di --tekan: " + k);
+                }
+                scriptKeys.add(code);
+            }
+        }
         batch = new SpriteBatch(2000);
         lit = Shaders.load("sprite.vert", "lit.frag");
         post = new PostProcessor(SCREEN_W, SCREEN_H);
@@ -130,6 +146,7 @@ public class ArenaPrototype extends ApplicationAdapter {
 
     /** Menu "Mulai": the opening scene of Babak 1; its script continues into the first battle. */
     void startNewGame() {
+        bag = BattleSession.newBag();
         story.start("contoh_babak1");
     }
 
@@ -193,6 +210,10 @@ public class ArenaPrototype extends ApplicationAdapter {
 
     /** Memuat arena atau lokasi cerita mana pun dari {@code assets/arena/<key>/} (dipakai naskah cerita). */
     void loadArena(String key, String modeName) {
+        if (session != null) {
+            session.stop();                      // panduan 10.5: AI berhenti saat layar battle ditutup
+            session = null;
+        }
         if (arena != null) {
             arena.dispose();
         }
@@ -206,6 +227,12 @@ public class ArenaPrototype extends ApplicationAdapter {
         popups.clear();
         popupText.clear();
         applyGrade();
+        if (!options.pamer) {
+            if (bag == null) {
+                bag = BattleSession.newBag();
+            }
+            session = BattleSession.create(this, arena, bag, options.demo, options.fast, options.weakBoss);
+        }
     }
 
     private void applyGrade() {
@@ -234,10 +261,25 @@ public class ArenaPrototype extends ApplicationAdapter {
             }
             return;
         }
-        menuInput();
+        if (session != null) {
+            feedScriptKeys();
+            id.girah.battle.StatusBattle end = session.input();
+            if (end != null) {
+                afterBattle(end);
+                return;
+            }
+        } else {
+            menuInput();
+            showcaseKeys();
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) {
             hud.showHelp = !hud.showHelp;
         }
+        commonKeys();
+    }
+
+    /** Tombol pamer (tanpa back end): hanya aktif di mode {@code --pamer}. */
+    private void showcaseKeys() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             startAction(false);
         }
@@ -265,6 +307,10 @@ public class ArenaPrototype extends ApplicationAdapter {
                 }
             }
         }
+    }
+
+    /** Tombol tampilan yang berlaku di semua mode. */
+    private void commonKeys() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             useNormals = !useNormals;
         }
@@ -485,6 +531,9 @@ public class ArenaPrototype extends ApplicationAdapter {
 
     /** Pengelana yang sedang bergiliran (yang gugur dilewati), atau null jika semua gugur. */
     Actor25D activeActor() {
+        if (session != null) {
+            return session.activeActor();
+        }
         List<Actor25D> party = party();
         for (int k = 0; k < party.size(); k++) {
             Actor25D a = party.get((activeIndex() + k) % party.size());
@@ -499,31 +548,89 @@ public class ArenaPrototype extends ApplicationAdapter {
         return turn / Math.max(1, party().size()) + 1;
     }
 
+    /** "Ronde 2" atau "Ronde 2 dari 8" (batas ronde). */
+    String roundLabel() {
+        return session != null ? session.roundLabel() : "Ronde " + round();
+    }
+
+    /** Urutan giliran sungguhan (kedua pihak), atau {@code null} di mode pamer. */
+    List<Actor25D> turnOrder() {
+        return session != null ? session.turnOrder() : null;
+    }
+
+    /** Musuh yang sedang berpikir (tanda "..."), atau {@code null}. */
+    Actor25D thinkingActor() {
+        return session != null ? session.thinkingActor() : null;
+    }
+
+    /** Judul hasil akhir pertarungan untuk HUD, atau {@code null}. */
+    String resultTitle() {
+        return session != null ? session.resultTitle() : null;
+    }
+
+    String resultHint() {
+        return session != null ? session.resultHint() : "";
+    }
+
+    String babadMessage() {
+        return session != null ? session.babadMessage : null;
+    }
+
+    /** Setelah pemain menekan Enter pada hasil akhir (panduan bagian 8). */
+    private void afterBattle(id.girah.battle.StatusBattle end) {
+        Gdx.app.log("battle", "setelah " + end + ": " + (end == id.girah.battle.StatusBattle.KALAH ? "ulangi" : "layar judul"));
+        if (end == id.girah.battle.StatusBattle.KALAH) {
+            loadArena(arena.key, mode.name);      // ulangi: pengelana dan musuh baru, BattleManager baru
+            return;
+        }
+        // MENANG / WAKTU_HABIS: naskah lanjutan dan Ending 3 belum ada (catatan D6), kembali ke layar judul
+        loadArena("girah", null);
+        title.open();
+    }
+
     float clock() {
         return time;
     }
 
     boolean menuOpen() {
+        if (session != null) {
+            return session.menuOpen();
+        }
         return action == null && later.isEmpty() && transforming == null && activeActor() != null;
     }
 
     String[] menuItems() {
+        if (session != null) {
+            return session.menuItems();
+        }
         return MENU;
     }
 
     int menuIndex() {
+        if (session != null) {
+            return session.menuIndex();
+        }
         return menuIndex;
     }
 
     boolean choosingTarget() {
+        if (session != null) {
+            return session.choosingTarget();
+        }
         return targets != null;
     }
 
     Actor25D menuTarget() {
+        if (session != null) {
+            return session.menuTarget();
+        }
         return menuOpen() && targets != null && !targets.isEmpty() ? targets.get(targetIndex % targets.size()) : null;
     }
 
     boolean menuEnabled(int i) {
+        if (session != null) {
+            return session.menuEnabled(i);
+        }
         Actor25D a = activeActor();
         if (a == null) {
             return false;
@@ -912,44 +1019,52 @@ public class ArenaPrototype extends ApplicationAdapter {
         }
     }
 
-    private void popup(float x, float y, String text) {
+    void popup(float x, float y, String text) {
         popups.add(new float[] {x, y, 1.0f});
         popupText.add(text);
     }
 
     /** Sisa waktu hit-stop (detik nyata): animasi dan aksi hampir berhenti sesaat saat benturan. */
     private float hitStop;
+    private boolean exitPending;
+    private int transformShotFrame = -1;
+    /** Tombol uji (--tekan) yang tersisa, dan tombol uji untuk frame ini. */
+    private final java.util.ArrayDeque<Integer> scriptKeys = new java.util.ArrayDeque<>();
+    private int scriptKey = -1;
+    private int scriptWait;
 
-    private void update(float realDt) {
-        time += realDt;
-        // hit-stop slows the action and the actors; the camera shake and particles keep real time
-        float dt = hitStop > 0f ? realDt * 0.05f : realDt;
-        hitStop = Math.max(0f, hitStop - realDt);
-        handleInput();
-        if (options.demo) {
-            demoTimer += dt;
-            if (demoTimer > 2.6f && action == null) {
-                demoTimer = 0f;
-                startAction(turn % 4 == 3);
-            }
+    /** Seperti {@code Gdx.input.isKeyJustPressed}, ditambah tombol uji dari {@code --tekan}. */
+    boolean justPressed(int key) {
+        return Gdx.input.isKeyJustPressed(key) || key == scriptKey;
+    }
+
+    /** Mengambil satu tombol uji ketika sesi siap menerima tombol (jeda 12 frame antar tombol). */
+    private void feedScriptKeys() {
+        scriptKey = -1;
+        if (scriptKeys.isEmpty() || session == null) {
+            return;
         }
-        if (frame == options.attackAt) {
-            startAction(false);
+        if (!session.acceptsKeys()) {
+            scriptWait = 0;
+            return;
         }
-        if (frame == options.jurusAt) {
-            startAction(true);
+        if (++scriptWait < 12) {
+            return;
         }
-        if (frame == options.storyAt && options.story != null) {
-            story.start(options.story);
-            story.jump(options.storyLine);
+        scriptWait = 0;
+        scriptKey = scriptKeys.poll();
+        Gdx.app.log("uji", "tekan " + Input.Keys.toString(scriptKey));
+    }
+
+    /** Dipanggil {@link BattleSession} saat wujud baru bos muncul (untuk screenshot uji). */
+    void onBossTransformed() {
+        if (options.shotTransform != null) {
+            transformShotFrame = frame + 20;
         }
-        if (frame == options.startAt && title.active) {
-            title.active = false;
-            startNewGame();
-        }
-        if (frame == options.storyEndAt) {
-            story.finish();
-        }
+    }
+
+    /** Pemicu uji mode pamer (tanpa back end). */
+    private void pamerTriggers() {
         if (frame == options.chooseAt) {
             // test: pick a menu item for the active member (shows target selection)
             menuIndex = options.chooseItem;
@@ -976,6 +1091,59 @@ public class ArenaPrototype extends ApplicationAdapter {
         }
         if (frame == options.gugurAt && pendekar() != null) {
             pendekar().play("gugur");
+        }
+    }
+
+    /** Membekukan aksi sesaat saat benturan (dipakai juga oleh {@link BattleSession}). */
+    void hitStop(float seconds) {
+        hitStop = Math.max(hitStop, seconds);
+    }
+
+    private void update(float realDt) {
+        time += realDt;
+        // hit-stop slows the action and the actors; the camera shake and particles keep real time
+        float dt = hitStop > 0f ? realDt * 0.05f : realDt;
+        hitStop = Math.max(0f, hitStop - realDt);
+        handleInput();
+        if (session != null) {
+            if (frame == options.attackAt) {
+                session.quickAction(0);
+            }
+            if (frame == options.jurusAt) {
+                session.quickAction(1);
+            }
+            session.update(dt);
+            narration = session.narration;
+            if (options.exitOnEnd && session.resultTitle() != null && !exitPending) {
+                Gdx.app.log("battle", "hasil: " + session.resultTitle() + " | " + session.babadMessage);
+                exitPending = true;                    // keluar setelah frame ini digambar (screenshot hasil)
+            }
+        } else if (options.demo) {
+            demoTimer += dt;
+            if (demoTimer > 2.6f && action == null) {
+                demoTimer = 0f;
+                startAction(turn % 4 == 3);
+            }
+        }
+        if (session == null && frame == options.attackAt) {
+            startAction(false);
+        }
+        if (session == null && frame == options.jurusAt) {
+            startAction(true);
+        }
+        if (frame == options.storyAt && options.story != null) {
+            story.start(options.story);
+            story.jump(options.storyLine);
+        }
+        if (frame == options.startAt && title.active) {
+            title.active = false;
+            startNewGame();
+        }
+        if (frame == options.storyEndAt) {
+            story.finish();
+        }
+        if (session == null) {
+            pamerTriggers();
         }
         updateAction(dt);
         checkBeaten();
@@ -1293,7 +1461,17 @@ public class ArenaPrototype extends ApplicationAdapter {
             hud.draw(batch, arena, mode, fx, rig);
         }
         frame++;
-        if (options.shotPath != null && frame == options.shotFrame) {
+        if (frame == transformShotFrame) {
+            saveScreenshot(options.shotTransform);
+        }
+        if (exitPending) {
+            if (options.shotPath != null) {
+                saveScreenshot(options.shotPath);
+            }
+            Gdx.app.exit();
+            return;
+        }
+        if (options.shotPath != null && frame == options.shotFrame && !options.exitOnEnd) {
             saveScreenshot(options.shotPath);
             Gdx.app.exit();
         }
@@ -1324,6 +1502,9 @@ public class ArenaPrototype extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        if (session != null) {
+            session.stop();
+        }
         arena.dispose();
         for (Texture[][] t : spriteCache.values()) {
             for (Texture[] set : t) {

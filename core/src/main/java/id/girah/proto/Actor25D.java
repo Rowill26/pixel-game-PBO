@@ -44,6 +44,15 @@ public class Actor25D {
     public float flash;
     public float hp = 1f;
     public float energy = 1f;
+    /**
+     * Nyawa dan energi batin yang <b>ditampilkan</b> (panduan back end bagian 7): di back end nilainya
+     * sudah berubah saat event onAksi tiba, tetapi di layar baru berkurang pada frame benturan.
+     * Bernilai -1 selama tokoh tidak terhubung ke back end (mode pamer).
+     */
+    public int nyawa = -1;
+    public int nyawaMaks = -1;
+    public int energi = -1;
+    public int energiMaks = -1;
     private float animTime;
 
     /** Animasi aksi sekali jalan (serang, jurus, terluka, gugur). */
@@ -161,6 +170,26 @@ public class Actor25D {
             t += c.durations[i];
         }
         return t;
+    }
+
+    /** Menyelaraskan bar HUD ({@link #hp}, {@link #energy}) dengan nilai yang ditampilkan. */
+    public void syncBars() {
+        if (nyawaMaks > 0) {
+            nyawa = Math.max(0, Math.min(nyawa, nyawaMaks));
+            hp = nyawa / (float) nyawaMaks;
+        }
+        if (energiMaks > 0) {
+            energi = Math.max(0, Math.min(energi, energiMaks));
+            energy = energi / (float) energiMaks;
+        } else if (energiMaks == 0) {
+            energy = 0f;
+        }
+    }
+
+    /** Lama total satu animasi aksi (detik), atau 0 jika tidak ada. */
+    public float animationLength(String name) {
+        Clip c = clips.get(name);
+        return c == null ? 0f : c.total();
     }
 
     public boolean hasAnimation(String name) {

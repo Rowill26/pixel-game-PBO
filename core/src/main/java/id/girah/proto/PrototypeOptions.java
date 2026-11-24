@@ -11,6 +11,18 @@ public final class PrototypeOptions {
     public int storyEndAt = -1;
     public String mode;
     public boolean demo;
+    /** Mode pamer lama: aksi pertunjukan tanpa back end (tombol E, K, X, G). */
+    public boolean pamer;
+    /** AI musuh berpikir lebih singkat (untuk uji). */
+    public boolean fast;
+    /** Keluar begitu hasil pertarungan tampil (untuk uji otomatis). */
+    public boolean exitOnEnd;
+    /** UJI SAJA: nyawa bos dikurangi sebelum pertarungan mulai, supaya pergantian wujud bisa dicek. */
+    public boolean weakBoss;
+    /** UJI SAJA: simpan screenshot tepat saat wujud ritual bos muncul. */
+    public String shotTransform;
+    /** UJI SAJA: tombol yang "ditekan" berurutan saat menu/hasil terbuka, mis. "DOWN,ENTER,ENTER". */
+    public String keys;
     public String shotPath;
     public int shotFrame = 120;
     public int attackAt = -1;
@@ -40,6 +52,12 @@ public final class PrototypeOptions {
                 case "--story-end-at": o.storyEndAt = Integer.parseInt(next); i++; break;
                 case "--mode": o.mode = next; i++; break;
                 case "--demo": o.demo = true; o.title = false; break;
+                case "--pamer": o.pamer = true; break;
+                case "--cepat": o.fast = true; break;
+                case "--keluar-saat-selesai": o.exitOnEnd = true; break;
+                case "--uji-bos-lemah": o.weakBoss = true; break;
+                case "--shot-berubah": o.shotTransform = next; i++; break;
+                case "--tekan": o.keys = next; i++; break;
                 case "--shot": o.shotPath = next; i++; break;
                 case "--frames": o.shotFrame = Integer.parseInt(next); i++; break;
                 case "--attack-at": o.attackAt = Integer.parseInt(next); i++; break;

@@ -51,38 +51,61 @@ Argumen tambahan, contoh: `./gradlew :lwjgl3:run --args="--arena pemakaman --dem
 Folder `prototype-2.5d/` sekarang hanya berisi `tools/` (alat Python untuk asset), `screenshots/`,
 dan README ini. **Semua perintah `python` di bawah dijalankan dari root repo.**
 
+## Pertarungan sungguhan (back end)
+
+Arena battle (`hutan`, `pemakaman`) sekarang memakai `BattleManager` dari back end
+(`core/src/main/java/id/girah/proto/BattleSession.java`, mengikuti `docs/panduan-integrasi-backend.md`):
+
+- Pengelana dan musuh dibuat dari tokoh di `arena.json` (kecocokan sprite dicek dengan `getIdSprite()`).
+  Ratna dan Mpu Bharadah belum punya kelas back end, jadi hanya hiasan (catatan D2).
+- Menu: **Serang**, **Jurus**, **Pusaka** (Tirta Suci, Kembang Kantil). Tombol nonaktif mengikuti aturan
+  back end, misalnya Jurus Peramu hanya aktif jika ada kawan yang terluka.
+- Setiap aksi (pemain atau AI) diputar dari event `onAksi`: maju jika jaraknya `DEKAT`, angka kerusakan dan
+  pemulihan dari back end, nyawa di HUD baru berkurang pada frame benturan, animasi gugur.
+- Narasi tampil baris demi baris dari `AntreanDialog`; `Enter` mempercepatnya. AI musuh menunggu sampai
+  animasi dan narasi selesai (`izinkanBertindak`), dan menampilkan "..." saat berpikir.
+- Akhir pertarungan: Babad diekspor ke `assets/babad/`. **KALAH** → `Enter` mengulang pertarungan;
+  **MENANG** / **WAKTU HABIS** → `Enter` kembali ke layar judul (naskah lanjutan belum ada, catatan D6).
+- Calon Arang berganti ke wujud ritual saat nyawanya ≤ 30% (hanya tampilan; back end belum punya wujud
+  kedua, catatan D4).
+
+Mode lama tanpa back end (tombol pamer efek E, K, X, G, SPASI, J) masih ada lewat `--pamer`.
+
 | Argumen | Arti |
 |---|---|
 | `--arena hutan\|pemakaman` | Arena awal |
 | `--mode day\|night` | Waktu awal (arena hutan punya keduanya) |
-| `--demo` | Serangan dan jurus berjalan otomatis |
+| `--demo` | Kedua pihak dimainkan otomatis |
+| `--pamer` | Mode pamer lama tanpa back end |
 | `--shot file.png --frames N` | Simpan screenshot pada frame N lalu keluar |
-| `--attack-at N` / `--jurus-at N` | Picu serangan/jurus pada frame N |
-| `--fx-at N` / `--fx-skip i` | Uji: putar pamer efek ke-i (0–7) pada frame N |
+| `--attack-at N` / `--jurus-at N` | Pengelana yang bergiliran menyerang / memakai jurus pada frame N |
 | `--title` / `--no-title` | Paksa tampil / lewati layar judul |
 | `--start-at N` / `--story-end-at N` | Uji: tekan Mulai pada frame N / selesaikan naskah pada frame N |
-| `--boss-down-at N` | Uji: nyawa bos habis pada frame N (Calon Arang berubah ke wujud ritual) |
+| `--cepat` | Uji: AI musuh berpikir lebih singkat |
+| `--keluar-saat-selesai` | Uji: keluar saat hasil pertarungan tampil (dengan `--shot`: screenshot hasil) |
+| `--tekan Down,Enter,...` | Uji: tombol yang "ditekan" berurutan setiap kali menu/hasil terbuka |
+| `--uji-bos-lemah` / `--shot-berubah f.png` | Uji: nyawa bos dikurangi di awal / screenshot saat bos berubah wujud |
+| `--fx-at N`, `--boss-down-at N`, dst. | Pemicu uji mode `--pamer` |
+
+Contoh uji satu pertarungan penuh: `./gradlew :lwjgl3:run --args="--arena hutan --demo --cepat --keluar-saat-selesai"`.
 
 ## Tombol
 
 | Tombol | Fungsi |
 |---|---|
-| Panah atas/bawah, `Enter` | Menu aksi melayang (Serang, Jurus, Pusaka) untuk pengelana yang bergiliran |
-| Panah, `Enter`, `Backspace` | Pilih sasaran (musuh, atau kawan untuk Ramuan Penawar), pakai, batal |
+| Panah atas/bawah, `Enter` (atau `Z`) | Menu aksi melayang (Serang, Jurus, Pusaka) untuk pengelana yang bergiliran |
+| Panah, `Enter`, `Backspace` (atau `X`) | Pilih sasaran / pusaka, pakai, kembali |
+| `Enter` saat narasi | Percepat narasi |
+| `Enter` di panel hasil | KALAH: ulangi · MENANG: layar judul |
 | `F12` | Tampilkan/sembunyikan daftar tombol |
-| `C` | Putar contoh layar cerita (`assets/cerita/contoh_babak2.json`); `Enter` lanjut, panah + `Enter` memilih, `ESC` keluar |
-| `SPASI` | Serang cepat (sasaran acak) |
-| `J` | Juru Mantra memakai Mantra Lingkar Suci (animasi jurus, cahaya tongkat ikut bergerak) |
-| `K` | Pendekar memakai jurus Tebasan Keris Pusaka (animasi jurus) |
-| `X` | Musuh menyerang Pendekar (animasi terluka) |
-| `E` | Pamer efek jurus: setiap tekan memutar jurus tokoh berikutnya (Peramu, Pengintai, Ratna, Bharadah, Pengikut, Pemimpin Pengikut, Calon Arang, Leak) beserta efeknya |
-| `G` | Pendekar gugur / bangkit lagi (animasi gugur, frame terakhir ditahan) |
+| `C` | Putar contoh layar cerita (`assets/cerita/contoh_babak2.json`) |
 | `T` | Ganti siang/malam (arena hutan) |
-| `1` / `2` | Ganti arena |
+| `1` / `2` | Ganti arena (pertarungan baru) |
 | `F1` – `F6` | Nyalakan/matikan: normal map, blur kedalaman, bloom, kamera + parallax, grading + vignette, bayangan |
 | `P` | Simpan screenshot ke `screenshots/` |
 | `H` | Sembunyikan HUD |
 | `ESC` | Keluar |
+| `SPASI`, `J`, `K`, `X`, `E`, `G` | Hanya di `--pamer`: serang cepat, mantra, jurus Pendekar, Pendekar diserang, pamer efek, gugur/bangkit |
 
 **Cara menilai:** matikan efek satu per satu dengan `F1`–`F6` untuk melihat sumbangan
 masing-masing terhadap rasa 2.5D, lalu nyalakan lagi.

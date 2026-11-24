@@ -147,7 +147,9 @@ public class Hud implements Disposable {
         drawBottom(batch, party, active);
         drawMenu(batch, active);
         drawPopups(batch);
+        drawThinking(batch);
         drawEnemyNames(batch, arena);
+        drawResult(batch);
         if (showHelp) {
             drawHelp(batch, fx, rig);
         } else {
@@ -168,17 +170,18 @@ public class Hud implements Disposable {
         float w = Math.max(layout.width, 70) + 14;
         panel.draw(batch, 4, H - 36, w, 32);
         font.setColor(GOLD);
-        font.draw(batch, "Ronde " + game.round(), 11, H - 10);
+        font.draw(batch, game.roundLabel(), 11, H - 10);
         font.setColor(MUTED);
         font.draw(batch, place, 11, H - 21);
 
-        // turn order: the coming party turns, starting with the active member
-        int n = party.size();
+        // turn order: the real order from the back end (both sides), or the party loop in pamer mode
+        List<Actor25D> order = game.turnOrder();
+        int n = order != null ? order.size() : party.size();
         if (n == 0) {
             return;
         }
-        int start = game.activeIndex();
-        int shown = 6;
+        int start = order != null ? 0 : game.activeIndex();
+        int shown = order != null ? Math.min(8, n) : 6;
         // start right after the title panel, so a long arena name never overlaps
         layout.setText(font, "Giliran");
         float labelX = 4 + w + 10;
@@ -186,7 +189,7 @@ public class Hud implements Disposable {
         font.setColor(MUTED);
         font.draw(batch, "Giliran", labelX, H - 10);
         for (int k = 0; k < shown; k++) {
-            Actor25D a = party.get((start + k) % n);
+            Actor25D a = order != null ? order.get(k) : party.get((start + k) % n);
             Texture t = icon(a);
             float x = x0 + k * 19;
             float y = H - 22 - (k == 0 ? 2 : 0);
@@ -226,7 +229,8 @@ public class Hud implements Disposable {
             font.setColor(a.isDown() ? DIM : on ? GOLD : TEXT);
             font.draw(batch, shortName(a.name), x + 26, BOTTOM - 12);
             font.setColor(MUTED);
-            font.draw(batch, Math.round(a.hp * 120) + "/120", x + 26, BOTTOM - 22);
+            String hpText = a.nyawaMaks > 0 ? a.nyawa + "/" + a.nyawaMaks : Math.round(a.hp * 120) + "/120";
+            font.draw(batch, hpText, x + 26, BOTTOM - 22);
             bar(batch, x + 7, 17, cw - 14, 4, a.hp, HP, HP_D);
             bar(batch, x + 7, 10, cw - 14, 3, a.energy, EN, EN_D);
         }
@@ -323,11 +327,56 @@ public class Hud implements Disposable {
         outlined.setColor(Color.WHITE);
     }
 
+    /** "..." di atas musuh yang sedang berpikir (panduan bagian 6). */
+    private void drawThinking(SpriteBatch batch) {
+        Actor25D a = game.thinkingActor();
+        if (a == null) {
+            return;
+        }
+        int dots = 1 + ((int) (game.clock() * 3f)) % 3;
+        String s = "...".substring(0, dots);
+        outlined.setColor(TEXT);
+        layout.setText(outlined, "...");
+        outlined.draw(batch, s, ux(a.footX()) - layout.width / 2f, uy(a.footY() + a.height() - 4f) + 12);
+    }
+
+    /** Panel hasil akhir pertarungan (panduan bagian 8). */
+    private void drawResult(SpriteBatch batch) {
+        String title = game.resultTitle();
+        if (title == null) {
+            return;
+        }
+        String babadText = game.babadMessage();
+        float w = 200;
+        if (babadText != null) {
+            layout.setText(font, babadText);
+            w = Math.max(w, layout.width + 24);
+        }
+        float h = 46;
+        float x = (W - w) / 2f;
+        float y = (H - h) / 2f + 20;
+        panelActive.draw(batch, x, y, w, h);
+        outlined.setColor(GOLD);
+        layout.setText(outlined, title);
+        outlined.draw(batch, title, (W - layout.width) / 2f, y + h - 8);
+        String babad = game.babadMessage();
+        font.setColor(MUTED);
+        if (babad != null) {
+            layout.setText(font, babad);
+            font.draw(batch, babad, (W - layout.width) / 2f, y + h - 21);
+        }
+        font.setColor(TEXT);
+        String hint = game.resultHint();
+        layout.setText(font, hint);
+        font.draw(batch, hint, (W - layout.width) / 2f, y + 12);
+    }
+
     private void drawHelp(SpriteBatch batch, PostProcessor.Settings fx, CameraRig rig) {
+        boolean real = game.session != null;
         String[] help = {
-                "Panah: pilih   Enter: pakai   Backspace: batal",
-                "SPASI serang cepat   J mantra   K jurus Pendekar",
-                "X Pendekar diserang   G gugur/bangkit   E pamer efek",
+                "Panah: pilih   Enter/Z: pakai   Backspace/X: batal",
+                real ? "Enter juga mempercepat narasi" : "SPASI serang cepat   J mantra   K jurus Pendekar",
+                real ? "C contoh layar cerita" : "X Pendekar diserang   G gugur/bangkit   E pamer efek",
                 "T siang/malam   1/2 arena   P screenshot   H HUD",
                 "F1 normal map " + onOff(game.useNormals) + "   F2 blur " + onOff(fx.dof) + "   F3 bloom " + onOff(fx.bloom),
                 "F4 kamera " + onOff(rig.enabled) + "   F5 grading " + onOff(fx.grade) + "   F6 bayangan " + onOff(game.useShadows),
