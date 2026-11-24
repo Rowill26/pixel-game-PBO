@@ -59,7 +59,7 @@ Dari dokumen alur cerita dan brief arah visual (bagian E). Perlu diputuskan **ma
 | D3 | **Sumber ritual** yang dihancurkan sebelum batas giliran habis (fase 3) | Ada `batasRonde` + `WAKTU_HABIS`, tetapi belum ada target "sumber ritual" | Sprite sumber ritual (utuh/retak/hancur) | 🟠 Penting | Usulan |
 | D4 | **Calon Arang berganti wujud** (manusia → wujud ritual) di fase 2 | `CalonArang` hanya satu wujud; `isNyawaRendah()` bisa dipakai sebagai pemicu | Sprite wujud ritual + animasi berubah wujud | 🟠 Penting | Usulan |
 | D5 | **Kabut mengurangi akurasi** (fase 1) dan **kerusakan berkala** (fase 3) | Belum ada | Lapisan kabut, efek kerusakan berkala | 🟢 Saran | Usulan |
-| D6 | **Sistem dialog, pilihan, kepercayaan (Ratna/warga), evakuasi, tiga ending** | Belum ada sama sekali | Layar cerita, potret dialog, UI pilihan | 🟠 Penting | Usulan |
+| D6 | **Sistem dialog, pilihan, kepercayaan (Ratna/warga), evakuasi, tiga ending** | Status cerita, pembaca/pemutar naskah, efek dan syarat, penentu ending sudah ada (Rowill26, PR #4, `5b15182`); front end sudah memakai `PemutarNaskah` (2026-11-24). **Sisa:** ending baru bisa ditentukan setelah pertarungan ritual Babak 5 (`catatHasilRitual`), yang menunggu D3/D7; daftar pertarungan per babak belum ada, jadi setelah MENANG game kembali ke layar judul. | Naskah lima babak (ditulis front end/penulis naskah) | 🟠 Penting | Sebagian selesai |
 | D7 | **Pertarungan tiga fase** dalam satu battle akhir | `BattleManager` satu fase | — | 🟢 Saran | Usulan |
 
 ---
@@ -71,3 +71,4 @@ Dari dokumen alur cerita dan brief arah visual (bagian E). Perlu diputuskan **ma
 | 2026-11-22 | Catatan awal: A1–A6, B1–B6, C1–C2, D1–D7 dari pemeriksaan kode backend, brief, dan prototipe 2.5D | Front end (usulan) |
 | 2026-11-23 | Tambah B7: informasi jarak dekat/jauh per aksi (gerak maju sudah dibuat di front end) | Front end (usulan) |
 | 2026-11-24 | Perbarui status A1–A4, A6, B1–B7, C1–C2, D1 (sudah dikerjakan back end di PR #2/#3 dan diintegrasikan front end). Tambah C3 (bos Babak 5 hampir mustahil dikalahkan, dari uji otomatis), C4 (setter nyawa public), C5 (Tas Pusaka saat mengulang setelah KALAH) | Front end (usulan) |
+| 2026-11-24 | D6 menjadi Sebagian selesai (PR #4 digabung; StoryLayer memakai PemutarNaskah). Sisa: ending setelah pertarungan ritual, daftar pertarungan per babak | Front end (usulan) |

@@ -81,6 +81,12 @@ public class ArenaPrototype extends ApplicationAdapter {
     BattleSession session;
     /** Tas Pusaka kelompok: dibuat sekali per permainan dan dipakai ulang di setiap pertarungan. */
     private id.girah.pusaka.TasPusaka bag;
+    /** Status cerita (nilai kepercayaan, penanda pilihan): dibuat sekali per permainan (panduan 11). */
+    private id.girah.cerita.StatusCerita storyStatus = new id.girah.cerita.StatusCerita();
+
+    id.girah.cerita.StatusCerita storyStatus() {
+        return storyStatus;
+    }
     final List<float[]> popups = new ArrayList<>();
     final List<String> popupText = new ArrayList<>();
     String narration = "Pilih aksi dengan panah dan Enter. F12 untuk daftar tombol.";
@@ -147,6 +153,7 @@ public class ArenaPrototype extends ApplicationAdapter {
     /** Menu "Mulai": the opening scene of Babak 1; its script continues into the first battle. */
     void startNewGame() {
         bag = BattleSession.newBag();
+        storyStatus = new id.girah.cerita.StatusCerita();
         story.start("contoh_babak1");
     }
 
@@ -1141,6 +1148,9 @@ public class ArenaPrototype extends ApplicationAdapter {
         }
         if (frame == options.storyEndAt) {
             story.finish();
+            if (options.storyChoice >= 0 && story.choosing()) {
+                story.choose(options.storyChoice);     // uji: pilih opsi; balasannya tampil berikutnya
+            }
         }
         if (session == null) {
             pamerTriggers();

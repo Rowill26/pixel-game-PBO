@@ -11,11 +11,15 @@
     {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Wabah ini tidak menunggu. Kita harus memilih ke mana lebih dulu."},
     {"choice": ["Mendahulukan Girah", "Mendahulukan Tapak Wangi"],
      "replies": [
-       [{"who": "ratna", "name": "Ratna Manggali", "face": "netral", "text": "Kalian mau mendengar cerita kami dulu? Terima kasih... sudah lama tidak ada yang bertanya."},
-        {"who": "narator", "text": "Kepercayaan Ratna bertambah."}],
+       [{"who": "ratna", "name": "Ratna Manggali", "face": "netral", "text": "Kalian mau mendengar cerita kami dulu? Terima kasih... sudah lama tidak ada yang bertanya."}],
        [{"who": "pengintai", "name": "Pengintai", "face": "tegas", "text": "Warga Tapak Wangi sekarat. Girah bisa menunggu sampai besok."},
-        {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "...Seperti biasa. Girah selalu bisa menunggu."},
-        {"who": "narator", "text": "Kepercayaan Ratna berkurang."}]
-     ]}
+        {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "...Seperti biasa. Girah selalu bisa menunggu."}]
+     ],
+     "efek": [
+       {"kepercayaanRatna": 1, "kepercayaanGirah": 1, "tandai": ["penawar_girah_dulu"]},
+       {"kepercayaanRatna": -1, "kepercayaanTapakWangi": 1, "tandai": ["penawar_tapak_wangi_dulu"]}
+     ]},
+    {"who": "narator", "text": "Persediaan kedua dibuat malam itu. Girah tidak lagi menunggu terlalu lama.", "syarat": {"penanda": ["penawar_girah_dulu"]}},
+    {"who": "narator", "text": "Janda Wening mendapat penawar lebih dulu. Napasnya mulai tenang.", "syarat": {"penanda": ["penawar_tapak_wangi_dulu"]}}
   ]
 }

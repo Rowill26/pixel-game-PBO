@@ -210,6 +210,14 @@ potret. Pilihan: `{"choice": ["A", "B"], "replies": [[baris jika A], [baris jika
 `assets/potret/<who>_<face>.png` (128×192, menghadap kanan); bila belum ada dipakai sprite tokoh
 diperbesar sebagai pengganti sementara. Uji: `--story contoh_babak2 --story-line 4`.
 
+Naskah dibaca dan dijalankan oleh **back end** (`PembacaNaskah`, `PemutarNaskah`, `StatusCerita`,
+panduan integrasi bagian 11). Format lengkap untuk penulis naskah, termasuk **`efek`** pilihan
+(kepercayaan Ratna/warga, penanda keputusan) dan **`syarat`** baris/opsi, ada di
+[`docs/format-naskah.md`](../docs/format-naskah.md). Perubahan nilai setelah memilih muncul sebentar di
+kanan atas ("Kepercayaan Ratna +1"). `"then"` boleh berisi arena pertarungan **atau** nama naskah
+berikutnya. `./gradlew test` memeriksa semua naskah di `assets/cerita/`. Uji pilihan:
+`--story contoh_babak2 --story-end-at 30 --pilih 0` (0 = opsi pertama).
+
 Potret dari AI (pixel art setengah badan, latar polos) diubah dengan:
 
 ```bash

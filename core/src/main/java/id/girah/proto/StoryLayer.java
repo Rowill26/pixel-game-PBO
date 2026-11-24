@@ -15,9 +15,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
+import id.girah.cerita.BarisDialog;
+import id.girah.cerita.Naskah;
+import id.girah.cerita.NaskahTidakValidException;
+import id.girah.cerita.NilaiCerita;
+import id.girah.cerita.OpsiPilihan;
+import id.girah.cerita.PembacaNaskah;
+import id.girah.cerita.PemutarNaskah;
+import id.girah.cerita.StatusCerita;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +34,14 @@ import java.util.Map;
  * besar di kiri, kotak dialog lebar dan miring yang menutupi tepi kanan potret, papan nama miring emas,
  * pilihan berupa panel miring bertumpuk, judul babak dan misi di atas.
  *
- * <p>Naskah dibaca dari {@code cerita/<nama>.json}. Potret dicari di {@code potret/<siapa>_<ekspresi>.png}
- * (128x192); bila belum ada, sementara dipakai sprite tokoh yang diperbesar 3x (bagian atas badan).
- * Bentuk panel dan warna adalah identitas game ini, bukan tiruan Persona.
+ * <p>Naskah dibaca dan dijalankan oleh back end (paket {@code id.girah.cerita}, panduan integrasi
+ * bagian 11): {@link PembacaNaskah} memeriksa format, {@link PemutarNaskah} memberi baris/pilihan
+ * berikutnya dan melewati yang syaratnya tidak terpenuhi, dan efek pilihan dicatat di
+ * {@link StatusCerita} milik permainan. Naskah ada di {@code cerita/<nama>.json}.
+ *
+ * <p>Potret dicari di {@code potret/<siapa>_<ekspresi>.png} (128x192); bila belum ada, sementara
+ * dipakai sprite tokoh yang diperbesar 3x (bagian atas badan). Bentuk panel dan warna adalah
+ * identitas game ini, bukan tiruan Persona.
  */
 public class StoryLayer implements Disposable {
 
@@ -47,16 +59,6 @@ public class StoryLayer implements Disposable {
     private static final Color NARRATOR = Color.valueOf("c9c1ad");     // brief: narator tanpa potret, Putih 1
     private static final Color MUTED = Color.valueOf("878d87");
 
-    /** Satu baris naskah, atau satu titik pilihan. */
-    private static final class Line {
-        String who;
-        String name;
-        String face;
-        String text;
-        String[] choices;
-        List<List<Line>> replies;
-    }
-
     public boolean active;
     private final ArenaPrototype game;
     private final ShapeRenderer shapes = new ShapeRenderer();
@@ -70,14 +72,19 @@ public class StoryLayer implements Disposable {
     private final List<Texture> owned = new ArrayList<>();
 
     private String title = "";
-    /** Arena loaded when the script ends ("then" in the script), e.g. the battle that follows. */
-    private String then;
     private String mission = "";
-    private final List<Line> queue = new ArrayList<>();
-    private int index;
+    /** Naskah yang sedang berjalan (back end), atau {@code null}. */
+    private PemutarNaskah player;
+    /** Baris terakhir yang tampil: tetap di layar selama pilihan ditampilkan. */
+    private BarisDialog speaker;
+    /** Opsi pilihan yang sedang tampil, atau {@code null} saat menampilkan baris dialog. */
+    private List<OpsiPilihan> options;
     private float typed;
     private int choice;
     private float portraitIn;
+    /** Pemberitahuan singkat perubahan nilai cerita ("Kepercayaan Ratna +1") dan sisa waktunya. */
+    private String toast = "";
+    private float toastLeft;
 
     public StoryLayer(ArenaPrototype game) {
         this.game = game;
@@ -105,114 +112,162 @@ public class StoryLayer implements Disposable {
 
     // ------------------------------------------------------------------ script
 
+    /** {@code true} jika {@code cerita/<nama>.json} ada (untuk "then" berupa naskah lanjutan). */
+    public static boolean exists(String script) {
+        return Gdx.files.internal("cerita/" + script + ".json").exists();
+    }
+
     public void start(String script) {
-        JsonValue root = new JsonReader().parse(Gdx.files.internal("cerita/" + script + ".json"));
+        Naskah naskah;
+        try {
+            naskah = PembacaNaskah.baca(script, Gdx.files.internal("cerita/" + script + ".json").readString("UTF-8"));
+        } catch (NaskahTidakValidException e) {
+            Gdx.app.error("Cerita", e.getMessage());   // pesan menyebut file dan letak kesalahannya
+            active = false;
+            return;
+        }
         // the scene's location: a story background in assets/arena/<key>/ (party standing in it)
-        String place = root.getString("arena", null);
-        if (place != null) {
-            game.loadArena(place, root.getString("mode", null));
+        if (naskah.getArena() != null) {
+            game.loadArena(naskah.getArena(), naskah.getMode());
         }
-        title = root.getString("title", "");
-        then = root.getString("then", null);
-        mission = root.getString("mission", "");
-        queue.clear();
-        queue.addAll(parse(root.get("lines")));
-        index = 0;
+        title = naskah.getJudul() == null ? "" : naskah.getJudul();
+        mission = naskah.getMisi() == null ? "" : naskah.getMisi();
+        player = new PemutarNaskah(naskah, game.storyStatus());
+        speaker = null;
+        toast = "";
+        toastLeft = 0f;
+        active = true;
+        Gdx.app.log("cerita", "mulai: " + script);
+        show();
+    }
+
+    /** Menyiapkan langkah sekarang dari pemutar: baris dialog atau pilihan; selesai -> "then". */
+    private void show() {
         typed = 0f;
-        portraitIn = 0f;
-        active = !queue.isEmpty();
-    }
-
-    private static List<Line> parse(JsonValue list) {
-        List<Line> out = new ArrayList<>();
-        for (JsonValue v = list.child; v != null; v = v.next) {
-            Line l = new Line();
-            if (v.has("choice")) {
-                l.choices = v.get("choice").asStringArray();
-                l.replies = new ArrayList<>();
-                for (JsonValue r = v.get("replies").child; r != null; r = r.next) {
-                    l.replies.add(parse(r));
-                }
-            } else {
-                l.who = v.getString("who", "narator");
-                l.name = v.getString("name", "");
-                l.face = v.getString("face", "netral");
-                l.text = v.getString("text", "");
-            }
-            out.add(l);
+        choice = 0;
+        if (player.isSelesai()) {
+            end();
+            return;
         }
-        return out;
+        if (player.isPilihan()) {
+            options = player.getOpsiTersedia();
+            return;
+        }
+        options = null;
+        BarisDialog b = player.getBaris();
+        if (speaker == null || !speaker.getIdPembicara().equals(b.getIdPembicara())) {
+            portraitIn = 0f;                    // a new speaker slides in
+        }
+        speaker = b;
     }
 
-    private Line current() {
-        return index < queue.size() ? queue.get(index) : null;
+    private void end() {
+        active = false;
+        options = null;
+        String then = player.getLanjutan();
+        Gdx.app.log("cerita", "selesai: " + player.getNaskah().getNama() + " | " + game.storyStatus()
+                + (then != null ? " | lanjut: " + then : ""));
+        if (then == null) {
+            return;
+        }
+        if (exists(then)) {
+            start(then);                        // naskah berikutnya
+        } else {
+            game.loadArena(then, null);         // arena pertarungan (atau lokasi) berikutnya
+        }
     }
 
     public void update(float dt) {
-        if (!active) {
-            return;
-        }
-        Line l = current();
-        if (l == null) {
-            active = false;
+        toastLeft = Math.max(0f, toastLeft - dt);
+        if (!active || player == null) {
             return;
         }
         typed += dt * 40f;                 // letters per second
         portraitIn = Math.min(1f, portraitIn + dt * 6f);
         boolean ok = Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.Z)
                 || Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
-        if (l.choices != null) {
+        if (options != null) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                choice = (choice + l.choices.length - 1) % l.choices.length;
+                choice = (choice + options.size() - 1) % options.size();
             }
             if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-                choice = (choice + 1) % l.choices.length;
+                choice = (choice + 1) % options.size();
             }
             if (ok) {
-                // the reply lines of the chosen option come right after the choice
-                queue.addAll(index + 1, l.replies.get(choice));
-                next();
+                choose(choice);
             }
             return;
         }
         if (ok) {
-            if (typed < l.text.length()) {
-                typed = l.text.length();        // first press finishes the line
+            if (typed < speaker.getTeks().length()) {
+                typed = speaker.getTeks().length();        // first press finishes the line
             } else {
-                next();
+                player.lanjut();
+                show();
             }
         }
     }
 
-    /** Test hook: run the script to its end (as if every line was read), including "then". */
-    public void finish() {
-        while (active && current() != null && current().choices == null) {
-            next();
+    /** Memilih opsi ke-{@code i}: back end mencatat efeknya; perubahan nilai ditampilkan sebentar. */
+    void choose(int i) {
+        if (options == null || i < 0 || i >= options.size()) {
+            return;
+        }
+        StatusCerita status = game.storyStatus();
+        Map<NilaiCerita, Integer> before = new EnumMap<>(NilaiCerita.class);
+        for (NilaiCerita n : NilaiCerita.values()) {
+            before.put(n, status.getNilai(n));
+        }
+        Gdx.app.log("cerita", "pilih: " + options.get(i).getTeks());
+        player.pilih(i);
+        List<String> changes = new ArrayList<>();
+        for (NilaiCerita n : NilaiCerita.values()) {
+            int d = status.getNilai(n) - before.get(n);
+            if (d != 0) {
+                changes.add(label(n) + (d > 0 ? " +" : " ") + d);
+            }
+        }
+        if (!changes.isEmpty()) {
+            toast = String.join("   ", changes);
+            toastLeft = 3f;
+        }
+        Gdx.app.log("cerita", "status: " + status);
+        show();
+    }
+
+    private static String label(NilaiCerita n) {
+        switch (n) {
+            case KEPERCAYAAN_RATNA:
+                return "Kepercayaan Ratna";
+            case KEPERCAYAAN_GIRAH:
+                return "Kepercayaan warga Girah";
+            case KEPERCAYAAN_TAPAK_WANGI:
+                return "Kepercayaan warga Tapak Wangi";
+            default:
+                return "Warga selamat";
         }
     }
 
-    /** Test hook: skip to line n (for screenshots). */
+    /** Test hook: run the script up to the next choice or its end (as if every line was read), including "then". */
+    public void finish() {
+        while (active && player != null && !player.isSelesai() && !player.isPilihan()) {
+            player.lanjut();
+            show();
+        }
+    }
+
+    /** Test hook: skip n lines (for screenshots). */
     public void jump(int n) {
-        while (index < n && current() != null && current().choices == null) {
-            next();
+        for (int k = 0; k < n && active && options == null && !player.isSelesai(); k++) {
+            player.lanjut();
+            show();
         }
         typed = 9999f;
     }
 
-    private void next() {
-        Line before = current();
-        index++;
-        typed = 0f;
-        choice = 0;
-        Line after = current();
-        if (after == null) {
-            active = false;
-            if (then != null) {
-                game.loadArena(then, null);
-            }
-        } else if (before == null || before.who == null || after.who == null || !before.who.equals(after.who)) {
-            portraitIn = 0f;                    // a new speaker slides in
-        }
+    /** Test hook: {@code true} while a choice is on screen. */
+    boolean choosing() {
+        return active && options != null;
     }
 
     // ------------------------------------------------------------------ drawing
@@ -269,16 +324,11 @@ public class StoryLayer implements Disposable {
     }
 
     public void draw(SpriteBatch batch) {
-        if (!active || current() == null) {
+        if (!active || player == null) {
             return;
         }
-        Line l = current();
-        // find the speaker shown: a choice keeps the last speaker on screen
-        Line speaker = l;
-        for (int k = index; k >= 0 && speaker.choices != null; k--) {
-            speaker = queue.get(k);
-        }
-        boolean narrator = speaker.who == null || speaker.who.equals("narator");
+        // a choice keeps the last speaker on screen; a choice as the very first step shows no speaker
+        boolean narrator = speaker == null || speaker.isNarator();
 
         matrix.setToOrtho2D(0, 0, W, H);
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -295,7 +345,7 @@ public class StoryLayer implements Disposable {
         batch.setColor(Color.WHITE);
         // portrait (left, bottom anchored, slides in)
         if (!narrator) {
-            TextureRegion r = portrait(speaker.who, speaker.face);
+            TextureRegion r = portrait(speaker.getIdPembicara(), speaker.getEkspresi());
             if (r != null) {
                 float pw = r.getRegionWidth() == 128 ? 128 : r.getRegionWidth() * 3;
                 float ph = r.getRegionHeight() == 192 ? 192 : r.getRegionHeight() * 3;
@@ -309,13 +359,15 @@ public class StoryLayer implements Disposable {
 
         // panels. Every label panel is sized from its text: the text starts half a slant in from the
         // lower-left corner and is centred vertically on the panel's cap height.
-        String name = narrator ? "" : speaker.name.isEmpty() ? speaker.who : speaker.name;
+        String name = narrator ? "" : speaker.getNama() == null || speaker.getNama().isEmpty()
+                ? speaker.getIdPembicara() : speaker.getNama();
         float bx = narrator ? 40 : 118;
         float bw = W - bx - 30;
         float titleW = textW(font, title) + SLANT + 14;
         float missionW = textW(font, mission) + SLANT + 14;
         float missionX = W - missionW - SLANT - 8;
         float nameW = textW(big, name) + SLANT + 16;
+        float toastW = toastLeft > 0f ? textW(font, toast) + SLANT + 14 : 0f;
 
         shapes.begin(ShapeRenderer.ShapeType.Filled);
         if (!title.isEmpty()) {
@@ -325,6 +377,10 @@ public class StoryLayer implements Disposable {
         if (!mission.isEmpty()) {
             slantRect(missionX - 2, H - 28, missionW + 4, 20, INK);
             slantRect(missionX, H - 26, missionW, 16, PANEL);
+        }
+        if (toastLeft > 0f) {
+            slantRect(W - toastW - SLANT - 10, H - 50, toastW + 4, 20, INK);
+            slantRect(W - toastW - SLANT - 8, H - 48, toastW, 16, PANEL_2);
         }
         // dialog box: wide, slanted, covering the right edge of the portrait
         slantRect(bx - 3, 3, bw + 6, 74, INK);
@@ -343,9 +399,9 @@ public class StoryLayer implements Disposable {
             slantRect(bx + 14, 64, nameW + 4, 24, INK);
             slantRect(bx + 16, 66, nameW, 20, GOLD);
         }
-        if (l.choices != null) {
-            for (int i = 0; i < l.choices.length; i++) {
-                float cy = 100 + (l.choices.length - 1 - i) * 22;
+        if (options != null) {
+            for (int i = 0; i < options.size(); i++) {
+                float cy = 100 + (options.size() - 1 - i) * 22;
                 boolean sel = i == choice;
                 slantRect(W - 232 - (sel ? 8 : 0), cy - 2, 214, 20, INK);
                 slantRect(W - 230 - (sel ? 8 : 0), cy, 210, 16, sel ? GOLD : PANEL);
@@ -362,26 +418,31 @@ public class StoryLayer implements Disposable {
             font.setColor(GOLD);
             font.draw(batch, mission, missionX + SLANT / 2f + 7, centreY(font, H - 26, 16));
         }
+        if (toastLeft > 0f) {
+            font.setColor(GOLD);
+            font.draw(batch, toast, W - toastW - SLANT - 8 + SLANT / 2f + 7, centreY(font, H - 48, 16));
+        }
         if (!narrator) {
             big.setColor(INK);
             big.draw(batch, name, bx + 16 + SLANT / 2f + 8, centreY(big, 66, 20));
         }
-        String text = speaker.text == null ? "" : speaker.text;
-        int n = l.choices != null ? text.length() : Math.min(text.length(), (int) typed);
+        String text = speaker == null ? "" : speaker.getTeks();
+        int n = options != null ? text.length() : Math.min(text.length(), (int) typed);
         font.setColor(narrator ? NARRATOR : TEXT);
         font.draw(batch, text.substring(0, n), bx + 20, 58, bw - 40, Align.left, true);
-        if (l.choices == null && n >= text.length() && ((int) (game.clock() * 2.5f)) % 2 == 0) {
+        if (options == null && n >= text.length() && ((int) (game.clock() * 2.5f)) % 2 == 0) {
             batch.draw(arrow, bx + bw - 14, 12);
         }
-        if (l.choices != null) {
-            for (int i = 0; i < l.choices.length; i++) {
-                float cy = 100 + (l.choices.length - 1 - i) * 22;
+        if (options != null) {
+            for (int i = 0; i < options.size(); i++) {
+                float cy = 100 + (options.size() - 1 - i) * 22;
                 boolean sel = i == choice;
                 font.setColor(sel ? INK : TEXT);
-                font.draw(batch, l.choices[i], W - 230 - (sel ? 8 : 0) + SLANT / 2f + 10, centreY(font, cy, 16));
+                font.draw(batch, options.get(i).getTeks(), W - 230 - (sel ? 8 : 0) + SLANT / 2f + 10,
+                        centreY(font, cy, 16));
             }
         }
-        String hint = l.choices != null ? "Panah pilih, Enter" : "Enter lanjut";
+        String hint = options != null ? "Panah pilih, Enter" : "Enter lanjut";
         font.setColor(MUTED);
         layout.setText(font, hint);
         font.draw(batch, hint, W - layout.width - 34, 92);

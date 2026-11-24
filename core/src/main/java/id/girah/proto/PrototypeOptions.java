@@ -23,6 +23,8 @@ public final class PrototypeOptions {
     public String shotTransform;
     /** UJI SAJA: tombol yang "ditekan" berurutan saat menu/hasil terbuka, mis. "DOWN,ENTER,ENTER". */
     public String keys;
+    /** UJI SAJA: opsi pilihan cerita yang dipilih pada frame --story-end-at (0 = opsi pertama). */
+    public int storyChoice = -1;
     public String shotPath;
     public int shotFrame = 120;
     public int attackAt = -1;
@@ -58,6 +60,7 @@ public final class PrototypeOptions {
                 case "--uji-bos-lemah": o.weakBoss = true; break;
                 case "--shot-berubah": o.shotTransform = next; i++; break;
                 case "--tekan": o.keys = next; i++; break;
+                case "--pilih": o.storyChoice = Integer.parseInt(next); i++; break;
                 case "--shot": o.shotPath = next; i++; break;
                 case "--frames": o.shotFrame = Integer.parseInt(next); i++; break;
                 case "--attack-at": o.attackAt = Integer.parseInt(next); i++; break;
