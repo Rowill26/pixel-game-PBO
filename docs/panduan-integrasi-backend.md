@@ -17,7 +17,8 @@
 8. [Akhir pertarungan](#8-akhir-pertarungan)
 9. [Tabel data](#9-tabel-data)
 10. [Aturan yang wajib dipatuhi](#10-aturan-yang-wajib-dipatuhi)
-11. [Yang belum ada di back end](#11-yang-belum-ada-di-back-end)
+11. [Layar cerita](#11-layar-cerita)
+12. [Yang belum ada di back end](#12-yang-belum-ada-di-back-end)
 
 ---
 
@@ -345,13 +346,59 @@ Pengikut yang kalah **menyerah**, bukan mati, jadi animasi `gugur`-nya sebaiknya
 5. **`ai.hentikan()`** saat layar battle ditutup.
 6. Jangan mengubah nyawa langsung (tidak ada setter publik). Semua lewat `BattleManager`.
 
-## 11. Yang belum ada di back end
+## 11. Layar cerita
+
+Back end kini membaca naskah dan mengingat pilihan pemain (paket `id.girah.cerita`). Format
+naskah untuk penulis: [format-naskah.md](format-naskah.md). Naskah lama tetap terbaca apa adanya.
+
+`StoryLayer` cukup mengganti pembacaan JSON-nya sendiri dengan `PemutarNaskah`:
+
+```java
+// sekali untuk seluruh permainan, seperti Tas Pusaka
+StatusCerita statusCerita = new StatusCerita();
+
+// setiap kali sebuah naskah dimulai
+Naskah naskah;
+try {
+    naskah = PembacaNaskah.baca(nama, Gdx.files.internal("cerita/" + nama + ".json").readString("UTF-8"));
+} catch (NaskahTidakValidException e) {
+    Gdx.app.error("Cerita", e.getMessage());   // pesan menyebut file dan letak kesalahannya
+    return;
+}
+PemutarNaskah pemutar = new PemutarNaskah(naskah, statusCerita);
+// naskah.getJudul(), getMisi(), getArena(), getMode() untuk latar dan judul babak
+
+// setiap kali layar siap menampilkan langkah berikutnya
+if (pemutar.isSelesai()) {
+    String berikutnya = pemutar.getLanjutan();   // "then": arena pertarungan atau naskah berikutnya
+} else if (pemutar.isPilihan()) {
+    List<OpsiPilihan> opsi = pemutar.getOpsiTersedia();   // opsi.get(i).getTeks() untuk tombol
+    // saat pemain memilih tombol ke-i:
+    pemutar.pilih(i);                                     // efek dicatat, balasan tampil berikutnya
+} else {
+    BarisDialog baris = pemutar.getBaris();
+    // baris.getIdPembicara() (kunci potret, "narator" = tanpa potret), getNama(), getEkspresi(), getTeks()
+    // saat pemain menekan Enter:
+    pemutar.lanjut();
+}
+```
+
+Baris dan opsi yang syaratnya tidak terpenuhi sudah dilewati oleh `PemutarNaskah`; layar tidak
+perlu memeriksa apa pun. Indeks untuk `pilih(i)` adalah indeks di `getOpsiTersedia()`.
+
+Setelah pertarungan fase terakhir Babak 5 selesai dengan `MENANG` atau `WAKTU_HABIS`:
+
+```java
+statusCerita.catatHasilRitual(hasil);
+Ending ending = PenentuEnding.tentukan(statusCerita);   // setelah pilihan akhir dibuat
+```
+
+## 12. Yang belum ada di back end
 
 Sedang dikerjakan back end (lihat catatan revisi D). Bagian di atas **tidak** perlu menunggu ini.
 
 | Fitur | Catatan |
 |---|---|
-| Status cerita, efek pilihan, 3 ending (D6) | Format efek pilihan di naskah JSON perlu disepakati. Usulan: tambahan `"efek"` di baris pilihan, mis. `{"choice": ["A", "B"], "replies": [[...], [...]], "efek": [{"kepercayaanRatna": 1}, {}]}`. Format lama tetap berlaku. |
 | Daftar pertarungan per babak | Musuh dan arena tiap pertarungan, siap dipanggil dari naskah (`"then"`). |
 | Babak 5 (D3, D4, D7) | Sumber ritual, Calon Arang berubah ke wujud ritual (`calon_arang_ritual`), tiga fase sebagai tiga pertarungan berurutan. |
 | Ratna dan Bharadah di arena (D2) | Versi sederhana, dikerjakan terakhir. |
