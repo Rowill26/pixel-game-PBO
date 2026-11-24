@@ -1,0 +1,17 @@
+{
+  "title": "BABAK 2 - LUKA RATNA MANGGALI",
+  "mission": "Misi: temui Calon Arang",
+  "arena": "girah",
+  "lines": [
+    {
+      "who": "narator",
+      "text": "Senja di Desa Girah. Pintu-pintu tertutup rapat, dan asap dupa mengalir dari rumah di ujung jalan."
+    },
+    {
+      "who": "pengintai",
+      "name": "Pengintai",
+      "face": "tegas",
+      "text": "Rumah di ujung itu. Tidak ada yang berani lewat di depannya."
+    }
+  ]
+}
