@@ -37,6 +37,10 @@ public final class PrototypeOptions {
     public int fxSkip = 0;
     public int chooseAt = -1;
     public String story;
+    /** Uji: langsung memulai pertarungan {@code assets/pertarungan/<id>.json} (--pertarungan). */
+    public String battle;
+    /** UJI SAJA: naskah dibaca otomatis (opsi pertama dipilih) supaya seluruh alur bisa dimainkan tanpa tangan. */
+    public boolean autoStory;
     public int storyAt = 5;
     public int storyLine = 0;
     public int chooseItem = 0;
@@ -73,6 +77,8 @@ public final class PrototypeOptions {
                 case "--fx-skip": o.fxSkip = Integer.parseInt(next); i++; break;
                 case "--choose-at": o.chooseAt = Integer.parseInt(next); i++; break;
                 case "--story": o.story = next; o.title = false; i++; break;
+                case "--alur-otomatis": o.autoStory = true; break;
+                case "--pertarungan": o.battle = next; o.title = false; i++; break;
                 case "--story-line": o.storyLine = Integer.parseInt(next); i++; break;
                 case "--choose-item": o.chooseItem = Integer.parseInt(next); i++; break;
                 default: break;

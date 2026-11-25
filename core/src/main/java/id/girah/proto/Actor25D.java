@@ -17,7 +17,8 @@ public class Actor25D {
     public final String id;
     /** Nama file sprite (untuk ikon giliran di HUD). */
     public String sprite = "";
-    public final String name;
+    /** Nama tampilan; pertarungan dari rencana boleh menggantinya (mis. "Leak 1"). */
+    public String name;
     public final String side;
     private final Texture[] frames;
     private final Texture[] normalFrames;

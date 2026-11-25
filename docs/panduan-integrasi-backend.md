@@ -412,6 +412,13 @@ naskah babak1_balai_daha  --then-->  naskah babak1_tapak_wangi  --then-->  perta
 
 Perubahan yang dibutuhkan di front end:
 
+> **Status 2026-11-25: langkah 1-5 sudah dikerjakan** (Rowill26, branch `frontend/alur-babak1`):
+> `ArenaPrototype.startNewGame()`, `startBattle(id)`, `afterBattle()`, `loadArena(key, mode)` untuk
+> lokasi cerita, `StoryLayer.end()`, dan `BattleSession.create(..., RencanaPertarungan, ...)`.
+> Naskah tanpa `"then"` kembali ke layar judul. Opsi uji baru: `--pertarungan <id>` (langsung ke
+> satu pertarungan) dan `--alur-otomatis` (naskah dibaca otomatis, opsi pertama dipilih), mis.
+> `--demo --title --start-at 30 --alur-otomatis --cepat` memainkan seluruh alur tanpa tangan.
+
 **1. Tombol "Mulai" di layar judul** memutar `AlurCerita.NASKAH_AWAL` (`"babak1_balai_daha"`),
 bukan `contoh_babak1`.
 
