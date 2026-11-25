@@ -1,0 +1,34 @@
+{
+  "title": "BABAK 3 - PETUNJUK DEWI, SIASAT BAHULA",
+  "mission": "Misi: antar Bahula ke Girah",
+  "arena": "girah",
+  "lines": [
+    {"who": "narator", "text": "Bahula datang ke rumah Calon Arang dengan membawa sirih pinang. Ratna menemuinya di halaman."},
+    {"who": "bahula", "name": "Bahula", "text": "Aku murid Mpu Bharadah dari Lemah Tulis. Aku datang untuk meminangmu, jika kau berkenan."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "netral", "text": "Kau tidak takut? Semua orang di desa ini menjauhiku."},
+    {"who": "bahula", "name": "Bahula", "text": "Aku tidak datang untuk mendengarkan mereka. Aku datang untuk mendengarkanmu."},
+    {"who": "narator", "text": "Ratna menerima pinangan itu atas kehendaknya sendiri, tanpa mengetahui bahwa pertemuan mereka semula bagian dari siasat."},
+    {"who": "narator", "text": "Malam itu Bahula menemui kelompok di tepi sawah. Wajahnya gelisah."},
+    {"who": "bahula", "name": "Bahula", "text": "Ia tulus. Aku melihatnya di matanya. Haruskah aku terus menyembunyikan alasan kedatanganku?"},
+    {"choice": ["Dukung Bahula berkata jujur", "Jalankan siasat sampai akhir"],
+     "efek": [
+       {"kepercayaanRatna": 1, "tandai": ["dukung_bahula_jujur"]},
+       null
+     ],
+     "replies": [
+       [
+         {"who": "peramu", "name": "Peramu", "face": "netral", "text": "Kebohongan yang dibiarkan tumbuh akan lebih menyakitinya. Jika saatnya tiba, jujurlah."},
+         {"who": "bahula", "name": "Bahula", "text": "Kalian benar. Aku akan mencari saat yang tepat."}
+       ],
+       [
+         {"who": "pengintai", "name": "Pengintai", "face": "tegas", "text": "Wabah masih berjalan. Satu kata yang salah, dan kita kehilangan satu-satunya jalan menuju kitab."},
+         {"who": "bahula", "name": "Bahula", "text": "Baiklah. Aku akan diam... untuk sekarang."}
+       ]
+     ]},
+    {"who": "narator", "text": "Untuk pertama kalinya setelah bertahun-tahun, rumah di Girah dipenuhi persiapan perayaan. Ratna tersenyum, dan Calon Arang melihat harapan yang hampir ia lepaskan."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "netral", "text": "Anakku, hari ini mereka akan tahu bahwa kau tidak harus hidup sendirian."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "bahagia", "text": "Aku bahagia, Ibu. Aku hanya berharap kebahagiaan ini tidak membuat orang lain terluka."},
+    {"who": "narator", "text": "Bahula tinggal di rumah Calon Arang. Kedekatannya dengan Ratna membuka jalan menuju kitab, tetapi juga membuat kebohongannya semakin berat."}
+  ],
+  "then": "babak4_rumah"
+}

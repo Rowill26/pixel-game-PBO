@@ -45,14 +45,25 @@ public final class RencanaPertarungan {
     private final List<Musuh> musuh;
     private final int batasRonde;
     private final String lanjutanMenang;
+    private final boolean ritual;
+    private final String lanjutanWaktuHabis;
+
+    /** Pertarungan biasa: bukan pertarungan ritual, tanpa lanjutan saat waktu habis. */
+    public RencanaPertarungan(String id, String arena, String mode, List<Musuh> musuh,
+                              int batasRonde, String lanjutanMenang) {
+        this(id, arena, mode, musuh, batasRonde, lanjutanMenang, false, null);
+    }
 
     /**
      * @param mode           waktu arena (mis. "night"), boleh {@code null}
      * @param batasRonde     {@link BattleManager#TANPA_BATAS_RONDE} untuk pertarungan biasa
      * @param lanjutanMenang naskah yang diputar setelah menang, boleh {@code null}
+     * @param ritual         {@code true} untuk pertarungan sumber ritual Babak 5: hasilnya (MENANG atau
+     *                       WAKTU_HABIS) dicatat dengan {@code StatusCerita.catatHasilRitual}
+     * @param lanjutanWaktuHabis naskah yang diputar jika batas ronde habis, boleh {@code null}
      */
     public RencanaPertarungan(String id, String arena, String mode, List<Musuh> musuh,
-                              int batasRonde, String lanjutanMenang) {
+                              int batasRonde, String lanjutanMenang, boolean ritual, String lanjutanWaktuHabis) {
         this.id = Objects.requireNonNull(id, "Id tidak boleh null");
         this.arena = Objects.requireNonNull(arena, "Arena tidak boleh null");
         this.mode = mode;
@@ -65,6 +76,11 @@ public final class RencanaPertarungan {
         }
         this.batasRonde = batasRonde;
         this.lanjutanMenang = lanjutanMenang;
+        if ((ritual || lanjutanWaktuHabis != null) && batasRonde == 0) {
+            throw new IllegalArgumentException("Pertarungan ritual dan lanjutan waktu habis butuh batas ronde");
+        }
+        this.ritual = ritual;
+        this.lanjutanWaktuHabis = lanjutanWaktuHabis;
     }
 
     /** Nama file tanpa {@code .json}, mis. "babak1_hutan". */
@@ -93,6 +109,16 @@ public final class RencanaPertarungan {
     /** Naskah setelah menang, atau {@code null}. */
     public String getLanjutanMenang() {
         return lanjutanMenang;
+    }
+
+    /** {@code true} jika hasil pertarungan ini menentukan apakah ritual dihentikan tepat waktu. */
+    public boolean isRitual() {
+        return ritual;
+    }
+
+    /** Naskah setelah batas ronde habis, atau {@code null}. */
+    public String getLanjutanWaktuHabis() {
+        return lanjutanWaktuHabis;
     }
 
     /** Musuh baru (nyawa penuh) sesuai rencana, urut seperti di file. */

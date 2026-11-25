@@ -83,6 +83,8 @@ public class ArenaPrototype extends ApplicationAdapter {
     private id.girah.pusaka.TasPusaka bag;
     /** Status cerita (nilai kepercayaan, penanda pilihan): dibuat sekali per permainan (panduan 11). */
     private id.girah.cerita.StatusCerita storyStatus = new id.girah.cerita.StatusCerita();
+    /** Rencana pertarungan yang sedang berjalan (panduan 12), atau {@code null} untuk pertarungan uji dari arena.json. */
+    private id.girah.alur.RencanaPertarungan plan;
 
     id.girah.cerita.StatusCerita storyStatus() {
         return storyStatus;
@@ -145,6 +147,9 @@ public class ArenaPrototype extends ApplicationAdapter {
         if (options.title) {
             loadArena("girah", null);            // title backdrop: Desa Girah at dusk
             title.open();
+        } else if (options.battle != null) {
+            bag = BattleSession.newBag();
+            startBattle(options.battle);
         } else {
             loadArena(arenaIndex, options.mode);
         }
@@ -154,7 +159,38 @@ public class ArenaPrototype extends ApplicationAdapter {
     void startNewGame() {
         bag = BattleSession.newBag();
         storyStatus = new id.girah.cerita.StatusCerita();
-        story.start("contoh_babak1");
+        plan = null;
+        story.start(id.girah.alur.AlurCerita.NASKAH_AWAL);
+    }
+
+    /** Akhir alur (naskah tanpa "then", atau menang tanpa naskah lanjutan): kembali ke layar judul. */
+    void backToTitle() {
+        plan = null;
+        loadArena("girah", null);
+        title.open();
+    }
+
+    /**
+     * Memulai pertarungan dari {@code assets/pertarungan/<id>.json} (panduan 12 langkah 3): arena dan
+     * waktunya dari rencana, musuh dari rencana, posisi dari {@code arena.json}. Dipanggil juga untuk
+     * mengulang setelah kalah.
+     */
+    void startBattle(String battleId) {
+        id.girah.alur.RencanaPertarungan rencana;
+        try {
+            rencana = id.girah.alur.PembacaPertarungan.baca(battleId,
+                    Gdx.files.internal("pertarungan/" + battleId + ".json").readString("UTF-8"));
+        } catch (id.girah.alur.PertarunganTidakValidException e) {
+            Gdx.app.error("Pertarungan", e.getMessage());
+            return;
+        }
+        openArena(rencana.getArena(), rencana.getMode());
+        plan = rencana;
+        if (bag == null) {
+            bag = BattleSession.newBag();
+        }
+        session = BattleSession.create(this, arena, rencana, bag, options.demo, options.fast, options.weakBoss);
+        Gdx.app.log("battle", "rencana: " + rencana);
     }
 
     boolean cameraEffects() {
@@ -210,13 +246,29 @@ public class ArenaPrototype extends ApplicationAdapter {
         return t;
     }
 
+    /** Uji tampilan (--arena, tombol 1/2): pertarungan dari semua tokoh di arena.json, di luar alur cerita. */
     private void loadArena(int index, String modeName) {
         arenaIndex = index;
-        loadArena(ARENAS[index], modeName);
+        plan = null;
+        openArena(ARENAS[index], modeName);
+        if (!options.pamer) {
+            if (bag == null) {
+                bag = BattleSession.newBag();
+            }
+            session = BattleSession.create(this, arena, bag, options.demo, options.fast, options.weakBoss);
+        }
     }
 
-    /** Memuat arena atau lokasi cerita mana pun dari {@code assets/arena/<key>/} (dipakai naskah cerita). */
+    /**
+     * Memuat lokasi cerita dari {@code assets/arena/<key>/} (panduan 12 langkah 4): hanya latar dan
+     * kelompok pengelana; musuh di arena.json tidak ditampilkan dan pertarungan tidak dimulai.
+     */
     void loadArena(String key, String modeName) {
+        openArena(key, modeName);
+        arena.actors.removeIf(Actor25D::isEnemy);
+    }
+
+    private void openArena(String key, String modeName) {
         if (session != null) {
             session.stop();                      // panduan 10.5: AI berhenti saat layar battle ditutup
             session = null;
@@ -234,12 +286,6 @@ public class ArenaPrototype extends ApplicationAdapter {
         popups.clear();
         popupText.clear();
         applyGrade();
-        if (!options.pamer) {
-            if (bag == null) {
-                bag = BattleSession.newBag();
-            }
-            session = BattleSession.create(this, arena, bag, options.demo, options.fast, options.weakBoss);
-        }
     }
 
     private void applyGrade() {
@@ -585,14 +631,29 @@ public class ArenaPrototype extends ApplicationAdapter {
 
     /** Setelah pemain menekan Enter pada hasil akhir (panduan bagian 8). */
     private void afterBattle(id.girah.battle.StatusBattle end) {
-        Gdx.app.log("battle", "setelah " + end + ": " + (end == id.girah.battle.StatusBattle.KALAH ? "ulangi" : "layar judul"));
+        if (plan != null && plan.isRitual() && end != id.girah.battle.StatusBattle.KALAH) {
+            storyStatus.catatHasilRitual(end);    // MENANG = ritual dihentikan tepat waktu, WAKTU_HABIS = Ending 3
+        }
+        String next = plan == null ? null
+                : end == id.girah.battle.StatusBattle.MENANG ? plan.getLanjutanMenang()
+                : end == id.girah.battle.StatusBattle.WAKTU_HABIS ? plan.getLanjutanWaktuHabis() : null;
+        Gdx.app.log("battle", "setelah " + end + ": " + (end == id.girah.battle.StatusBattle.KALAH ? "ulangi"
+                : next != null ? "naskah " + next : "layar judul"));
         if (end == id.girah.battle.StatusBattle.KALAH) {
-            loadArena(arena.key, mode.name);      // ulangi: pengelana dan musuh baru, BattleManager baru
+            if (plan != null) {
+                startBattle(plan.getId());        // ulangi: pengelana dan musuh baru, nyawa penuh, tas yang sama
+            } else {
+                loadArena(arenaIndex, mode.name);
+            }
             return;
         }
-        // MENANG / WAKTU_HABIS: naskah lanjutan dan Ending 3 belum ada (catatan D6), kembali ke layar judul
-        loadArena("girah", null);
-        title.open();
+        if (next != null) {
+            plan = null;
+            story.start(next);                    // naskah setelah menang atau setelah waktu habis
+            return;
+        }
+        // tanpa naskah lanjutan: kembali ke layar judul
+        backToTitle();
     }
 
     float clock() {
@@ -1151,6 +1212,14 @@ public class ArenaPrototype extends ApplicationAdapter {
             if (options.storyChoice >= 0 && story.choosing()) {
                 story.choose(options.storyChoice);     // uji: pilih opsi; balasannya tampil berikutnya
             }
+        }
+        if (options.autoStory && story.active && frame % 20 == 0) {
+            story.finish();
+            if (story.choosing()) {
+                story.choose(0);
+            }
+        } else if (options.autoStory && session != null && session.result() != null && frame % 60 == 0) {
+            afterBattle(session.result());       // uji: layar hasil dikonfirmasi otomatis
         }
         if (session == null) {
             pamerTriggers();

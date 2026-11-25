@@ -1,0 +1,58 @@
+{
+  "title": "AKHIR",
+  "arena": "pemakaman",
+  "mode": "night",
+  "lines": [
+    {"who": "narator", "text": "Ritual mencapai puncaknya. Cahaya merah memenuhi pemakaman, lalu lenyap.",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+    {"who": "narator", "text": "Calon Arang tewas ketika lingkaran runtuh. Kabut bergerak menjauh, menuju Daha.",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Ibu... bangunlah. Kita masih bisa pulang.",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+    {"who": "bahula", "name": "Bahula", "text": "Ratna...",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Aku ingin menyelamatkannya. Aku juga ingin menyelamatkan mereka semua.",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Ritual ini telah lepas kendali. Kita harus segera memperingatkan Daha.",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+    {"who": "narator", "text": "Gelombang terakhir wabah menyebar ke Daha sebelum akhirnya mereda. Kerajaan kehilangan banyak rakyatnya, dan Ratna harus menghadapi kehilangan ibunya.",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+
+    {"who": "narator", "text": "Altar runtuh, dan lingkaran ritual padam. Calon Arang berlutut; Ratna berdiri di sampingnya.",
+     "syarat": {"ending": "PENGADILAN_KERAJAAN"}},
+    {"who": "narator", "text": "Ratna menatap ibunya, lalu menatap kelompok. Luka karena kitab yang dicuri belum sembuh; ia tidak berkata apa-apa.",
+     "syarat": {"ending": "PENGADILAN_KERAJAAN", "jalanPemulihanTerbuka": false}},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Ritual sudah berhenti. Sekarang kita harus memutuskan nasibnya.",
+     "syarat": {"ending": "PENGADILAN_KERAJAAN"}},
+    {"choice": ["Serahkan kepada kerajaan", "Tempuh jalan pemulihan"],
+     "syarat": [
+       {"ending": "PENGADILAN_KERAJAAN"},
+       {"ending": "PENGADILAN_KERAJAAN", "jalanPemulihanTerbuka": true}
+     ],
+     "efek": [
+       {"tandai": ["serahkan_ke_kerajaan"]},
+       {"tandai": ["pilih_jalan_pemulihan"]}
+     ],
+     "replies": [
+       [
+         {"who": "calon_arang", "name": "Calon Arang", "face": "sedih", "text": "Jadi inilah akhirnya. Mereka akan membawaku pergi."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Aku akan ikut, Ibu. Aku tidak akan membiarkanmu sendirian."},
+         {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Mereka yang kehilangan keluarga juga harus didengar. Kerajaan akan menentukan pertanggungjawabanmu."},
+         {"who": "narator", "text": "Calon Arang kehilangan akses pada kitab dan kekuatannya. Ia dibawa ke Daha untuk diadili."},
+         {"who": "narator", "text": "Wabah berangsur surut, tetapi warga yang selamat masih harus hidup dengan kehilangan mereka."}
+       ],
+       [
+         {"who": "narator", "text": "Ratna mendekati ibunya. Mpu Bharadah menutup kitab dan meletakkannya jauh dari lingkaran ritual."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Ibu, aku tidak meminta Ibu melupakan apa yang terjadi padaku. Aku hanya meminta Ibu berhenti membuat luka baru."},
+         {"who": "calon_arang", "name": "Calon Arang", "face": "sedih", "text": "Setelah semua yang kulakukan... apakah masih ada jalan untukku?"},
+         {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Ada jalan, tetapi bukan jalan yang singkat. Kau harus mengakui perbuatanmu, kehilangan kekuatan yang kau salahgunakan, dan menghadapi mereka yang kau sakiti."},
+         {"who": "calon_arang", "name": "Calon Arang", "face": "netral", "text": "Dan kau menyebut itu penyucian?"},
+         {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Penyucian jiwa bukan menghapus masa lalu. Itu keberanian untuk berhenti bersembunyi darinya dan mulai memperbaiki apa yang masih bisa diperbaiki."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "bahagia", "text": "Aku tidak tahu apakah semua orang akan memaafkan Ibu. Tapi aku akan menemani Ibu mengambil langkah pertama."},
+         {"who": "narator", "text": "Calon Arang hidup dalam pengawasan Mpu Bharadah tanpa akses kepada kitabnya. Warga tidak serta-merta memaafkannya."},
+         {"who": "narator", "text": "Ratna dan para pengelana membantu mereka yang terdampak, sementara pemulihan dimulai perlahan."}
+       ]
+     ]}
+  ],
+  "then": "epilog"
+}

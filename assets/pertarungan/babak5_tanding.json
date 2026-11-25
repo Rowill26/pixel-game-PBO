@@ -1,0 +1,8 @@
+{
+  "arena": "pemakaman",
+  "mode": "night",
+  "musuh": [
+    {"jenis": "calon_arang"}
+  ],
+  "menang": "babak5_ritual_terakhir"
+}

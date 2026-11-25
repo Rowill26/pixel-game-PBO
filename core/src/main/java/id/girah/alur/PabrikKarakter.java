@@ -8,6 +8,7 @@ import id.girah.karakter.PemimpinPengikut;
 import id.girah.karakter.Pengelana;
 import id.girah.karakter.Pengikut;
 import id.girah.karakter.Senopati;
+import id.girah.karakter.SumberRitual;
 import id.girah.karakter.TelikSandi;
 import id.girah.karakter.Wiku;
 import java.util.List;
@@ -22,10 +23,12 @@ import java.util.TreeSet;
 public final class PabrikKarakter {
 
     /** Jenis musuh yang bisa dipakai di {@code assets/pertarungan/*.json}. */
-    public static final Set<String> JENIS_MUSUH = Set.of("leak", "pengikut", "pemimpin_pengikut", "calon_arang");
+    public static final Set<String> JENIS_MUSUH = Set.of(
+            "leak", "pengikut", "pemimpin_pengikut", "calon_arang", "sumber_ritual");
 
     /** Bos yang namanya tetap (konstruktornya tanpa nama). */
-    public static final Set<String> JENIS_BERNAMA_TETAP = Set.of("pemimpin_pengikut", "calon_arang");
+    public static final Set<String> JENIS_BERNAMA_TETAP = Set.of(
+            "pemimpin_pengikut", "calon_arang", "sumber_ritual");
 
     private PabrikKarakter() {
     }
@@ -60,6 +63,8 @@ public final class PabrikKarakter {
                 return new PemimpinPengikut();
             case "calon_arang":
                 return new CalonArang();
+            case "sumber_ritual":
+                return new SumberRitual();
             default:
                 throw new IllegalArgumentException("Jenis musuh tidak dikenal: '" + jenis + "'. Yang dikenal: "
                         + new TreeSet<>(JENIS_MUSUH));

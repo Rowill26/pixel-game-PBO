@@ -13,5 +13,6 @@
     {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Warga Girah sendiri sudah lama takut kepadanya. Mungkin ketakutan itulah yang ia balas."},
     {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kita kembali ke Daha. Raja harus mendengar ini sebelum kita melangkah ke Girah."},
     {"who": "narator", "text": "Kelompok kembali ke istana membawa petunjuk tentang wabah, ritual, dan Calon Arang, lalu menunggu izin untuk menyelidiki Girah."}
-  ]
+  ],
+  "then": "babak2_girah"
 }

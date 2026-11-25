@@ -168,12 +168,15 @@ public class StoryLayer implements Disposable {
         Gdx.app.log("cerita", "selesai: " + player.getNaskah().getNama() + " | " + game.storyStatus()
                 + (then != null ? " | lanjut: " + then : ""));
         if (then == null) {
+            game.backToTitle();                 // akhir alur yang sudah ditulis
             return;
         }
         if (exists(then)) {
             start(then);                        // naskah berikutnya
+        } else if (Gdx.files.internal("pertarungan/" + then + ".json").exists()) {
+            game.startBattle(then);             // pertarungan dari assets/pertarungan/ (panduan 12)
         } else {
-            game.loadArena(then, null);         // arena pertarungan (atau lokasi) berikutnya
+            game.loadArena(then, null);         // perilaku lama: lokasi tanpa pertarungan
         }
     }
 

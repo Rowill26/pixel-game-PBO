@@ -1,0 +1,9 @@
+{
+  "arena": "girah",
+  "musuh": [
+    {"jenis": "leak", "nama": "Leak"},
+    {"jenis": "pengikut", "nama": "Pengikut"},
+    {"jenis": "pemimpin_pengikut"}
+  ],
+  "menang": "babak4_penutup"
+}

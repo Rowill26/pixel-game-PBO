@@ -176,6 +176,57 @@ final class BattleSession implements BattleListener {
             }
         }
         BattleManager bm = new BattleManager(party, foes, BattleManager.TANPA_BATAS_RONDE, tas);
+        return start(game, arena, bm, made, auto, fast);
+    }
+
+    /**
+     * Membuat pertarungan dari rencana di {@code assets/pertarungan/<id>.json} (panduan bagian 12).
+     * Musuh diambil dari rencana; {@code arena.json} hanya memberi posisi. Setiap karakter dipasangkan
+     * ke tokoh arena pertama yang belum terpakai dengan sprite yang sama. Tokoh pengelana/musuh di
+     * arena yang tidak dipakai rencana dikeluarkan dari layar; sekutu (Ratna, Bharadah) tetap tampil.
+     */
+    static BattleSession create(ArenaPrototype game, ArenaData arena, id.girah.alur.RencanaPertarungan plan,
+                                TasPusaka tas, boolean auto, boolean fast, boolean weakBoss) {
+        BattleManager bm = plan.buatBattle(tas);
+        Map<KarakterMitos, Actor25D> made = new IdentityHashMap<>();
+        List<Actor25D> free = new ArrayList<>();
+        for (Actor25D a : arena.actors) {
+            if (a.isParty() || a.isEnemy()) {
+                free.add(a);
+            }
+        }
+        List<KarakterMitos> all = new ArrayList<>(bm.getKelompok());
+        all.addAll(bm.getLawan());
+        for (KarakterMitos k : all) {
+            Actor25D spot = null;
+            for (Actor25D a : free) {
+                if (a.sprite.equals(k.getIdSprite())) {
+                    spot = a;
+                    break;
+                }
+            }
+            if (spot == null) {
+                throw new IllegalStateException("Arena '" + arena.key + "' tidak punya posisi untuk sprite '"
+                        + k.getIdSprite() + "' (" + k.getNama() + ") dari pertarungan '" + plan.getId() + "'");
+            }
+            free.remove(spot);
+            spot.name = k.getNama();                 // nama tampilan dari rencana, mis. "Leak 1"
+            made.put(k, spot);
+        }
+        arena.actors.removeAll(free);                // posisi yang tidak dipakai rencana tidak ditampilkan
+        if (weakBoss) {
+            for (KarakterMitos k : bm.getLawan()) {
+                MakhlukGirah f = (MakhlukGirah) k;
+                while (f.isBos() && f.getNyawa() * 100 > f.getNyawaMaks() * 33) {
+                    f.terimaSerangan(40);
+                }
+            }
+        }
+        return start(game, arena, bm, made, auto, fast);
+    }
+
+    private static BattleSession start(ArenaPrototype game, ArenaData arena, BattleManager bm,
+                                       Map<KarakterMitos, Actor25D> made, boolean auto, boolean fast) {
         BattleSession s = new BattleSession(game, arena, bm, auto, fast);
         for (Map.Entry<KarakterMitos, Actor25D> e : made.entrySet()) {
             s.link(e.getKey(), e.getValue());
@@ -193,7 +244,8 @@ final class BattleSession implements BattleListener {
         bm.mulai();
         s.refreshTurnDisplay();
         s.narration = "Pertarungan dimulai: " + arena.title + ".";
-        Gdx.app.log("battle", "mulai: " + arena.title + " (" + party.size() + " pengelana, " + foes.size() + " lawan)");
+        Gdx.app.log("battle", "mulai: " + arena.title + " (" + bm.getKelompok().size() + " pengelana, "
+                + bm.getLawan().size() + " lawan)");
         return s;
     }
 
@@ -216,6 +268,8 @@ final class BattleSession implements BattleListener {
                 return new PemimpinPengikut();
             case "calon_arang":
                 return new CalonArang();
+            case "sumber_ritual":
+                return new id.girah.karakter.SumberRitual();
             default:
                 return null;        // ratna, bharadah: belum ada kelas back end (catatan D2)
         }
@@ -395,7 +449,7 @@ final class BattleSession implements BattleListener {
     }
 
     String resultHint() {
-        return result == StatusBattle.KALAH ? "Enter: ulangi pertarungan" : "Enter: kembali ke layar judul";
+        return result == StatusBattle.KALAH ? "Enter: ulangi pertarungan" : "Enter: lanjutkan";
     }
 
     // ================================================================
@@ -403,6 +457,11 @@ final class BattleSession implements BattleListener {
     // ================================================================
 
     /** Dibaca setiap frame. Mengembalikan aksi akhir pertarungan yang diminta pemain, atau {@code null}. */
+    /** Hasil pertarungan yang sudah selesai, atau {@code null} selama masih berjalan. */
+    StatusBattle result() {
+        return resultTitle() != null ? result : null;
+    }
+
     StatusBattle input() {
         boolean ok = game.justPressed(Input.Keys.ENTER) || game.justPressed(Input.Keys.Z);
         if (resultTitle() != null) {

@@ -12,6 +12,7 @@ import id.girah.cerita.NaskahTidakValidException;
 import id.girah.cerita.OpsiPilihan;
 import id.girah.cerita.PembacaNaskah;
 import id.girah.cerita.Pilihan;
+import id.girah.karakter.MakhlukGirah;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -139,7 +140,7 @@ class AsetCeritaTest {
     }
 
     @Test
-    @DisplayName("Setiap \"then\" dan \"menang\" menunjuk ke file yang ada")
+    @DisplayName("Setiap \"then\", \"menang\", dan \"waktuHabis\" menunjuk ke file yang ada")
     void tautanAda() {
         butuhAssets();
         List<String> kesalahan = new ArrayList<>();
@@ -156,8 +157,44 @@ class AsetCeritaTest {
             if (menang != null && !naskah.containsKey(menang)) {
                 kesalahan.add("pertarungan '" + p.getId() + "': \"menang\": \"" + menang + "\" bukan naskah");
             }
+            String waktuHabis = p.getLanjutanWaktuHabis();
+            if (waktuHabis != null && !naskah.containsKey(waktuHabis)) {
+                kesalahan.add("pertarungan '" + p.getId() + "': \"waktuHabis\": \"" + waktuHabis + "\" bukan naskah");
+            }
         }
         tidakAdaKesalahan(kesalahan, "Tautan yang putus");
+    }
+
+    @Test
+    @DisplayName("Arena setiap pertarungan punya posisi untuk setiap musuh (sprite sama di arena.json)")
+    void posisiMusuhAda() throws IOException {
+        butuhAssets();
+        List<String> kesalahan = new ArrayList<>();
+        for (RencanaPertarungan p : pertarungan.values()) {
+            Path file = ASSETS.resolve("arena").resolve(p.getArena()).resolve("arena.json");
+            if (!Files.isRegularFile(file)) {
+                continue;                                   // arena yang hilang dilaporkan test lain
+            }
+            Map<String, Integer> tersedia = new TreeMap<>();
+            JsonValue akar = new JsonReader().parse(Files.readString(file, StandardCharsets.UTF_8));
+            for (JsonValue a = akar.get("actors").child; a != null; a = a.next) {
+                if ("girah".equals(a.getString("side", ""))) {
+                    tersedia.merge(a.getString("sprite"), 1, Integer::sum);
+                }
+            }
+            Map<String, Integer> dibutuhkan = new TreeMap<>();
+            for (MakhlukGirah m : p.buatMusuh()) {
+                dibutuhkan.merge(m.getIdSprite(), 1, Integer::sum);
+            }
+            for (Map.Entry<String, Integer> e : dibutuhkan.entrySet()) {
+                int ada = tersedia.getOrDefault(e.getKey(), 0);
+                if (ada < e.getValue()) {
+                    kesalahan.add("pertarungan '" + p.getId() + "': arena '" + p.getArena() + "' punya " + ada
+                            + " posisi sprite '" + e.getKey() + "', dibutuhkan " + e.getValue());
+                }
+            }
+        }
+        tidakAdaKesalahan(kesalahan, "Posisi musuh yang kurang");
     }
 
     @Test
@@ -211,6 +248,9 @@ class AsetCeritaTest {
             }
             if (pertarungan.containsKey(id) && pertarungan.get(id).getLanjutanMenang() != null) {
                 antrean.add(pertarungan.get(id).getLanjutanMenang());
+            }
+            if (pertarungan.containsKey(id) && pertarungan.get(id).getLanjutanWaktuHabis() != null) {
+                antrean.add(pertarungan.get(id).getLanjutanWaktuHabis());
             }
         }
 

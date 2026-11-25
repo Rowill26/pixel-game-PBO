@@ -144,6 +144,29 @@
       "side": "girah"
     },
     {
+      "id": "leak2",
+      "name": "Leak 2",
+      "sprite": "leak",
+      "x": 178,
+      "y": 304,
+      "side": "girah",
+      "float": true,
+      "eyes": [
+        48,
+        20,
+        53,
+        21
+      ]
+    },
+    {
+      "id": "sumber_ritual",
+      "name": "Sumber Ritual",
+      "sprite": "sumber_ritual",
+      "x": 84,
+      "y": 252,
+      "side": "girah"
+    },
+    {
       "id": "pendekar",
       "name": "Pendekar",
       "sprite": "pendekar",

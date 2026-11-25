@@ -1,0 +1,15 @@
+{
+  "title": "BABAK 3 - PETUNJUK DEWI, SIASAT BAHULA",
+  "mission": "Misi: pelajari penangkal kutukan",
+  "arena": "hutan",
+  "mode": "day",
+  "lines": [
+    {"who": "narator", "text": "Kabut surut. Mpu Bharadah menancapkan kembali tonggak-tonggak mantra di keempat sudut halaman."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Perlindungan ini akan bertahan. Sekarang dengarkan baik-baik."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Kutukan Calon Arang menempel pada rasa takut. Siapa yang panik, paling dulu jatuh. Tarik napas, sebut nama yang kalian lindungi, lalu lawan."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Mantra penangkal yang sederhana. Aku bisa merapalkannya bersama kalian di tengah pertarungan."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Antar Bahula ke Girah. Bantulah persiapan pertemuannya dengan Ratna, dan awasi apa yang terjadi di rumah itu."},
+    {"who": "narator", "text": "Keesokan harinya, kelompok berangkat ke Girah bersama Bahula."}
+  ],
+  "then": "babak3_girah"
+}

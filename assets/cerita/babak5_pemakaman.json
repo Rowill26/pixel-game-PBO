@@ -1,0 +1,18 @@
+{
+  "title": "BABAK 5 - PERTARUNGAN DI GIRAH",
+  "mission": "Misi: tembus penjagaan pemakaman",
+  "arena": "pemakaman",
+  "mode": "night",
+  "lines": [
+    {"who": "narator", "text": "Pemakaman dekat Candi Durga, malam tanpa bintang. Tanah basah berwarna hitam kebiruan, dan batu nisan tua berdiri miring di antara akar pohon."},
+    {"who": "narator", "text": "Asap dupa naik perlahan dari altar. Di kejauhan, siluet Candi Durga tampak di balik kabut."},
+    {"who": "pengintai", "name": "Pengintai", "face": "tegas", "text": "Penjaga di sekeliling lingkaran. Leak di atas, pengikut di bawah."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Buka jalan untuk kami. Aku dan Ratna akan menyusul di belakang kalian."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Jangan sakiti Ibu lebih dari yang perlu. Kumohon.",
+     "syarat": {"tanpaPenanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "kecewa", "text": "Aku ikut bukan untuk kalian. Aku ikut untuk Ibu.",
+     "syarat": {"penanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Lindungi Ratna dan Mpu Bharadah. Maju!"}
+  ],
+  "then": "babak5_penjaga"
+}

@@ -1,0 +1,43 @@
+{
+  "title": "BABAK 4 - KITAB YANG DICURI",
+  "mission": "Misi: lindungi warga Girah",
+  "arena": "girah",
+  "lines": [
+    {"who": "narator", "text": "Kabut ungu menutupi jalan. Warga berlari menuju balai desa sambil menggendong anak-anak dan orang sakit."},
+    {"who": "kepala_desa", "name": "Kepala Desa", "text": "Mereka datang dari dua arah! Kami tidak bisa mengevakuasi semua orang sekaligus!"},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kita amankan jalan yang paling dekat dengan warga."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Aku akan membantu membawa yang sakit. Ibu tidak boleh melakukan ini!",
+     "syarat": {"tanpaPenanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "peramu", "name": "Peramu", "face": "tegas", "text": "Ratna, tetap bersamaku. Kita bawa mereka ke tempat aman.",
+     "syarat": {"tanpaPenanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "narator", "text": "Ratna berdiri di ambang pintu rumahnya, menatap kelompok tanpa sepatah kata. Ia tidak ikut membantu.",
+     "syarat": {"penanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "pengintai", "name": "Pengintai", "face": "tegas", "text": "Jalan barat menuju balai desa, tempat orang sakit dikumpulkan. Jalan timur menuju ladang, lebih lapang tapi jauh."},
+    {"choice": ["Jalan barat ke balai desa", "Jalan barat ke balai desa", "Jalan timur ke ladang"],
+     "syarat": [
+       {"tanpaPenanda": ["kitab_diambil_diam_diam"]},
+       {"penanda": ["kitab_diambil_diam_diam"]},
+       null
+     ],
+     "efek": [
+       {"wargaSelamat": 3},
+       {"wargaSelamat": 1},
+       {"wargaSelamat": 2}
+     ],
+     "replies": [
+       [
+         {"who": "narator", "text": "Ratna dan Peramu memapah orang-orang sakit ke balai desa. Hampir semua warga di jalan barat tiba dengan selamat."}
+       ],
+       [
+         {"who": "narator", "text": "Tanpa bantuan Ratna, membawa orang sakit lewat jalan sempit itu berjalan lambat. Banyak warga tertinggal di belakang kabut."}
+       ],
+       [
+         {"who": "narator", "text": "Warga yang masih kuat berlari ke ladang timur. Sebagian besar selamat, tetapi orang-orang sakit di balai desa terlambat dijemput."}
+       ]
+     ]},
+    {"who": "narator", "text": "Dari dalam kabut, seorang lelaki bertopeng memimpin para pengikut. Seekor leak melayang di atas mereka."},
+    {"who": "pemimpin_pengikut", "name": "Pemimpin Pengikut", "text": "Kalian mencuri dari rumah yang memberi kalian makan. Malam ini Girah akan membayar."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Lindungi warga. Kalahkan pemimpinnya!"}
+  ],
+  "then": "babak4_desa"
+}

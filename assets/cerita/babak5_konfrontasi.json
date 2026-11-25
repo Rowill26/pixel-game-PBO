@@ -1,0 +1,50 @@
+{
+  "title": "BABAK 5 - KASIH YANG MENJADI API",
+  "mission": "Misi: hadapi Calon Arang",
+  "arena": "pemakaman",
+  "mode": "night",
+  "lines": [
+    {"who": "narator", "text": "Bunyi kentongan terdengar pelan, disusul tabuhan rendah. Calon Arang berdiri di tengah lingkaran ritual; tangannya bergetar ketika melihat putrinya."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Akhirnya kau datang juga, Bharadah. Apakah seluruh Daha sudah kehabisan prajurit untuk dikirim kepadaku?"},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Aku datang bukan untuk menghitung kekuatan kita. Aku datang karena rakyat menderita."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Rakyat? Mereka menutup pintu ketika Ratna lewat. Mereka membisikkan namaku seakan-akan putriku membawa kutukan."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Ibu..."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "sedih", "text": "Aku melihatmu menunggu di halaman setiap hari, berharap ada yang datang. Bagaimana aku bisa diam?"},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Aku tahu Ibu terluka melihatku sendirian. Aku juga terluka. Tapi sekarang ada anak-anak yang kehilangan orang tua."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Mereka membuatmu menangis!"},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "kecewa", "text": "Dan sekarang orang lain menangis karena kita!"},
+    {"who": "narator", "text": "Calon Arang menatap Ratna. Cahaya ritual berkedip."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "sedih", "text": "Aku melakukan semuanya karena aku menyayangimu."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Kalau begitu, dengarkan aku sebagai anakmu. Aku tidak ingin kasih Ibu berubah menjadi alasan untuk membunuh."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Kasihmu kepada Ratna nyata, Calon Arang. Tetapi dendam telah membuatmu menyamakan orang yang melukainya dengan semua orang yang kau sakiti."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Mudah bagimu berkata begitu. Kau tidak pernah melihat anakmu dijauhi setiap hari."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Benar. Aku tidak akan berpura-pura mengetahui seluruh lukamu. Namun aku melihat akibatnya, dan aku tidak bisa membiarkannya berlanjut."},
+    {"who": "narator", "text": "Calon Arang mengangkat tangan. Asap dupa berputar, membentuk bayangan-bayangan di sekeliling altar."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Ibu, berhenti. Aku takut kehilanganmu."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "sedih", "text": "Mereka telah mengambil kitabku dan memperdayamu. Apa lagi yang tersisa untukku?"},
+    {"choice": ["Mengakui luka Calon Arang", "Mendesaknya menyerah", "Menghancurkan altar"],
+     "efek": [
+       {"kepercayaanRatna": 1},
+       null,
+       null
+     ],
+     "replies": [
+       [
+         {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Yang terjadi kepada Ratna tidak adil. Tetapi wabah ini juga tidak adil bagi mereka yang sakit. Hentikan ritualnya, dan biarkan kami mencari jalan lain."},
+         {"who": "narator", "text": "Untuk sesaat, tangan Calon Arang turun. Ratna menatap kelompok dengan mata berkaca-kaca."}
+       ],
+       [
+         {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Cukup. Warga telah terlalu lama menderita. Hentikan ritual ini dan hadapi akibat perbuatanmu."},
+         {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Akibat? Akulah akibat dari perbuatan kalian semua!"}
+       ],
+       [
+         {"who": "pengintai", "name": "Pengintai", "face": "tegas", "text": "Lingkaran di bawah altar adalah sumbernya. Kita tidak punya waktu lagi!"},
+         {"who": "narator", "text": "Pengintai melompat ke arah altar, tetapi Calon Arang lebih dulu menghadang."}
+       ]
+     ]},
+    {"who": "narator", "text": "Calon Arang mengirim gelombang kabut. Mpu Bharadah menahan serangan dengan lingkar perlindungan. Tanah bergetar."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Jika kalian ingin menghentikanku, tunjukkan kekuatan kalian!"},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Kekuatan bukan hanya kemampuan untuk menghancurkan. Malam ini, aku akan menghentikanmu."}
+  ],
+  "then": "babak5_tanding"
+}

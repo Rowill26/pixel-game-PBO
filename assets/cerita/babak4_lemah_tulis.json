@@ -1,0 +1,20 @@
+{
+  "title": "BABAK 4 - KITAB YANG DICURI",
+  "mission": "Misi: bawa kitab kepada Mpu Bharadah",
+  "arena": "hutan",
+  "mode": "day",
+  "lines": [
+    {"who": "narator", "text": "Di Lemah Tulis, Mpu Bharadah membuka kitab itu lembar demi lembar. Pelita menyala sampai lewat tengah malam."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Ritualnya bertumpu pada satu altar di pemakaman dekat Candi Durga. Selama altar itu menyala, wabah akan terus mengalir."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Jadi jika altar itu dihancurkan sebelum ritualnya sempurna..."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Wabah akan putus. Tetapi Calon Arang tidak akan membiarkan siapa pun mendekat."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Ratna menyerahkan kitab ini dengan tangannya sendiri. Itu bukan perkara kecil bagi seorang anak.",
+     "syarat": {"penanda": ["ratna_membantu_kitab"]}},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Kitab ini diambil tanpa sepengetahuan Ratna. Luka yang kalian buat padanya juga harus kalian tanggung.",
+     "syarat": {"penanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "narator", "text": "Menjelang fajar, seorang pemuda dari Girah berlari ke pertapaan dengan napas tersengal."},
+    {"who": "warga", "name": "Pemuda Girah", "text": "Kabut ungu turun di desa! Para pengikut Calon Arang menyerang dari dua arah!"},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Ia tahu kitabnya hilang. Kita kembali ke Girah, sekarang juga."}
+  ],
+  "then": "babak4_serangan"
+}
