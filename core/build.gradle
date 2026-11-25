@@ -12,10 +12,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    // Naskah di assets/cerita diperiksa oleh SemuaNaskahAssetsTest: test harus dijalankan ulang
-    // setiap kali naskah berubah, bukan hanya saat kode berubah.
-    inputs.files(fileTree(rootProject.file('assets/cerita')))
-          .withPropertyName('naskahCerita')
+    // Naskah, pertarungan, arena, dan potret diperiksa oleh AsetCeritaTest: test harus dijalankan
+    // ulang setiap kali file itu berubah, bukan hanya saat kode berubah.
+    inputs.files(fileTree(rootProject.file('assets')) {
+              include 'cerita/**', 'pertarungan/**', 'arena/*/arena.json', 'potret/**'
+          })
+          .withPropertyName('asetCerita')
           .withPathSensitivity(PathSensitivity.RELATIVE)
     testLogging {
         events 'passed', 'skipped', 'failed'
