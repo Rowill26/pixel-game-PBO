@@ -1,0 +1,36 @@
+{
+  "title": "BABAK 4 - KITAB YANG DICURI",
+  "mission": "Misi: temukan kitab Calon Arang",
+  "arena": "girah",
+  "lines": [
+    {"who": "narator", "text": "Beberapa pekan berlalu. Suatu malam, Bahula melihat Calon Arang menyimpan sebuah kitab lontar di peti kayu di bilik belakang."},
+    {"who": "bahula", "name": "Bahula", "text": "Aku tahu di mana kitab itu. Ratna memegang kunci bilik belakang."},
+    {"who": "bahula", "name": "Bahula", "text": "Dulu kalian memintaku berkata jujur jika kesempatan itu datang. Kurasa inilah saatnya.",
+     "syarat": {"penanda": ["dukung_bahula_jujur"]}},
+    {"who": "bahula", "name": "Bahula", "text": "Kita bisa mengambilnya saat Ratna tidur. Atau... aku bisa mengatakan semuanya kepadanya.",
+     "syarat": {"tanpaPenanda": ["dukung_bahula_jujur"]}},
+    {"choice": ["Bahula jujur kepada Ratna", "Mengambil kitab diam-diam"],
+     "efek": [
+       {"kepercayaanRatna": 2, "tandai": ["bahula_jujur", "ratna_membantu_kitab"]},
+       {"kepercayaanRatna": -2, "tandai": ["kitab_diambil_diam_diam"]}
+     ],
+     "replies": [
+       [
+         {"who": "bahula", "name": "Bahula", "text": "Ratna, aku harus mengatakan sesuatu. Awalnya aku datang ke Girah atas permintaan guruku. Kami mencari kitab ibumu."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "kecewa", "text": "Jadi pernikahan ini hanya jalan menuju kitab itu?"},
+         {"who": "bahula", "name": "Bahula", "text": "Siasat itulah yang membawaku kemari. Aku tidak akan berbohong tentang itu lagi. Tapi mengenalmu telah mengubahku, dan aku menyesal telah menyembunyikannya."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Aku tidak bisa langsung memaafkanmu. Tapi jika kitab itu dapat menghentikan wabah, aku akan membantumu."},
+         {"who": "narator", "text": "Ratna membuka bilik belakang dan menyerahkan kitab itu dengan tangannya sendiri. Hubungan mereka terluka, tetapi tidak putus."}
+       ],
+       [
+         {"who": "narator", "text": "Menjelang subuh, Bahula dan Pengintai menyelinap ke bilik belakang. Kitab itu berpindah tangan tanpa suara."},
+         {"who": "narator", "text": "Namun peti yang kosong ditemukan sebelum matahari tinggi. Ratna menemui Bahula di halaman."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "kecewa", "text": "Semua orang takut mendekatiku. Lalu kau datang, dan aku mengira akhirnya ada seseorang yang melihatku."},
+         {"who": "bahula", "name": "Bahula", "text": "Ratna, aku--"},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "kecewa", "text": "Jangan katakan kau melakukannya demi aku. Kau bahkan tidak memberiku pilihan."}
+       ]
+     ]},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kitab sudah di tangan kita. Kita bawa ke Lemah Tulis sekarang, sebelum Calon Arang menyadarinya."}
+  ],
+  "then": "babak4_lemah_tulis"
+}

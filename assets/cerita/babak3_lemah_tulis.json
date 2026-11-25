@@ -1,0 +1,21 @@
+{
+  "title": "BABAK 3 - PETUNJUK DEWI, SIASAT BAHULA",
+  "mission": "Misi: temui Mpu Bharadah",
+  "arena": "hutan",
+  "mode": "day",
+  "lines": [
+    {"who": "narator", "text": "Pertapaan Lemah Tulis berdiri di tengah hutan. Bale kecil beratap ijuk, tangga batu berlumut, dan kitab lontar di atas meja rendah."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Raja sudah mengabarkan kedatangan kalian. Ceritakan apa yang kalian temukan."},
+    {"who": "narator", "text": "Mpu Bharadah mendengarkan kisah tentang kabut, kain ritual, dan Ratna Manggali."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Ritual Calon Arang tertulis dalam sebuah kitab. Jika kitab itu bisa dibaca, kita akan tahu cara memutus ritualnya."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Muridku, Bahula, akan meminang Ratna. Dengan tinggal di rumah itu, ia mungkin menemukan kitabnya."},
+    {"who": "bahula", "name": "Bahula", "text": "Guru meminta aku menikahinya untuk mendekati ibunya?"},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Aku meminta kau membuka jalan menuju kitab itu. Wabah tidak akan menunggu sampai kita menemukan jalan yang mudah."},
+    {"who": "peramu", "name": "Peramu", "face": "tegas", "text": "Ratna sudah cukup lama diperlakukan sebagai penyebab ketakutan orang. Apakah adil menjadikan perasaannya bagian dari siasat?"},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "netral", "text": "Pertanyaanmu benar. Karena itulah Bahula harus menghadapi akibat pilihannya, bukan bersembunyi di balik namaku."},
+    {"who": "bahula", "name": "Bahula", "text": "Aku akan pergi. Tapi jika Ratna menolak, aku tidak akan memaksanya."},
+    {"who": "narator", "text": "Tiba-tiba pelita di bale berkedip. Kabut tipis merayap dari sela pepohonan, dan pagar mantra di sekitar pertapaan mulai retak."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Mereka tahu kalian ada di sini. Jaga halaman ini selagi aku memulihkan perlindungannya."}
+  ],
+  "then": "babak3_pertapaan"
+}

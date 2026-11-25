@@ -478,7 +478,7 @@ Sedang dikerjakan back end (lihat catatan revisi D). Bagian di atas **tidak** pe
 
 | Fitur | Catatan |
 |---|---|
-| Naskah Babak 2–5 | Ditulis back end dari dokumen cerita, babak demi babak. |
+| Naskah Babak 5 dan epilog | Babak 1–4 sudah selesai (lihat format-naskah.md bagian 8). |
 | Babak 5 (D3, D4, D7) | Sumber ritual, Calon Arang berubah ke wujud ritual (`calon_arang_ritual`), tiga fase sebagai tiga pertarungan berurutan. |
 | Ratna dan Bharadah di arena (D2) | Versi sederhana, dikerjakan terakhir. |
 

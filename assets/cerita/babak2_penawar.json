@@ -1,0 +1,37 @@
+{
+  "title": "BABAK 2 - LUKA RATNA MANGGALI",
+  "mission": "Misi: penawar untuk dua desa",
+  "arena": "girah",
+  "lines": [
+    {"who": "narator", "text": "Sehari penuh kelompok mengumpulkan daun, akar, dan kulit kayu dari tepi hutan. Peramu meraciknya hingga larut."},
+    {"who": "peramu", "name": "Peramu", "face": "netral", "text": "Persediaan pertama hanya cukup untuk satu desa. Persediaan kedua baru siap dua hari lagi."},
+    {"who": "pengintai", "name": "Pengintai", "face": "netral", "text": "Di Girah, anak-anak mulai demam. Di Tapak Wangi, Janda Wening makin lemah."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Aku mendengar kalian dari balik pagar. Kumohon, jangan biarkan anak-anak Girah menanggung kesalahan ibuku."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kita harus memilih ke mana penawar pertama dibawa."},
+    {"choice": ["Mendahulukan Girah", "Mendahulukan Tapak Wangi"],
+     "efek": [
+       {"kepercayaanRatna": 1, "kepercayaanGirah": 1, "tandai": ["penawar_girah_dulu"]},
+       {"kepercayaanRatna": -1, "kepercayaanTapakWangi": 1, "tandai": ["penawar_tapak_wangi_dulu"]}
+     ],
+     "replies": [
+       [
+         {"who": "narator", "text": "Penawar pertama dibagikan di Girah. Ratna ikut mengantarkannya dari rumah ke rumah."},
+         {"who": "warga", "name": "Warga Girah", "text": "Ratna... terima kasih. Kami tidak menyangka kau mau datang ke rumah kami."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "bahagia", "text": "Aku selalu mau datang. Hanya saja, baru hari ini pintunya dibuka."},
+         {"who": "narator", "text": "Di Tapak Wangi, Janda Wening harus menunggu dua hari lagi. Demamnya belum juga turun."}
+       ],
+       [
+         {"who": "narator", "text": "Penawar pertama dibawa ke Tapak Wangi. Peramu sendiri yang meminumkannya kepada Janda Wening."},
+         {"who": "wening", "name": "Janda Wening", "text": "Dinginnya... mulai pergi. Terima kasih, Nak. Aku kira aku tidak akan melihat pagi lagi."},
+         {"who": "narator", "text": "Di Girah, anak-anak masih demam. Ratna menyaksikan rombongan pembawa penawar melewati desanya."},
+         {"who": "ratna", "name": "Ratna Manggali", "face": "kecewa", "text": "Bahkan kalian pun memilih menjauh dari Girah."}
+       ]
+     ]},
+    {"who": "narator", "text": "Dua hari kemudian, persediaan kedua selesai. Kedua desa akhirnya menerima penawar."},
+    {"who": "peramu", "name": "Peramu", "face": "tegas", "text": "Penawar ini hanya meredakan gejala. Selama sumbernya masih ada, wabah akan terus datang."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Pengucilan Ratna menjadi akar kemarahan Calon Arang. Tetapi wabah itu menyakiti orang yang tidak pernah terlibat."},
+    {"who": "pengintai", "name": "Pengintai", "face": "netral", "text": "Ilmu sekuat ini tidak bisa kita lawan sendirian."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kita kembali ke Daha. Raja harus tahu apa yang kita temukan di Girah."}
+  ],
+  "then": "babak3_istana"
+}

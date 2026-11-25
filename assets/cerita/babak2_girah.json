@@ -1,0 +1,24 @@
+{
+  "title": "BABAK 2 - LUKA RATNA MANGGALI",
+  "mission": "Misi: temui Ratna Manggali",
+  "arena": "girah",
+  "lines": [
+    {"who": "narator", "text": "Raja Erlangga mengizinkan penyelidikan ke Girah. Kabut menggantung rendah di atas sawah ketika kelompok tiba di desa itu."},
+    {"who": "narator", "text": "Di halaman sebuah rumah di ujung desa, seorang perempuan muda menyapu sendirian. Warga yang lewat mempercepat langkah."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "netral", "text": "Kalian bukan orang Girah. Orang Girah tidak pernah berhenti di depan rumah ini."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Saat aku datang ke pasar, percakapan berhenti. Saat aku menyapa, mereka menunduk dan pergi."},
+    {"who": "peramu", "name": "Peramu", "face": "netral", "text": "Apakah mereka pernah mengatakan mengapa?"},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Mereka takut kepada Ibu. Lama-kelamaan, mereka takut kepadaku juga."},
+    {"who": "narator", "text": "Tidak ada lelaki yang berani meminangnya, meskipun Ratna sendiri tidak pernah menyakiti siapa pun."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Namun warga di Daha sedang sakit. Jika ibumu tahu penyebabnya, kami harus berbicara dengannya."},
+    {"who": "narator", "text": "Pintu rumah terbuka. Calon Arang berdiri di ambangnya."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Sekarang kalian ingin berbicara? Ketika anakku dipermalukan, ke mana perginya suara kalian?"},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "netral", "text": "Ibu, mereka datang untuk mencari cara menghentikan wabah."},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "sedih", "text": "Dan setelah itu? Apakah mereka akan menerima putriku, atau kembali menutup pintu di hadapannya?"},
+    {"who": "calon_arang", "name": "Calon Arang", "face": "murka", "text": "Pergilah dari halaman rumahku."},
+    {"who": "narator", "text": "Kelompok mundur. Dari balik pintu, Ratna menatap mereka seolah ingin mengatakan sesuatu, lalu pintu itu tertutup."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Kemarahan sebesar itu tidak lahir dalam semalam. Tapi orang-orang yang sakit di Daha tidak pernah menutup pintu bagi Ratna."},
+    {"who": "peramu", "name": "Peramu", "face": "tegas", "text": "Apa pun sebabnya, warga butuh penawar sekarang. Aku tahu tanaman yang bisa meredakan panas dan dinginnya."}
+  ],
+  "then": "babak2_penawar"
+}

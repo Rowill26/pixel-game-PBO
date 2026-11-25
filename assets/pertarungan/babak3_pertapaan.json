@@ -1,0 +1,10 @@
+{
+  "arena": "hutan",
+  "mode": "day",
+  "musuh": [
+    {"jenis": "leak", "nama": "Leak 1"},
+    {"jenis": "leak", "nama": "Leak 2"},
+    {"jenis": "pengikut", "nama": "Pengikut"}
+  ],
+  "menang": "babak3_penangkal"
+}

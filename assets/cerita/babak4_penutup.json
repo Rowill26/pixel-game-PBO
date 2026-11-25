@@ -1,0 +1,20 @@
+{
+  "title": "BABAK 4 - KITAB YANG DICURI",
+  "mission": "Misi: berangkat ke pemakaman",
+  "arena": "girah",
+  "lines": [
+    {"who": "narator", "text": "Pemimpin pengikut roboh, dan para pengikut yang tersisa melarikan diri ke arah pemakaman. Kabut ungu perlahan menipis."},
+    {"who": "kepala_desa", "name": "Kepala Desa", "text": "Hampir semua warga berhasil keluar. Kami berutang nyawa kepada kalian.",
+     "syarat": {"wargaSelamat": 3}},
+    {"who": "kepala_desa", "name": "Kepala Desa", "text": "Sebagian warga selamat. Yang lain... kami masih mencari mereka di balik kabut.",
+     "syarat": {"kurangDari": {"wargaSelamat": 3}}},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Ibu ada di pemakaman dekat Candi Durga. Aku tahu ia masih bisa dihentikan. Kumohon, jangan biarkan ia sendirian di sana.",
+     "syarat": {"tanpaPenanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "kecewa", "text": "Pergilah ke pemakaman. Kalian sudah mendapatkan apa yang kalian cari dari rumah ini.",
+     "syarat": {"penanda": ["kitab_diambil_diam_diam"]}},
+    {"who": "narator", "text": "Mpu Bharadah tiba dari Lemah Tulis dengan kitab di tangannya."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Malam ini Calon Arang akan menyempurnakan ritualnya. Jika kita terlambat, wabah terakhir akan mencapai Daha."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kalau begitu kita berangkat sekarang."},
+    {"who": "narator", "text": "Kelompok, Mpu Bharadah, dan Ratna berjalan menuju pemakaman di bawah langit yang mulai memerah."}
+  ]
+}

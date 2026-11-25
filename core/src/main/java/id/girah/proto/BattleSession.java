@@ -455,6 +455,11 @@ final class BattleSession implements BattleListener {
     // ================================================================
 
     /** Dibaca setiap frame. Mengembalikan aksi akhir pertarungan yang diminta pemain, atau {@code null}. */
+    /** Hasil pertarungan yang sudah selesai, atau {@code null} selama masih berjalan. */
+    StatusBattle result() {
+        return resultTitle() != null ? result : null;
+    }
+
     StatusBattle input() {
         boolean ok = game.justPressed(Input.Keys.ENTER) || game.justPressed(Input.Keys.Z);
         if (resultTitle() != null) {

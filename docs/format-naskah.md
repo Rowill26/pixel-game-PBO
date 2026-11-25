@@ -227,11 +227,27 @@ Nama pertarungan tidak boleh sama dengan nama naskah.
 Kelompok pengelana selalu Pendekar, Juru Mantra, Peramu, dan Pengintai dengan nyawa penuh.
 Jika kalah, pertarungan diulang dari awal.
 
-## 8. Contoh lengkap: Babak 1
+## 8. Alur Babak 1-4
 
 | File | Isi | Lanjut ke |
 |---|---|---|
 | `cerita/babak1_balai_daha.json` | Raja Erlangga memberi tugas | `babak1_tapak_wangi` |
 | `cerita/babak1_tapak_wangi.json` | memeriksa Janda Wening, keterangan warga | `babak1_hutan` |
-| `pertarungan/babak1_hutan.json` | dua Leak dan satu Pengikut di Hutan Beringin | menang: `babak1_penutup` |
-| `cerita/babak1_penutup.json` | kain ritual, pengikut yang menyerah menyebut Calon Arang | (babak 2 menyusul) |
+| `pertarungan/babak1_hutan.json` | dua Leak dan satu Pengikut di Hutan Beringin (malam) | menang: `babak1_penutup` |
+| `cerita/babak1_penutup.json` | kain ritual, pengikut yang menyerah menyebut Calon Arang | `babak2_girah` |
+| `cerita/babak2_girah.json` | menemui Ratna, Calon Arang mengusir kelompok | `babak2_penawar` |
+| `cerita/babak2_penawar.json` | **pilihan:** penawar pertama ke Girah atau Tapak Wangi | `babak3_istana` |
+| `cerita/babak3_istana.json` | penglihatan Raja tentang guru di Lemah Tulis | `babak3_lemah_tulis` |
+| `cerita/babak3_lemah_tulis.json` | siasat Mpu Bharadah dan Bahula, pagar mantra retak | `babak3_pertapaan` |
+| `pertarungan/babak3_pertapaan.json` | dua Leak dan satu Pengikut di halaman pertapaan (siang) | menang: `babak3_penangkal` |
+| `cerita/babak3_penangkal.json` | perlindungan pulih, penangkal kutukan | `babak3_girah` |
+| `cerita/babak3_girah.json` | pinangan Bahula; **pilihan:** mendukung Bahula jujur; pernikahan | `babak4_rumah` |
+| `cerita/babak4_rumah.json` | **pilihan A/B:** Bahula jujur atau kitab diambil diam-diam | `babak4_lemah_tulis` |
+| `cerita/babak4_lemah_tulis.json` | Bharadah membaca kitab (altar ritual), kabar serangan | `babak4_serangan` |
+| `cerita/babak4_serangan.json` | **pilihan evakuasi** (`wargaSelamat` 3/1/2), pemimpin pengikut muncul | `babak4_desa` |
+| `pertarungan/babak4_desa.json` | Leak, Pengikut, dan **Pemimpin Pengikut** di Desa Girah | menang: `babak4_penutup` |
+| `cerita/babak4_penutup.json` | hasil evakuasi, berangkat ke pemakaman | (Babak 5 menyusul) |
+
+Pilihan evakuasi Babak 4: jalan barat memberi `wargaSelamat` 3 jika Ratna ikut membantu (tanpa
+`kitab_diambil_diam_diam`), 1 jika tidak; jalan timur selalu 2. Label pilihan sebaiknya
+**paling panjang 30 huruf** supaya tidak terpotong di layar.

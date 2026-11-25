@@ -1,0 +1,16 @@
+{
+  "title": "BABAK 3 - PETUNJUK DEWI, SIASAT BAHULA",
+  "mission": "Misi: menghadap Raja Erlangga",
+  "arena": "balai_daha",
+  "mode": "night",
+  "lines": [
+    {"who": "narator", "text": "Malam di Istana Daha. Raja Erlangga mendengarkan laporan kelompok tanpa memotong sepatah kata pun."},
+    {"who": "raja_erlangga", "name": "Raja Erlangga", "text": "Seorang ibu yang anaknya dikucilkan, dan rakyat yang jatuh sakit karena kemarahannya. Tidak ada pihak yang sepenuhnya bersih di sini."},
+    {"who": "narator", "text": "Raja menyendiri di sanggar pemujaan. Menjelang fajar, ia kembali dengan wajah yang lebih tenang."},
+    {"who": "raja_erlangga", "name": "Raja Erlangga", "text": "Dalam keheningan aku melihat seorang guru di Lemah Tulis. Ia mampu menghadapi ancaman dari Girah."},
+    {"who": "raja_erlangga", "name": "Raja Erlangga", "text": "Namanya Mpu Bharadah. Temui dia, dan sampaikan semua yang kalian lihat."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "tegas", "text": "Nama itu dikenal di kalangan juru mantra. Konon tidak ada kutukan yang tidak bisa ia baca."},
+    {"who": "narator", "text": "Kelompok berangkat ke Lemah Tulis sebelum matahari terbit."}
+  ],
+  "then": "babak3_lemah_tulis"
+}

@@ -1213,6 +1213,8 @@ public class ArenaPrototype extends ApplicationAdapter {
             if (story.choosing()) {
                 story.choose(0);
             }
+        } else if (options.autoStory && session != null && session.result() != null && frame % 60 == 0) {
+            afterBattle(session.result());       // uji: layar hasil dikonfirmasi otomatis
         }
         if (session == null) {
             pamerTriggers();
