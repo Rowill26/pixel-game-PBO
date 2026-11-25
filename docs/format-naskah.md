@@ -12,8 +12,9 @@ Setelah menulis atau mengubah naskah, jalankan dari folder root repo:
 ./gradlew test
 ```
 
-Semua file di `assets/cerita/` diperiksa otomatis. Jika ada yang salah, pesannya menyebut nama
-file dan letaknya, misalnya:
+Semua file di `assets/cerita/` dan `assets/pertarungan/` diperiksa otomatis, termasuk tautan
+antar-file, arena, ekspresi potret, dan apakah setiap naskah bisa dicapai dari naskah awal
+(`babak1_balai_daha`). Jika ada yang salah, pesannya menyebut nama file dan letaknya, misalnya:
 
 ```
 Naskah 'babak4' di lines[6].efek[0].tandai[0]: penanda tidak dikenal: "bahula_jujr".
@@ -33,7 +34,7 @@ Yang dikenal: [penawar_girah_dulu, penawar_tapak_wangi_dulu, ...]
     {"who": "narator", "text": "Pagi di Desa Tapak Wangi."},
     {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Mereka takut kepada Ibu."}
   ],
-  "then": "hutan"
+  "then": "babak1_hutan"
 }
 ```
 
@@ -44,10 +45,26 @@ Yang dikenal: [penawar_girah_dulu, penawar_tapak_wangi_dulu, ...]
 | `arena` | tidak | latar (folder di `assets/arena/`) |
 | `mode` | tidak | waktu latar, mis. `"night"` |
 | `lines` | **ya** | daftar baris dan pilihan |
-| `then` | tidak | yang dimuat setelah naskah selesai (arena pertarungan atau naskah berikutnya) |
+| `then` | tidak | langkah berikutnya: nama **naskah** lain atau nama **pertarungan** di `assets/pertarungan/` (lihat bagian 7) |
 
 **Baris dialog:** `text` wajib. `who` = kunci potret (bawaan `"narator"`, tanpa potret),
 `name` = papan nama, `face` = ekspresi potret (bawaan `"netral"`).
+
+Potret yang tersedia (`who`: ekspresi):
+
+| `who` | Ekspresi |
+|---|---|
+| `pendekar`, `juru_mantra`, `peramu`, `pengintai` | `netral`, `tegas` |
+| `ratna` | `netral`, `bahagia`, `sedih`, `kecewa` |
+| `calon_arang` | `netral`, `sedih`, `murka` |
+| `bharadah` | `netral`, `tegas` |
+
+Tokoh lain (mis. `raja_erlangga`, `wening`, `warga`) boleh dipakai: papan namanya tampil tanpa potret.
+Ekspresi yang tidak ada untuk tokoh di atas ditolak saat pemeriksaan.
+
+**Arena** untuk latar: `balai_daha` (night), `tapak_wangi` (day), `girah` (day), `hutan` (day, night),
+`pemakaman` (night). Lokasi cerita tidak memulai pertarungan; pertarungan hanya dimulai dari
+file di `assets/pertarungan/`.
 
 **Pilihan:**
 
@@ -176,3 +193,45 @@ pilihan lain yang mendukung Ratna (Girah dulu, mendukung Bahula, atau mengakui l
   ]
 }
 ```
+
+## 7. File pertarungan
+
+Pertarungan disimpan di `assets/pertarungan/<id>.json` dan dipanggil dari `"then"` sebuah naskah.
+Nama pertarungan tidak boleh sama dengan nama naskah.
+
+```json
+{
+  "arena": "hutan",
+  "mode": "night",
+  "musuh": [
+    {"jenis": "leak", "nama": "Leak 1"},
+    {"jenis": "leak", "nama": "Leak 2"},
+    {"jenis": "pengikut", "nama": "Pengikut"}
+  ],
+  "menang": "babak1_penutup"
+}
+```
+
+| Kunci | Wajib | Isi |
+|---|---|---|
+| `arena` | **ya** | folder di `assets/arena/` |
+| `mode` | tidak | waktu arena, mis. `"night"` |
+| `musuh` | **ya** | minimal satu; urutan = urutan posisi di arena |
+| `batasRonde` | tidak | bawaan `0` (tanpa batas); dipakai fase ritual Babak 5 |
+| `menang` | tidak | naskah yang diputar setelah menang |
+
+**Jenis musuh:** `leak`, `pengikut`, `pemimpin_pengikut`, `calon_arang`. Nama boleh diisi untuk
+`leak` dan `pengikut`, dan harus berbeda jika ada lebih dari satu (mis. `"Leak 1"`, `"Leak 2"`).
+`pemimpin_pengikut` dan `calon_arang` bernama tetap, jadi tanpa `"nama"`.
+
+Kelompok pengelana selalu Pendekar, Juru Mantra, Peramu, dan Pengintai dengan nyawa penuh.
+Jika kalah, pertarungan diulang dari awal.
+
+## 8. Contoh lengkap: Babak 1
+
+| File | Isi | Lanjut ke |
+|---|---|---|
+| `cerita/babak1_balai_daha.json` | Raja Erlangga memberi tugas | `babak1_tapak_wangi` |
+| `cerita/babak1_tapak_wangi.json` | memeriksa Janda Wening, keterangan warga | `babak1_hutan` |
+| `pertarungan/babak1_hutan.json` | dua Leak dan satu Pengikut di Hutan Beringin | menang: `babak1_penutup` |
+| `cerita/babak1_penutup.json` | kain ritual, pengikut yang menyerah menyebut Calon Arang | (babak 2 menyusul) |
