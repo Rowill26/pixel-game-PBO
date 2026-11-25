@@ -18,7 +18,8 @@
 9. [Tabel data](#9-tabel-data)
 10. [Aturan yang wajib dipatuhi](#10-aturan-yang-wajib-dipatuhi)
 11. [Layar cerita](#11-layar-cerita)
-12. [Yang belum ada di back end](#12-yang-belum-ada-di-back-end)
+12. [Alur cerita dan pertarungan](#12-alur-cerita-dan-pertarungan)
+13. [Yang belum ada di back end](#13-yang-belum-ada-di-back-end)
 
 ---
 
@@ -393,13 +394,84 @@ statusCerita.catatHasilRitual(hasil);
 Ending ending = PenentuEnding.tentukan(statusCerita);   // setelah pilihan akhir dibuat
 ```
 
-## 12. Yang belum ada di back end
+## 12. Alur cerita dan pertarungan
+
+Alur permainan tersimpan di data, bukan di kode:
+
+```
+naskah babak1_balai_daha  --then-->  naskah babak1_tapak_wangi  --then-->  pertarungan babak1_hutan
+                                                                                   |
+                                                                            menang |
+                                                                                   v
+                                                                         naskah babak1_penutup
+```
+
+- `assets/cerita/<nama>.json`: naskah. `"then"` boleh menunjuk ke naskah lain **atau** pertarungan.
+- `assets/pertarungan/<id>.json`: pertarungan. Menentukan arena, **musuh**, batas ronde, dan
+  naskah setelah menang (`"menang"`). Format lengkap: [format-naskah.md](format-naskah.md#7-file-pertarungan).
+
+Perubahan yang dibutuhkan di front end:
+
+**1. Tombol "Mulai" di layar judul** memutar `AlurCerita.NASKAH_AWAL` (`"babak1_balai_daha"`),
+bukan `contoh_babak1`.
+
+**2. Akhir naskah (`StoryLayer.end()`)**: urutan pemeriksaan `"then"` menjadi naskah → pertarungan → arena.
+
+```java
+String then = player.getLanjutan();
+if (exists(then)) {
+    start(then);                                                   // naskah berikutnya
+} else if (Gdx.files.internal("pertarungan/" + then + ".json").exists()) {
+    game.mulaiPertarungan(then);                                   // lihat langkah 3
+} else {
+    game.loadArena(then, null);                                    // perilaku lama
+}
+```
+
+**3. Memulai pertarungan dari rencana**: musuh diambil dari file pertarungan, bukan dari `arena.json`.
+
+```java
+RencanaPertarungan rencana;
+try {
+    rencana = PembacaPertarungan.baca(id,
+            Gdx.files.internal("pertarungan/" + id + ".json").readString("UTF-8"));
+} catch (PertarunganTidakValidException e) {
+    Gdx.app.error("Pertarungan", e.getMessage());
+    return;
+}
+// muat arena rencana.getArena() dengan waktu rencana.getMode() (boleh null = bawaan arena)
+BattleManager battle = rencana.buatBattle(tas);   // kelompok + musuh baru, nyawa penuh, tas yang sama
+// lanjutkan seperti bagian 3-8: listener, PengendaliMusuh, battle.mulai()
+```
+
+`arena.json` tetap menentukan **posisi**. Pasangkan musuh dari `battle.getLawan()` ke posisi tokoh
+`arena.json` dengan sprite yang sama (`k.getIdSprite()`), berurutan; posisi musuh di `arena.json`
+yang tidak dipakai rencana **tidak ditampilkan**. Babak 1 memakai arena `hutan` dengan dua Leak dan
+satu Pengikut, tanpa Pemimpin Pengikut.
+
+**4. Lokasi cerita tidak memulai pertarungan.** Naskah boleh memakai arena yang punya musuh di
+`arena.json` (mis. `babak1_penutup` di `hutan`). Saat arena dimuat untuk naskah, tampilkan latarnya
+saja; pertarungan hanya dimulai dari langkah 3.
+
+**5. Setelah pertarungan**:
+
+| Hasil | Lanjutan |
+|---|---|
+| `MENANG` | jika `rencana.getLanjutanMenang() != null`, `story.start(rencana.getLanjutanMenang())`; jika `null`, kembali ke layar judul |
+| `KALAH` | ulangi: `rencana.buatBattle(tas)` lagi (semua tokoh baru, nyawa penuh) |
+| `WAKTU_HABIS` | belum dipakai di Babak 1; aturannya menyusul bersama Babak 5 |
+
+`./gradlew test` memeriksa seluruh jaringan ini: setiap `"then"` dan `"menang"` menunjuk ke file
+yang ada, arena dan waktunya ada, ekspresi potret ada, dan semua naskah bisa dicapai dari
+`NASKAH_AWAL`. Babak 1 juga dimainkan otomatis dari awal sampai akhir.
+
+## 13. Yang belum ada di back end
 
 Sedang dikerjakan back end (lihat catatan revisi D). Bagian di atas **tidak** perlu menunggu ini.
 
 | Fitur | Catatan |
 |---|---|
-| Daftar pertarungan per babak | Musuh dan arena tiap pertarungan, siap dipanggil dari naskah (`"then"`). |
+| Naskah Babak 2–5 | Ditulis back end dari dokumen cerita, babak demi babak. |
 | Babak 5 (D3, D4, D7) | Sumber ritual, Calon Arang berubah ke wujud ritual (`calon_arang_ritual`), tiga fase sebagai tiga pertarungan berurutan. |
 | Ratna dan Bharadah di arena (D2) | Versi sederhana, dikerjakan terakhir. |
 
