@@ -1,0 +1,16 @@
+{
+  "title": "BABAK 1 - BISIK-BISIK GIRAH",
+  "mission": "Misi: menghadap Raja Erlangga",
+  "arena": "balai_daha",
+  "lines": [
+    {"who": "narator", "text": "Kerajaan Daha yang semula makmur dilanda penyakit aneh. Warga mengalami panas dan dingin bergantian, sementara kabut muncul dari arah Girah."},
+    {"who": "narator", "text": "Di Balai Kerajaan, perdebatan pecah. Sebagian pejabat mendesak Raja Erlangga mengirim prajurit, sementara yang lain takut tindakan itu akan memperburuk bencana."},
+    {"who": "pejabat", "name": "Pejabat Kerajaan", "text": "Paduka, jumlah warga yang sakit bertambah setiap hari. Rakyat mulai meninggalkan ladang."},
+    {"who": "raja_erlangga", "name": "Raja Erlangga", "text": "Jika kita mengirim prajurit tanpa mengetahui sebabnya, kita mungkin hanya menambah ketakutan."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Panas dan dingin yang datang bergantian, bersama kabut... Itu bukan wabah yang biasa, Paduka."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Izinkan kami menyelidiki desa-desa yang terdampak."},
+    {"who": "raja_erlangga", "name": "Raja Erlangga", "text": "Pergilah. Lindungi rakyatku, tetapi jangan jatuhkan tuduhan sebelum kalian menemukan bukti."},
+    {"who": "narator", "text": "Penyelidikan dimulai di Desa Tapak Wangi, tempat seorang janda bernama Wening terbaring sakit."}
+  ],
+  "then": "babak1_tapak_wangi"
+}

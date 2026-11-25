@@ -1,0 +1,18 @@
+{
+  "title": "BABAK 1 - BISIK-BISIK GIRAH",
+  "mission": "Misi: periksa Janda Wening",
+  "arena": "tapak_wangi",
+  "lines": [
+    {"who": "narator", "text": "Desa Tapak Wangi. Jalan desa sepi, dan dari balik pintu-pintu terdengar orang mengerang menahan panas."},
+    {"who": "peramu", "name": "Peramu", "face": "netral", "text": "Ini rumah Janda Wening. Biar aku memeriksanya lebih dulu."},
+    {"who": "wening", "name": "Janda Wening", "text": "Panas... lalu dingin sampai tulangku ngilu. Sudah tiga malam begini."},
+    {"who": "peramu", "name": "Peramu", "face": "tegas", "text": "Tidak ada luka, airnya pun bersih. Penyakit ini tidak datang dari tubuhnya sendiri."},
+    {"who": "narator", "text": "Warga yang masih sehat berkumpul di depan balai banjar, menunggu kabar."},
+    {"who": "warga", "name": "Warga Tapak Wangi", "text": "Setiap malam kabut turun dari arah Hutan Beringin. Paginya, selalu ada yang jatuh sakit."},
+    {"who": "pengintai", "name": "Pengintai", "face": "netral", "text": "Kabut yang selalu datang dari arah yang sama tidak mungkin kebetulan."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "tegas", "text": "Kalau begitu kita ikuti jejaknya ke hutan."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Ingat pesan Raja: tidak ada tuduhan sebelum ada bukti."},
+    {"who": "narator", "text": "Malam turun ketika keempat pengelana memasuki Hutan Beringin. Di tanah lapang, kabut menebal, dan sesuatu sudah menunggu."}
+  ],
+  "then": "babak1_hutan"
+}

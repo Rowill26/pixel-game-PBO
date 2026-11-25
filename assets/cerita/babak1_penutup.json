@@ -1,0 +1,17 @@
+{
+  "title": "BABAK 1 - BISIK-BISIK GIRAH",
+  "mission": "Misi: temukan lokasi ritual",
+  "arena": "hutan",
+  "mode": "night",
+  "lines": [
+    {"who": "narator", "text": "Kabut menipis. Di balik akar beringin, kelompok menemukan kain ritual yang masih berbau dupa."},
+    {"who": "pengintai", "name": "Pengintai", "face": "tegas", "text": "Abu dupa, sesaji, dan lingkaran di tanah. Ritual ini dilakukan belum lama."},
+    {"who": "narator", "text": "Pengikut yang menyerah duduk terikat di bawah pohon. Dengan suara bergetar, ia menyebut sebuah nama: Calon Arang."},
+    {"who": "pengikut", "name": "Pengikut", "text": "Kalian menyebutnya jahat. Tapi pernahkah kalian melihat bagaimana mereka memperlakukan putrinya?"},
+    {"who": "pengintai", "name": "Pengintai", "face": "netral", "text": "Apa yang dilakukan putrinya?"},
+    {"who": "pengikut", "name": "Pengikut", "text": "Tidak ada. Itulah sebabnya Calon Arang begitu murka."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "netral", "text": "Warga Girah sendiri sudah lama takut kepadanya. Mungkin ketakutan itulah yang ia balas."},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kita kembali ke Daha. Raja harus mendengar ini sebelum kita melangkah ke Girah."},
+    {"who": "narator", "text": "Kelompok kembali ke istana membawa petunjuk tentang wabah, ritual, dan Calon Arang, lalu menunggu izin untuk menyelidiki Girah."}
+  ]
+}
