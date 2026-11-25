@@ -35,7 +35,8 @@ import java.util.TreeSet;
  */
 public final class PembacaPertarungan {
 
-    private static final Set<String> KUNCI_AKAR = Set.of("arena", "mode", "musuh", "batasRonde", "menang");
+    private static final Set<String> KUNCI_AKAR = Set.of(
+            "arena", "mode", "musuh", "batasRonde", "menang", "ritual", "waktuHabis");
     private static final Set<String> KUNCI_MUSUH = Set.of("jenis", "nama");
 
     private final String id;
@@ -73,6 +74,15 @@ public final class PembacaPertarungan {
         String arena = teks(akar, "arena", true);
         String mode = teks(akar, "mode", false);
         String menang = teks(akar, "menang", false);
+        String waktuHabis = teks(akar, "waktuHabis", false);
+        boolean ritual = false;
+        JsonValue r = akar.get("ritual");
+        if (r != null && !r.isNull()) {
+            if (!r.isBoolean()) {
+                throw salah("ritual", "harus true atau false");
+            }
+            ritual = r.asBoolean();
+        }
 
         int batasRonde = 0;
         JsonValue batas = akar.get("batasRonde");
@@ -112,7 +122,13 @@ public final class PembacaPertarungan {
             }
             musuh.add(new RencanaPertarungan.Musuh(jenis, nama));
         }
-        return new RencanaPertarungan(id, arena, mode, musuh, batasRonde, menang);
+        if (batasRonde == 0 && ritual) {
+            throw salah("ritual", "pertarungan ritual butuh \"batasRonde\" lebih dari 0");
+        }
+        if (batasRonde == 0 && waktuHabis != null) {
+            throw salah("waktuHabis", "hanya bisa dipakai jika \"batasRonde\" lebih dari 0");
+        }
+        return new RencanaPertarungan(id, arena, mode, musuh, batasRonde, menang, ritual, waktuHabis);
     }
 
     private String teks(JsonValue objek, String kunci, boolean wajib) throws PertarunganTidakValidException {

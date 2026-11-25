@@ -631,7 +631,12 @@ public class ArenaPrototype extends ApplicationAdapter {
 
     /** Setelah pemain menekan Enter pada hasil akhir (panduan bagian 8). */
     private void afterBattle(id.girah.battle.StatusBattle end) {
-        String next = plan != null && end == id.girah.battle.StatusBattle.MENANG ? plan.getLanjutanMenang() : null;
+        if (plan != null && plan.isRitual() && end != id.girah.battle.StatusBattle.KALAH) {
+            storyStatus.catatHasilRitual(end);    // MENANG = ritual dihentikan tepat waktu, WAKTU_HABIS = Ending 3
+        }
+        String next = plan == null ? null
+                : end == id.girah.battle.StatusBattle.MENANG ? plan.getLanjutanMenang()
+                : end == id.girah.battle.StatusBattle.WAKTU_HABIS ? plan.getLanjutanWaktuHabis() : null;
         Gdx.app.log("battle", "setelah " + end + ": " + (end == id.girah.battle.StatusBattle.KALAH ? "ulangi"
                 : next != null ? "naskah " + next : "layar judul"));
         if (end == id.girah.battle.StatusBattle.KALAH) {
@@ -644,10 +649,10 @@ public class ArenaPrototype extends ApplicationAdapter {
         }
         if (next != null) {
             plan = null;
-            story.start(next);                    // MENANG: naskah setelah pertarungan
+            story.start(next);                    // naskah setelah menang atau setelah waktu habis
             return;
         }
-        // WAKTU_HABIS (Babak 5) atau menang tanpa naskah lanjutan: kembali ke layar judul
+        // tanpa naskah lanjutan: kembali ke layar judul
         backToTitle();
     }
 

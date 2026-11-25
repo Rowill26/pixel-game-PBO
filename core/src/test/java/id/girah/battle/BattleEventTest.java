@@ -121,7 +121,8 @@ class BattleEventTest {
 
         HasilAksi h = perekam.satuSatunyaAksi();
         assertEquals(JarakAksi.DEKAT, h.getJarak());
-        assertEquals(2, h.getPerubahan(calonArang).orElseThrow().getKerusakan());
+        assertEquals(TelikSandi.KEKUATAN_AWAL - CalonArang.PERTAHANAN_AWAL,
+                h.getPerubahan(calonArang).orElseThrow().getKerusakan());
         assertEquals(-TelikSandi.BIAYA_JURUS, h.getPerubahan(telikSandi).orElseThrow().getPerubahanEnergiBatin());
         assertEquals(List.of(telikSandi), perekam.aktorGiliran);
     }

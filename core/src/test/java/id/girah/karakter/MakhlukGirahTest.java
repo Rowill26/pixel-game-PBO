@@ -50,29 +50,29 @@ class MakhlukGirahTest {
     }
 
     @Test
-    @DisplayName("Ucapan nyawa rendah muncul tepat sekali saat nyawa <= 30% (120 dari 400)")
+    @DisplayName("Ucapan nyawa rendah muncul tepat sekali saat nyawa <= 30% (84 dari 280)")
     void ucapanNyawaRendahSekali() {
-        calonArang.terimaSerangan(285);                 // 275 kerusakan -> 125
-        String belum = senopati.serang(calonArang);     // 5 kerusakan  -> 120
+        calonArang.terimaSerangan(193);                 // 187 kerusakan -> 93
+        String belum = senopati.serang(calonArang);     // 9 kerusakan  -> 84
         assertTrue(calonArang.isNyawaRendah());
         assertTrue(belum.contains("Apa lagi yang tersisa untukku?"), belum);
 
-        String sesudah = senopati.serang(calonArang);   // -> 115
+        String sesudah = senopati.serang(calonArang);   // -> 75
         assertFalse(sesudah.contains("Apa lagi yang tersisa untukku?"), "Ucapan tidak diulang");
     }
 
     @Test
     void diAtasAmbangTidakBerucap() {
-        calonArang.terimaSerangan(280);                 // -> 130
-        String narasi = senopati.serang(calonArang);    // -> 125
+        calonArang.terimaSerangan(190);                 // -> 96
+        String narasi = senopati.serang(calonArang);    // -> 87
         assertFalse(calonArang.isNyawaRendah());
         assertFalse(narasi.contains("Calon Arang: \""), narasi);
     }
 
     @Test
     void pukulanTerakhirMenampilkanNarasiGugurBukanUcapan() {
-        calonArang.terimaSerangan(405);                 // 395 kerusakan -> 5, belum sempat berucap
-        String narasi = senopati.serang(calonArang);    // 5 kerusakan  -> 0
+        calonArang.terimaSerangan(281);                 // 275 kerusakan -> 5, belum sempat berucap
+        String narasi = senopati.serang(calonArang);    // 9 kerusakan  -> 0
         assertFalse(calonArang.isHidup());
         assertTrue(narasi.contains("Cahayanya meredup"), narasi);
         assertFalse(narasi.contains("Apa lagi yang tersisa untukku?"), narasi);

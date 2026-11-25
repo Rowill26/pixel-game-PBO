@@ -478,8 +478,8 @@ Sedang dikerjakan back end (lihat catatan revisi D). Bagian di atas **tidak** pe
 
 | Fitur | Catatan |
 |---|---|
-| Naskah Babak 5 dan epilog | Babak 1–4 sudah selesai (lihat format-naskah.md bagian 8). |
-| Babak 5 (D3, D4, D7) | Sumber ritual, Calon Arang berubah ke wujud ritual (`calon_arang_ritual`), tiga fase sebagai tiga pertarungan berurutan. |
+| Naskah Babak 5 dan epilog | Selesai (format-naskah.md bagian 8). |
+| Babak 5 (D3, D4, D7) | Selesai: `SumberRitual` (sprite `sumber_ritual`, gambar sementara), tiga pertarungan berurutan, wujud ritual memakai `nextForm` di front end. `afterBattle()` memanggil `catatHasilRitual` untuk rencana `isRitual()` dan memutar `getLanjutanWaktuHabis()` saat WAKTU_HABIS. |
 | Ratna dan Bharadah di arena (D2) | Versi sederhana, dikerjakan terakhir. |
 
 Pertanyaan tentang back end: hubungi pemilik back end (Rowill26).

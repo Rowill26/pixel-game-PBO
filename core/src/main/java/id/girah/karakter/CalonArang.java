@@ -9,10 +9,10 @@ import java.util.List;
  */
 public class CalonArang extends MakhlukGirah {
 
-    public static final int NYAWA_AWAL = 400;
+    public static final int NYAWA_AWAL = 280;
     public static final int ENERGI_BATIN_AWAL = 120;
     public static final int KEKUATAN_AWAL = 20;
-    public static final int PERTAHANAN_AWAL = 10;
+    public static final int PERTAHANAN_AWAL = 6;
     public static final int KECEPATAN_AWAL = 12;
 
     public static final int BIAYA_JURUS = 30;

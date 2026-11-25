@@ -1,0 +1,13 @@
+{
+  "arena": "pemakaman",
+  "mode": "night",
+  "musuh": [
+    {"jenis": "sumber_ritual"},
+    {"jenis": "leak", "nama": "Leak 1"},
+    {"jenis": "leak", "nama": "Leak 2"}
+  ],
+  "batasRonde": 8,
+  "ritual": true,
+  "menang": "babak5_akhir",
+  "waktuHabis": "babak5_akhir"
+}

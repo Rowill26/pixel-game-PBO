@@ -55,11 +55,12 @@ class PengelanaTest {
         }
 
         @Test
-        @DisplayName("Langkah Bayangan: menyerang (12 - 10 = 2), lalu memberi tepat satu giliran tambahan")
+        @DisplayName("Langkah Bayangan: menyerang (kekuatan - pertahanan), lalu memberi tepat satu giliran tambahan")
         void langkahBayangan() throws EnergiBatinHabisException {
             String narasi = telikSandi.gunakanJurus(List.of(calonArang));
 
-            assertEquals(398, calonArang.getNyawa());
+            assertEquals(CalonArang.NYAWA_AWAL - (TelikSandi.KEKUATAN_AWAL - CalonArang.PERTAHANAN_AWAL),
+                    calonArang.getNyawa());
             assertEquals(28, telikSandi.getEnergiBatin());
             assertTrue(narasi.contains("siap bergerak sekali lagi"), narasi);
             assertTrue(telikSandi.ambilGiliranTambahan());

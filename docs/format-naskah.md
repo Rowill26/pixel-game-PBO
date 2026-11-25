@@ -219,15 +219,17 @@ Nama pertarungan tidak boleh sama dengan nama naskah.
 | `musuh` | **ya** | minimal satu; urutan = urutan posisi di arena |
 | `batasRonde` | tidak | bawaan `0` (tanpa batas); dipakai fase ritual Babak 5 |
 | `menang` | tidak | naskah yang diputar setelah menang |
+| `waktuHabis` | tidak | naskah yang diputar jika batas ronde habis (butuh `batasRonde`) |
+| `ritual` | tidak | `true` untuk pertarungan sumber ritual Babak 5: hasilnya (menang / waktu habis) dicatat sebagai hasil ritual dan menentukan ending (butuh `batasRonde`) |
 
-**Jenis musuh:** `leak`, `pengikut`, `pemimpin_pengikut`, `calon_arang`. Nama boleh diisi untuk
+**Jenis musuh:** `leak`, `pengikut`, `pemimpin_pengikut`, `calon_arang`, `sumber_ritual`. Nama boleh diisi untuk
 `leak` dan `pengikut`, dan harus berbeda jika ada lebih dari satu (mis. `"Leak 1"`, `"Leak 2"`).
-`pemimpin_pengikut` dan `calon_arang` bernama tetap, jadi tanpa `"nama"`.
+`pemimpin_pengikut`, `calon_arang`, dan `sumber_ritual` bernama tetap, jadi tanpa `"nama"`.
 
 Kelompok pengelana selalu Pendekar, Juru Mantra, Peramu, dan Pengintai dengan nyawa penuh.
 Jika kalah, pertarungan diulang dari awal.
 
-## 8. Alur Babak 1-4
+## 8. Alur lengkap
 
 | File | Isi | Lanjut ke |
 |---|---|---|
@@ -246,7 +248,15 @@ Jika kalah, pertarungan diulang dari awal.
 | `cerita/babak4_lemah_tulis.json` | Bharadah membaca kitab (altar ritual), kabar serangan | `babak4_serangan` |
 | `cerita/babak4_serangan.json` | **pilihan evakuasi** (`wargaSelamat` 3/1/2), pemimpin pengikut muncul | `babak4_desa` |
 | `pertarungan/babak4_desa.json` | Leak, Pengikut, dan **Pemimpin Pengikut** di Desa Girah | menang: `babak4_penutup` |
-| `cerita/babak4_penutup.json` | hasil evakuasi, berangkat ke pemakaman | (Babak 5 menyusul) |
+| `cerita/babak4_penutup.json` | hasil evakuasi, berangkat ke pemakaman | `babak5_pemakaman` |
+| `cerita/babak5_pemakaman.json` | tiba di pemakaman Candi Durga | `babak5_penjaga` |
+| `pertarungan/babak5_penjaga.json` | fase 1: dua Leak dan satu Pengikut | menang: `babak5_konfrontasi` |
+| `cerita/babak5_konfrontasi.json` | "Kasih yang Menjadi Api"; **pilihan 1/2/3** (mengakui luka +1 Ratna) | `babak5_tanding` |
+| `pertarungan/babak5_tanding.json` | fase 2: Calon Arang (berubah wujud saat nyawa rendah) | menang: `babak5_ritual_terakhir` |
+| `cerita/babak5_ritual_terakhir.json` | altar menyala, batas delapan ronde | `babak5_ritual` |
+| `pertarungan/babak5_ritual.json` | fase 3: Sumber Ritual dan dua Leak, `batasRonde` 8, `ritual` | menang dan waktu habis: `babak5_akhir` |
+| `cerita/babak5_akhir.json` | Ending 3 jika waktu habis; selain itu **pilihan akhir** serahkan / pemulihan (Ending 1/2) | `epilog` |
+| `cerita/epilog.json` | Tapak Wangi; berubah menurut ending, `wargaSelamat`, dan Wening | (layar judul) |
 
 Pilihan evakuasi Babak 4: jalan barat memberi `wargaSelamat` 3 jika Ratna ikut membantu (tanpa
 `kitab_diambil_diam_diam`), 1 jika tidak; jalan timur selalu 2. Label pilihan sebaiknya

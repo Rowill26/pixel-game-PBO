@@ -1,0 +1,26 @@
+{
+  "title": "EPILOG",
+  "arena": "tapak_wangi",
+  "lines": [
+    {"who": "narator", "text": "Beberapa waktu kemudian, para pengelana kembali ke Tapak Wangi."},
+    {"who": "narator", "text": "Kabar dari Daha datang setiap pekan. Sidang Calon Arang masih berjalan, dan Ratna tidak pernah absen menemaninya.",
+     "syarat": {"ending": "PENGADILAN_KERAJAAN"}},
+    {"who": "narator", "text": "Dari Lemah Tulis, Mpu Bharadah mengabarkan bahwa Calon Arang mulai menanam obat-obatan untuk desa-desa yang dulu ia sakiti.",
+     "syarat": {"ending": "JALAN_PEMULIHAN"}},
+    {"who": "narator", "text": "Bendera duka masih berkibar di banyak rumah. Gelombang terakhir wabah meninggalkan bekas yang panjang di Daha.",
+     "syarat": {"ending": "AKHIR_TRAGIS"}},
+    {"who": "narator", "text": "Di Girah, hampir semua rumah kembali berpenghuni. Warga yang dulu lari kini membangun ulang balai desa bersama-sama.",
+     "syarat": {"wargaSelamat": 3}},
+    {"who": "narator", "text": "Di Girah, beberapa rumah tetap kosong. Warga menyalakan pelita di depan pintu-pintu itu setiap malam.",
+     "syarat": {"kurangDari": {"wargaSelamat": 3}}},
+    {"who": "wening", "name": "Janda Wening", "text": "Desa ini tidak akan kembali seperti dahulu. Tapi selama masih ada yang saling menolong, kami bisa memulai lagi.",
+     "syarat": {"weningSelamat": true}},
+    {"who": "narator", "text": "Rumah Janda Wening kini sunyi. Tetangganya menaruh bunga di depan pintunya, dan pintu itu tidak pernah dikunci.",
+     "syarat": {"weningSelamat": false}},
+    {"who": "peramu", "name": "Peramu", "face": "netral", "text": "Kami akan meninggalkan sisa obat di balai desa."},
+    {"who": "pengintai", "name": "Pengintai", "face": "netral", "text": "Jalan menuju hutan sudah terbuka. Perjalanan kita bisa dilanjutkan."},
+    {"who": "narator", "text": "Kabut akhirnya meninggalkan Girah. Namun kisah Calon Arang tetap hidup: tentang seorang ibu yang mencintai anaknya, dan luka yang berubah menjadi dendam."},
+    {"who": "narator", "text": "Tentang harga yang harus dibayar ketika penderitaan dibalas dengan penderitaan."},
+    {"who": "narator", "text": "TAMAT"}
+  ]
+}

@@ -268,6 +268,8 @@ final class BattleSession implements BattleListener {
                 return new PemimpinPengikut();
             case "calon_arang":
                 return new CalonArang();
+            case "sumber_ritual":
+                return new id.girah.karakter.SumberRitual();
             default:
                 return null;        // ratna, bharadah: belum ada kelas back end (catatan D2)
         }
@@ -447,7 +449,7 @@ final class BattleSession implements BattleListener {
     }
 
     String resultHint() {
-        return result == StatusBattle.KALAH ? "Enter: ulangi pertarungan" : "Enter: kembali ke layar judul";
+        return result == StatusBattle.KALAH ? "Enter: ulangi pertarungan" : "Enter: lanjutkan";
     }
 
     // ================================================================

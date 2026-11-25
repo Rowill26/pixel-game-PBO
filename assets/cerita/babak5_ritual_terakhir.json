@@ -1,0 +1,15 @@
+{
+  "title": "BABAK 5 - RITUAL TERAKHIR",
+  "mission": "Misi: hancurkan sumber ritual",
+  "arena": "pemakaman",
+  "mode": "night",
+  "lines": [
+    {"who": "narator", "text": "Calon Arang jatuh berlutut di tengah lingkaran. Namun ritual itu tidak padam. Altar di belakangnya menyala makin terang."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Ritualnya sudah berjalan sendiri. Altar itu mengambil tenaga dari tanah pemakaman ini."},
+    {"who": "juru_mantra", "name": "Juru Mantra", "face": "tegas", "text": "Setiap denyutnya membakar kita semua. Kita tidak bisa bertahan lama di dalam lingkaran."},
+    {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Hancurkan altar itu sebelum delapan ronde berlalu. Jika tidak, ritualnya akan sempurna, dan wabah terakhir akan mencapai Daha."},
+    {"who": "ratna", "name": "Ratna Manggali", "face": "sedih", "text": "Ibu masih di dalam lingkaran! Cepat!"},
+    {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Semua ke altar. Sekarang!"}
+  ],
+  "then": "babak5_ritual"
+}

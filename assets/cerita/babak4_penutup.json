@@ -16,5 +16,6 @@
     {"who": "bharadah", "name": "Mpu Bharadah", "face": "tegas", "text": "Malam ini Calon Arang akan menyempurnakan ritualnya. Jika kita terlambat, wabah terakhir akan mencapai Daha."},
     {"who": "pendekar", "name": "Pendekar", "face": "tegas", "text": "Kalau begitu kita berangkat sekarang."},
     {"who": "narator", "text": "Kelompok, Mpu Bharadah, dan Ratna berjalan menuju pemakaman di bawah langit yang mulai memerah."}
-  ]
+  ],
+  "then": "babak5_pemakaman"
 }
