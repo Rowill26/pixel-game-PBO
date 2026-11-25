@@ -1,0 +1,114 @@
+{
+  "name": "Desa Girah",
+  "modes": {
+    "day": {
+      "sky": "sky_day.png",
+      "ambient": [
+        0.92,
+        0.86,
+        0.86
+      ],
+      "sun": [
+        0.55,
+        0.38,
+        0.32
+      ],
+      "sunDir": [
+        -0.7,
+        0.4,
+        0.6
+      ],
+      "torches": false,
+      "shafts": false,
+      "particles": "ash",
+      "grade": {
+        "sat": 0.92,
+        "tint": [
+          1.02,
+          0.97,
+          0.98
+        ],
+        "lift": [
+          0.015,
+          0.01,
+          0.02
+        ],
+        "vignette": 0.35
+      }
+    }
+  },
+  "startMode": "day",
+  "layers": [
+    {
+      "file": "far.png",
+      "parallax": 0.35,
+      "normal": false,
+      "lit": 1.0
+    },
+    {
+      "file": "ground.png",
+      "parallax": 1.0,
+      "normal": true,
+      "lit": 1.0
+    }
+  ],
+  "front": {
+    "file": "front.png",
+    "parallax": 1.35,
+    "normal": true
+  },
+  "torches": [],
+  "staticLights": [
+    {
+      "x": 389,
+      "y": 251,
+      "z": 12,
+      "color": [
+        0.9,
+        0.35,
+        0.3
+      ],
+      "radius": 60,
+      "intensity": 0.8,
+      "flicker": 0.2
+    }
+  ],
+  "actors": [
+    {
+      "id": "pendekar",
+      "name": "Pendekar",
+      "sprite": "pendekar",
+      "x": 296,
+      "y": 262,
+      "side": "pengelana"
+    },
+    {
+      "id": "juru_mantra",
+      "name": "Juru Mantra",
+      "sprite": "juru_mantra",
+      "x": 340,
+      "y": 276,
+      "side": "pengelana",
+      "staff": [
+        60,
+        20
+      ]
+    },
+    {
+      "id": "peramu",
+      "name": "Peramu",
+      "sprite": "peramu",
+      "x": 386,
+      "y": 262,
+      "side": "pengelana"
+    },
+    {
+      "id": "pengintai",
+      "name": "Pengintai",
+      "sprite": "pengintai",
+      "x": 430,
+      "y": 276,
+      "side": "pengelana"
+    }
+  ]
+}

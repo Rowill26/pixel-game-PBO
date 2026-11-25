@@ -1,0 +1,189 @@
+{
+  "name": "Tanah lapang Hutan Beringin",
+  "modes": {
+    "day": {
+      "sky": "sky_day.png",
+      "ambient": [
+        0.95,
+        0.95,
+        0.88
+      ],
+      "sun": [
+        0.55,
+        0.5,
+        0.35
+      ],
+      "sunDir": [
+        -0.5,
+        0.6,
+        0.6
+      ],
+      "torches": false,
+      "shafts": true,
+      "particles": "dust",
+      "grade": {
+        "sat": 0.82,
+        "tint": [
+          0.98,
+          1.0,
+          0.95
+        ],
+        "lift": [
+          0.01,
+          0.015,
+          0.02
+        ],
+        "vignette": 0.45
+      }
+    },
+    "night": {
+      "sky": "sky_night.png",
+      "ambient": [
+        0.28,
+        0.31,
+        0.46
+      ],
+      "sun": [
+        0.12,
+        0.14,
+        0.24
+      ],
+      "sunDir": [
+        0.2,
+        0.7,
+        0.7
+      ],
+      "torches": true,
+      "shafts": false,
+      "particles": "fireflies",
+      "grade": {
+        "sat": 0.85,
+        "tint": [
+          0.95,
+          0.95,
+          1.05
+        ],
+        "lift": [
+          0.01,
+          0.01,
+          0.03
+        ],
+        "vignette": 0.65
+      }
+    }
+  },
+  "startMode": "night",
+  "layers": [
+    {
+      "file": "far.png",
+      "parallax": 0.6,
+      "normal": true,
+      "lit": 1.0
+    },
+    {
+      "file": "ground.png",
+      "parallax": 1.0,
+      "normal": true,
+      "lit": 1.0
+    }
+  ],
+  "front": {
+    "file": "front.png",
+    "parallax": 1.35,
+    "normal": true
+  },
+  "torches": [
+    {
+      "x": 28,
+      "y": 224
+    },
+    {
+      "x": 588,
+      "y": 302
+    }
+  ],
+  "actors": [
+    {
+      "id": "leak1",
+      "name": "Leak 1",
+      "sprite": "leak",
+      "x": 140,
+      "y": 226,
+      "side": "girah",
+      "float": true,
+      "eyes": [
+        48,
+        20,
+        53,
+        21
+      ]
+    },
+    {
+      "id": "leak2",
+      "name": "Leak 2",
+      "sprite": "leak",
+      "x": 236,
+      "y": 246,
+      "side": "girah",
+      "float": true,
+      "eyes": [
+        48,
+        20,
+        53,
+        21
+      ]
+    },
+    {
+      "id": "pengikut",
+      "name": "Pengikut",
+      "sprite": "pengikut",
+      "x": 118,
+      "y": 276,
+      "side": "girah"
+    },
+    {
+      "id": "pemimpin_pengikut",
+      "name": "Pemimpin Pengikut",
+      "sprite": "pemimpin_pengikut",
+      "x": 212,
+      "y": 292,
+      "side": "girah"
+    },
+    {
+      "id": "pendekar",
+      "name": "Pendekar",
+      "sprite": "pendekar",
+      "x": 440,
+      "y": 238,
+      "side": "pengelana"
+    },
+    {
+      "id": "juru_mantra",
+      "name": "Juru Mantra",
+      "sprite": "juru_mantra",
+      "x": 494,
+      "y": 254,
+      "side": "pengelana",
+      "staff": [
+        60,
+        20
+      ]
+    },
+    {
+      "id": "peramu",
+      "name": "Peramu",
+      "sprite": "peramu",
+      "x": 432,
+      "y": 274,
+      "side": "pengelana"
+    },
+    {
+      "id": "pengintai",
+      "name": "Pengintai",
+      "sprite": "pengintai",
+      "x": 490,
+      "y": 292,
+      "side": "pengelana"
+    }
+  ]
+}

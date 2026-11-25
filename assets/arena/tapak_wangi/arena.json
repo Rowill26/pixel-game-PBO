@@ -1,0 +1,107 @@
+{
+  "name": "Desa Tapak Wangi",
+  "modes": {
+    "day": {
+      "sky": "sky_day.png",
+      "ambient": [
+        0.96,
+        0.96,
+        0.9
+      ],
+      "sun": [
+        0.5,
+        0.48,
+        0.38
+      ],
+      "sunDir": [
+        -0.5,
+        0.6,
+        0.6
+      ],
+      "torches": false,
+      "shafts": false,
+      "particles": "dust",
+      "grade": {
+        "sat": 0.92,
+        "tint": [
+          0.98,
+          1.0,
+          0.97
+        ],
+        "lift": [
+          0.012,
+          0.015,
+          0.018
+        ],
+        "vignette": 0.22
+      }
+    }
+  },
+  "startMode": "day",
+  "layers": [
+    {
+      "file": "far.png",
+      "parallax": 0.35,
+      "normal": false,
+      "lit": 1.0
+    },
+    {
+      "file": "ground.png",
+      "parallax": 1.0,
+      "normal": true,
+      "lit": 1.0
+    }
+  ],
+  "front": {
+    "file": "front.png",
+    "parallax": 1.35,
+    "normal": true
+  },
+  "torches": [],
+  "actors": [
+    {
+      "id": "pendekar",
+      "name": "Pendekar",
+      "sprite": "pendekar",
+      "x": 300,
+      "y": 252,
+      "side": "pengelana"
+    },
+    {
+      "id": "juru_mantra",
+      "name": "Juru Mantra",
+      "sprite": "juru_mantra",
+      "x": 344,
+      "y": 266,
+      "side": "pengelana",
+      "staff": [
+        60,
+        20
+      ]
+    },
+    {
+      "id": "peramu",
+      "name": "Peramu",
+      "sprite": "peramu",
+      "x": 392,
+      "y": 252,
+      "side": "pengelana"
+    },
+    {
+      "id": "pengintai",
+      "name": "Pengintai",
+      "sprite": "pengintai",
+      "x": 436,
+      "y": 266,
+      "side": "pengelana"
+    },
+    {
+      "id": "ratna",
+      "name": "Ratna",
+      "sprite": "ratna",
+      "x": 520,
+      "y": 256,
+      "side": "sekutu"
+    }
+  ]
+}

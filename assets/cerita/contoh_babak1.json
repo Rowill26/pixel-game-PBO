@@ -1,0 +1,28 @@
+{
+  "title": "BABAK 1 - BISIK-BISIK GIRAH",
+  "mission": "Misi: menghadap Raja",
+  "arena": "balai_daha",
+  "lines": [
+    {
+      "who": "narator",
+      "text": "Malam di Balai Kerajaan Daha. Pelita-pelita bergoyang pelan, dan para pejabat berbicara dengan suara rendah."
+    },
+    {
+      "who": "juru_mantra",
+      "name": "Juru Mantra",
+      "face": "netral",
+      "text": "Peta ini penuh tanda merah. Wabah sudah sampai ke desa-desa di selatan."
+    },
+    {
+      "who": "pendekar",
+      "name": "Pendekar",
+      "face": "tegas",
+      "text": "Kalau begitu kita berangkat sebelum fajar."
+    },
+    {
+      "who": "narator",
+      "text": "Fajar belum datang ketika keempat pengelana memasuki Hutan Beringin. Di tanah lapang, sesuatu sudah menunggu."
+    }
+  ],
+  "then": "hutan"
+}
